@@ -1,0 +1,25 @@
+{
+  "search": "Search Recipes",
+  "@search": {
+    "description": "Search for a recipe"
+  },
+  "hello": "Hello",
+  "@hello": {
+    "description": "Welcome User"
+  },
+  "askCook": "What do you want to cook today?",
+  "@askCook": {
+    "description": "Welcome User "
+  },
+  "trend": "Trending Recipe",
+  "@trend": {
+    "description": "Popular Recipes"
+  },
+  "hour": "Hour",
+  "hours": "Hours",
+  "minute": "Min",
+  "minutes": "Mins",
+  "second": "Sec",
+  "seconds": "Secs",
+  "serving": "Serving"
+}

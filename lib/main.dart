@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'file:///D:/MyFlutterApplication/cooking_master/lib/screens/home_screen.dart';
+import 'package:cooking_master/screens/home_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() {
   runApp(CookingMasterApp());
 }
@@ -8,6 +9,8 @@ class CookingMasterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     );

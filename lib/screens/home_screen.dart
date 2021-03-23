@@ -1,7 +1,10 @@
 import 'package:cooking_master/constants/color_constant.dart';
+import 'package:cooking_master/screens/Home/body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,63 +12,56 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<IconData> icons = [
+    FontAwesomeIcons.search,
+  ];
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        margin: EdgeInsets.only(top: 8),
-        child: ListView(
-          physics: ClampingScrollPhysics(),
-          children: <Widget>[
-            //Custom Appbar
-            Container(
-              margin: EdgeInsets.only(left: 16, right: 16, top: 16),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  //Language Button
-                  GestureDetector(
-                    onTap: () {
-                      //TODO: Open language choose
-                    },
-                      child: Container(
-                        height: 39,
-                        width: 39,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          //Todo: Load Image Compared with User's language
-                          image: DecorationImage(image: AssetImage('assets/images/vietnam.png'))
-                        ),
-                      ),
-                  ),
-
-                  //Appbar Text
-                  Text('Cooking Master', style: GoogleFonts.inter(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
-                    color: kBlackColor
-                  )),
-
-                  //User Profile
-                  GestureDetector(
-                    onTap: () {
-                      //TODO: Open User Profile
-                    },
-                    child: Container(
-                      height: 39,
-                      width: 39,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          image: DecorationImage(image: AssetImage('assets/images/user.png'))
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 30,
+        backgroundColor: blue2,
+      ),
+      body: Body(size: size),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Container(
+          margin: EdgeInsets.all(6.0),
+          child: Icon(Icons.add),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        color: blue4,
+        shape: CircularNotchedRectangle(),
+        notchMargin: 4.0,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(25.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(0.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(icon: Icon(Icons.search), onPressed: () {}),
+              IconButton(
+                  icon: Icon(Icons.people_alt_outlined), onPressed: () {}),
+              SizedBox(),
+              IconButton(
+                  icon: Icon(Icons.shopping_bag_outlined), onPressed: () {}),
+              IconButton(
+                  icon: FaIcon(FontAwesomeIcons.heart), onPressed: () {}),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
+
