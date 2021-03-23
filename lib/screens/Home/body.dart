@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:cooking_master/models/recipe_card_model.dart';
-import 'file:///D:/MyFlutterApplication/cooking_master/lib/widgets/list_view_of_recipe_cards_with_title.dart';
+import 'package:cooking_master/widgets/list_view_of_recipe_cards_with_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'header_with_searchbox.dart';

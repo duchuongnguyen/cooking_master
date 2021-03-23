@@ -1,5 +1,5 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
-import 'file:///D:/MyFlutterApplication/cooking_master/widgets/ListCards/title_with_custom_underline.dart';
+import 'ListCards/title_with_custom_underline.dart';
 import 'package:flutter/material.dart';
 
 import 'ListCards/list_view_of_recipe_cards.dart';
