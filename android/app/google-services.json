@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "120021942616",
+    "project_id": "cooking-master-5dc52",
+    "storage_bucket": "cooking-master-5dc52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120021942616:android:b39caed85174e51780652d",
+        "android_client_info": {
+          "package_name": "com.example.cooking_master"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120021942616-9mcf4v1npu9aoc7mrm1kvvtns9jdi5oh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cooking_master",
+            "certificate_hash": "aadb633a659ff04f8d03d40541d66bdde917bf5c"
+          }
+        },
+        {
+          "client_id": "120021942616-3ss199skic2nldkt3ufp75j6d99mfpve.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX4He4DzhcFE336Z0TqOEO8mwHHHiIcA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120021942616-3ss199skic2nldkt3ufp75j6d99mfpve.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
