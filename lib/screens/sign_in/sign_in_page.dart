@@ -86,9 +86,10 @@ class SignInPage extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        builder: (context) => EmailSignInPage(),
-      ),
-    );
+        builder: (context) => EmailSignInPage(auth: auth),
+      )
+    ).then((value) => onSignIn(auth.currentUser));
+
   }
 
   @override
@@ -138,7 +139,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with email',
             textColor: Colors.white,
             color: Colors.teal[700],
-            //onPressed: _signInWithEmail,
+            onPressed:() => _signInWithEmail(context),
             //onPressed: isLoading ? null : () => _signInWithEmail(context),
           ),
           SizedBox(height: 8.0),

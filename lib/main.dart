@@ -1,4 +1,5 @@
 import 'package:cooking_master/screens/landing_page.dart';
+import 'package:cooking_master/screens/sign_in/email_sign_in_page.dart';
 import 'package:cooking_master/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/screens/home_screen.dart';
@@ -13,6 +14,7 @@ void main() async {
 class CookingMasterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //return MaterialApp(home: EmailSignInPage());
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
