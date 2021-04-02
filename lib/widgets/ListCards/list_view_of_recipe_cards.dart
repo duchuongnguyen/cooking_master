@@ -45,7 +45,6 @@ class ListViewOfRecipeCards extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-
                   //Kind of recipe
                   Positioned(
                     top: defaultPadding,
@@ -67,7 +66,10 @@ class ListViewOfRecipeCards extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    width: size.width* 0.5,
 
+                  ),
                   //Detail Information
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -94,7 +96,6 @@ class ListViewOfRecipeCards extends StatelessWidget {
                               ),
                             ),
                           ),
-
                           //Recipe Save
                           Positioned(
                               top: -defaultPadding + 5,
@@ -109,7 +110,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                           Align(
                             alignment: Alignment.bottomLeft,
                             child: Text(
-                              cards[index].recipeCookTime + ' | ' + cards[index].recipeServingNumber.toString() + AppLocalizations.of(context).serving,
+                              cards[index].recipeCookTime + ' | ' + cards[index].recipeServingNumber.toString() + " " + AppLocalizations.of(context).serving,
                               style: TextStyle(
                                   color: Colors.blueGrey,
                                   fontSize: 12
@@ -119,7 +120,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             );

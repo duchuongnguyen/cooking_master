@@ -1,3 +1,4 @@
+import 'package:cooking_master/screens/detail_recipe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/screens/home_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
