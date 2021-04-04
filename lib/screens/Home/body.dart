@@ -19,9 +19,11 @@ class Body extends StatelessWidget {
     return Column(
       children: <Widget>[
         HeaderWithSearchBox(size: size),
-
         //Trending Recipe, can add any kind of recipes in here
-        ListViewOfRecipeCardsWithTitle(title: AppLocalizations.of(context).trend, size: size, cards: cards),
+        ListViewOfRecipeCardsWithTitle(
+            title: AppLocalizations.of(context).trend,
+            size: size,
+            cards: cards),
       ],
     );
   }

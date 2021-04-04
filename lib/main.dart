@@ -1,8 +1,8 @@
+
 import 'package:cooking_master/screens/landing_page.dart';
-import 'package:cooking_master/screens/sign_in/email_sign_in_page.dart';
 import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/screens/detail_recipe_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cooking_master/screens/home_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';

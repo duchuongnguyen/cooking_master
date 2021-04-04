@@ -3,6 +3,7 @@ import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cooking_master/screens/user_profile_screen.dart';
 
 class HeaderWithSearchBox extends StatelessWidget {
   const HeaderWithSearchBox({
@@ -40,17 +41,28 @@ class HeaderWithSearchBox extends StatelessWidget {
                     Text(
                       AppLocalizations.of(context).hello + ' Huy,',
                       style: Theme.of(context).textTheme.headline5.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold,),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     Spacer(),
-                    Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          image: DecorationImage(
-                              image: AssetImage("assets/images/user.jpg")
-                          )
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserProfileScreen()));
+                      },
+                      child: Hero(
+                        tag: 'avatar',
+                        child: Container(
+                          height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              image: DecorationImage(
+                                  image: AssetImage("assets/images/user.jpg"))),
+                        ),
                       ),
                     )
                   ],
@@ -60,7 +72,9 @@ class HeaderWithSearchBox extends StatelessWidget {
                   child: Text(
                     AppLocalizations.of(context).askCook,
                     style: Theme.of(context).textTheme.headline6.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16),
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16),
                   ),
                 ),
               ],
