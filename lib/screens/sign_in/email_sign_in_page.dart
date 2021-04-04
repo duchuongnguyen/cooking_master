@@ -5,8 +5,8 @@ import 'email_sign_in_form_change_notifier.dart';
 
 class EmailSignInPage extends StatelessWidget {
 
-  const EmailSignInPage({Key key,@required this.auth}) : super(key: key);
-  final AuthBase auth;
+  const EmailSignInPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     EmailSignInType _formType;
@@ -21,7 +21,7 @@ class EmailSignInPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            child: EmailSignInForm(auth: auth)
+            child: EmailSignInForm()
             //EmailSignInFormChangeNotifier.create(context),
           ),
         ),

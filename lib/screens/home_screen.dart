@@ -7,13 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-    const HomeScreen({Key key, @required this.auth,@required this.onSignOut}) : super(key: key);
-    final Auth auth;
-    final VoidCallback onSignOut;
-
-
+    const HomeScreen({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -23,13 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List<IconData> icons = [
     FontAwesomeIcons.search,
   ];
-  Future<void> _signOut(/*BuildContext context*/) async {
+  Future<void> _signOut(BuildContext context) async {
     try {
       //await manager.signInWithGoogle();
-       await widget.auth.signOut();
-       widget.onSignOut();
-       LandingPage(auth: null);
-      //onSignIn(userCredentials);
+      final auth = Provider.of<AuthBase>(context, listen: false);
+       await auth.signOut();
     } on Exception catch (e) {
       // _showSignInError(context, e);
     }
@@ -45,8 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Body(size: size),
       floatingActionButton: FloatingActionButton(
-        onPressed: _signOut,
-
+        onPressed: ()=> _signOut(context),
         child: Container(
           margin: EdgeInsets.all(6.0),
           child: Icon(Icons.add),

@@ -9,19 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'email_sign_in_page.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   //const
-  SignInPage({
-    Key key,
-    //@required this.manager,
-    //@required this.isLoading,
-    @required this.auth,
-    @required this.onSignIn,
-  }) : super(key: key);
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
  // final SignInManager manager;
   //final bool isLoading;
-  AuthBase auth;
-  final void Function(User) onSignIn;
   static const Key emailPasswordKey = Key('email-password');
 
   // static Widget create(BuildContext context) {
@@ -52,33 +48,36 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Future<void> _signInAnonymously(/*BuildContext context*/) async {
+  Future<void> _signInAnonymously(BuildContext context) async {
     try {
      // await manager.signInAnonymously();
-      final userCredentials = await auth.signInAnonymously();
-      onSignIn(userCredentials);
+      final auth = Provider.of<AuthBase>(context, listen: false);
+       await auth.signInAnonymously();
+
     } on Exception catch (e) {
-     // _showSignInError(context, e);
+      _showSignInError(context, e);
     }
   }
 
-  Future<void> _signInWithGoogle(/*BuildContext context*/) async {
+  Future<void> _signInWithGoogle(BuildContext context) async {
     try {
       //await manager.signInWithGoogle();
-      final userCredentials = await auth.signInWithGoogle();
-      onSignIn(userCredentials);
+      final auth = Provider.of<AuthBase>(context, listen: false);
+     await auth.signInWithGoogle();
+
     } on Exception catch (e) {
-     // _showSignInError(context, e);
+      _showSignInError(context, e);
     }
   }
 
-  Future<void> _signInWithFacebook(/*BuildContext context*/) async {
+  Future<void> _signInWithFacebook(BuildContext context) async {
     try {
      // await manager.signInWithFacebook();
-      final userCredentials = await auth.signInWithFacebook();
-      onSignIn(userCredentials);
+      final auth = Provider.of<AuthBase>(context, listen: false);
+      await auth.signInWithFacebook();
+
     } on Exception catch (e) {
-      //_showSignInError(context, e);
+      _showSignInError(context, e);
     }
   }
 
@@ -86,9 +85,9 @@ class SignInPage extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        builder: (context) => EmailSignInPage(auth: auth),
+        builder: (context) => EmailSignInPage(),
       )
-    ).then((value) => onSignIn(auth.currentUser));
+    );
 
   }
 
@@ -121,7 +120,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Google',
             textColor: Colors.black87,
             color: Colors.white,
-            onPressed: _signInWithGoogle,
+            onPressed:() => _signInWithGoogle(context),
             //isLoading ? null : () => _signInWithGoogle(context),
           ),
           SizedBox(height: 8.0),
@@ -130,7 +129,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Facebook',
             textColor: Colors.white,
             color: Color(0xFF334D92),
-            onPressed: _signInWithFacebook,
+            onPressed: () => _signInWithFacebook(context),
             //onPressed: isLoading ? null : () => _signInWithFacebook(context),
           ),
           SizedBox(height: 8.0),
@@ -153,7 +152,7 @@ class SignInPage extends StatelessWidget {
             text: 'Go anonymous',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: _signInAnonymously,
+            onPressed: () => _signInAnonymously(context),
             //onPressed: isLoading ? null : () => _signInAnonymously(context),
           ),
         ],
@@ -176,4 +175,5 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
+
 }

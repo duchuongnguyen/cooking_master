@@ -1,18 +1,17 @@
 import 'package:cooking_master/screens/sign_in/validators.dart';
 import 'package:cooking_master/services/auth.dart';
 import 'package:cooking_master/widgets/form_submit_button.dart';
+import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
  enum EmailSignInType {SignIn , SignUp}
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators{
-   EmailSignInForm({@required this.auth}) ;
-  final AuthBase auth;
-
+   EmailSignInForm({Key key,}) ;
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
-
 class _EmailSignInFormState extends State<EmailSignInForm> {
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -23,16 +22,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   String get _email => _emailController.text;
   String get _password => _passwordController.text;
   String get _confirmPassword => _confirmPasswordController.text;
-  bool canSubmit = false;
   bool submitted = false;
   bool isLoading = false;
-  List<Widget> builChildren()
+  List<Widget> buildChildren()
   {
     final buttonSubmitText = _formType == EmailSignInType.SignIn ?
         'Sign In' : 'SignUp';
     final changeText = _formType == EmailSignInType.SignIn ?
         'Need an account?  Sign Up' : 'Have an account?  Sign In';
-     canSubmit = widget.emailValidator.isValid(_email) &&
+     submitted = widget.emailValidator.isValid(_email) &&
     widget.emailValidator.isValid(_password) ;
     return [
       EmailField(),
@@ -54,14 +52,14 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
                       ),
                       obscureText: true,
                       textInputAction: TextInputAction.done,
-                      onEditingComplete: _submit,
+                      onEditingComplete: isLoading ? null : _submit,
                       )]
                   )
       ),
       SizedBox(height: 8.0),
       FormSubmitButton(
           text: buttonSubmitText,
-          onPressed: _submit
+          onPressed: isLoading? null : _submit
           ),
       SizedBox(height: 8.0,),
       // ignore: deprecated_member_use
@@ -84,11 +82,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       ),
       obscureText: true,
       onEditingComplete:  _formType == EmailSignInType.SignIn ? _submit : passwordEditComplete,
-      //onChanged: (_password) => updateState(),
       textInputAction: _formType == EmailSignInType.SignIn ? TextInputAction.done : TextInputAction.next,
     );
   }
-
   // ignore: non_constant_identifier_names
   TextField EmailField() {
     bool emailValid = submitted && !widget.emailValidator.isValid(_email);
@@ -105,7 +101,6 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onEditingComplete: emailEditComplete,
-      //onChanged: (_email) => updateState(),
     );
   }
   @override
@@ -115,12 +110,19 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        children: builChildren(),
+        children: buildChildren(),
       ),
     );
   }
-  updateState() {setState(() {
-  });}
+  updateState() {setState(() {});}
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
   Future<void> _submit()  async {
     setState(() {
       submitted = true;
@@ -128,21 +130,26 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     });
     try {
       await Future.delayed(Duration( seconds:  3));
+      final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInType.SignIn) {
-        await widget.auth.signInWithEmailAndPassword(_email, _password);
+        await auth.signInWithEmailAndPassword(_email, _password);
         Navigator.of(context).pop();
       }
       else {
         if(checkConfirmPassWord()) {
-          await widget.auth.createUserWithEmailAndPassword(_email, _password);
+          await auth.createUserWithEmailAndPassword(_email, _password);
           Navigator.of(context).pop();
         }
       }
 
     }
-    catch (e)
+    on FirebaseAuthException catch (e)
     {
-      print('some thing wrong');
+      showExceptionAlertDialog(
+        context,
+        title: 'Sign in failed',
+        exception: e,
+      );
     }
     finally
         {
