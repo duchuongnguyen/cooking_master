@@ -9,7 +9,7 @@ AppBar buildAppBar(BuildContext context,
     elevation: 0,
     title: Text(
       title,
-      style: GoogleFonts.merriweather(color: blue1, fontSize: 27),
+      style: GoogleFonts.roboto(color: Colors.black, fontSize: 18),
     ),
     leading: leading,
     actions: actions,
