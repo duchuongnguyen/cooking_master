@@ -1,9 +1,12 @@
+import 'package:cooking_master/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthBase {
   User get currentUser;
+
+ // Future<UserModel> getModelUser();
 
   Stream<User> authStateChanges();
 
@@ -40,6 +43,7 @@ class Auth implements AuthBase {
     final userCredential = await _firebaseAuth.signInWithCredential(
       EmailAuthProvider.credential(email: email, password: password),
     );
+
     return userCredential.user;
   }
 
@@ -117,4 +121,13 @@ class Auth implements AuthBase {
     await facebookLogin.logOut();
     await _firebaseAuth.signOut();
   }
+
+  // @override
+  // Future<UserModel> getModelUser () async {
+  //   // TODO: implement getModelUser
+  //   var firebaseUser =  _firebaseAuth.currentUser;
+  //   return UserModel(firebaseUser?.uid,
+  //       userName: firebaseUser?.displayName);
+  //   throw UnimplementedError();
+  // }
 }

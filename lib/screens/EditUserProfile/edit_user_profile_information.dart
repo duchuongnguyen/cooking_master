@@ -1,8 +1,13 @@
+
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/services/firebase_userprofile.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
+import 'package:cooking_master/widgets/show_alert_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 var editor;
 
@@ -13,7 +18,7 @@ var editTypes = [
     "firstUpperCase": "Ảnh đại diện"
   },
   {
-    "type": "username",
+    "type": "name",
     "lowerCase": "tên hiển thị",
     "firstUpperCase": "Tên hiển thị",
   },
@@ -22,13 +27,29 @@ var editTypes = [
 ];
 
 class EditUserProfileInformation extends StatelessWidget {
+   EditUserProfileInformation({Key key, this.type, this.user})
+      : super(key: key);
   final type;
   final UserModel user;
-
-  const EditUserProfileInformation({Key key, this.type, this.user})
-      : super(key: key);
+  final usernameController = TextEditingController();
+  Future<void> _confirmUpdate(BuildContext context) async {
+    final userProfile = Provider.of<UserProfile>(context, listen: false);
+    final didRequestSignOut = await showAlertDialog(
+      context,
+      title: 'Save change',
+      content: 'Are you sure that you want to save change?',
+      cancelActionText: 'Cancel',
+      defaultActionText: 'Save',
+    );
+    if (didRequestSignOut == true) {
+     await userProfile.updateUser(user.userId, type, usernameController.text );
+     Navigator.pop(context,true);
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    // ignore: non_constant_identifier_names
+
     for (var i = 0; i < editTypes.length; i++) {
       if (editTypes[i]["type"] == type) {
         editor = editTypes[i];
@@ -45,13 +66,14 @@ class EditUserProfileInformation extends StatelessWidget {
                 Icons.done,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () => _confirmUpdate(context),
             ),
           ], leading: CustomBackButton(
         tapEvent: () {
           Navigator.pop(context);
         },
-      )),
+      )
+      ),
       body: Container(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -64,19 +86,23 @@ class EditUserProfileInformation extends StatelessWidget {
                 Hero(
                   tag: "avatar",
                   child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        image:
-                            DecorationImage(image: AssetImage(user.userImage))),
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        // border: Border.all(),
+                      ),
+                      child: CircleAvatar(
+                        radius: CupertinoThumbPainter.radius,
+                        backgroundImage: NetworkImage(user.userImage),
+                      )
                   ),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: ()  {},
                   child: Hero(
                     tag: "username",
                     child: Text(
@@ -92,6 +118,7 @@ class EditUserProfileInformation extends StatelessWidget {
             ),
             Divider(thickness: 1.5),
             TextField(
+              controller: usernameController,
               decoration: InputDecoration(
                 hintText: editor["firstUpperCase"] + ' của bạn',
                 counterText: "0/101",

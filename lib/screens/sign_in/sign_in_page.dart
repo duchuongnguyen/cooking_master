@@ -2,6 +2,7 @@ import 'package:cooking_master/screens/sign_in/sign_in_button.dart';
 import 'package:cooking_master/screens/sign_in/sign_in_manager.dart';
 import 'package:cooking_master/screens/sign_in/social_sign_in_button.dart';
 import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/firebase_userprofile.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,22 +20,6 @@ class _SignInPageState extends State<SignInPage> {
  // final SignInManager manager;
   //final bool isLoading;
   static const Key emailPasswordKey = Key('email-password');
-
-  // static Widget create(BuildContext context) {
-  //   final auth = Provider.of<AuthBase>(context, listen: false);
-  //   return ChangeNotifierProvider<ValueNotifier<bool>>(
-  //     create: (_) => ValueNotifier<bool>(false),
-  //     child: Consumer<ValueNotifier<bool>>(
-  //       builder: (_, isLoading, __) => Provider<SignInManager>(
-  //         create: (_) => SignInManager(auth: auth, isLoading: isLoading),
-  //         child: Consumer<SignInManager>(
-  //          // builder: (_, manager, __) =>
-  //          //     SignInPage(manager: manager, isLoading: isLoading.value),
-  //        // ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   void _showSignInError(BuildContext context, Exception exception) {
     if (exception is FirebaseException &&
@@ -63,8 +48,9 @@ class _SignInPageState extends State<SignInPage> {
     try {
       //await manager.signInWithGoogle();
       final auth = Provider.of<AuthBase>(context, listen: false);
-     await auth.signInWithGoogle();
-
+      final userProfile = Provider.of<UserProfile>(context, listen: false);
+      var user = await auth.signInWithGoogle();
+      userProfile.addUser(user.uid);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
@@ -72,10 +58,10 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-     // await manager.signInWithFacebook();
       final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithFacebook();
-
+      final userProfile = Provider.of<UserProfile>(context, listen: false);
+      var user = await auth.signInWithFacebook();
+      userProfile.addUser(user.uid);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
