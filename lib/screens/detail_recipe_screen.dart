@@ -40,16 +40,13 @@ class DetailSilverDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  // TODO: implement maxExtent
   double get maxExtent => throw UnimplementedError();
 
   @override
-  // TODO: implement minExtent
   double get minExtent => throw UnimplementedError();
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    // TODO: implement shouldRebuild
     throw UnimplementedError();
   }
 

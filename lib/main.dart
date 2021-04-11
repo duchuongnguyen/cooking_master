@@ -1,8 +1,6 @@
 import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/screens/landing_page.dart';
-import 'package:cooking_master/screens/splash_screen.dart';
 import 'package:cooking_master/services/auth.dart';
-import 'package:cooking_master/screens/detail_recipe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,7 +28,7 @@ class CookingMasterApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: LandingPage(),
       ),
     );
   }
