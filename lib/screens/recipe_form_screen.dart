@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/services/recipe.dart';
+import 'package:cooking_master/widgets/CustomBackButton.dart';
+import 'package:cooking_master/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,30 +49,82 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
 
   Widget _showImage() {
     if (_imageFile == null && _imageUrl == null) {
-      return Text('Image placeholder');
+      return GestureDetector(
+        onTap: () {
+          _getLocalImage();
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              Image.asset('assets/images/food-placeholder.png'),
+              Positioned.fill(
+                bottom: 15,
+                child: _imageFile == null && _imageUrl == null
+                    ? Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt_outlined),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("Upload recipe photo")
+                          ],
+                        ),
+                      )
+                    : SizedBox(height: 0),
+              ),
+            ],
+          ),
+        ),
+      );
     } else if (_imageFile != null) {
       print('showing image from local file');
       return Stack(
-        alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
           Image.file(
             File(_imageFile.path),
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
             height: 250,
           ),
-          FlatButton(
-            padding: EdgeInsets.all(16),
-            color: Colors.black54,
-            onPressed: () => _getLocalImage(),
-            child: Text(
-              'Change Image',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
+          Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.white)),
+                width: 100,
+                height: 40,
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _getLocalImage(),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Icon(Icons.camera_alt_outlined,
+                                color: Colors.white),
+                            Text(
+                              "Edit",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    VerticalDivider(
+                      thickness: 0.4,
+                      color: Colors.white,
+                    ),
+                    Icon(Icons.delete_outlined, color: Colors.white),
+                  ],
+                ),
+              )),
         ],
       );
     } else if (_imageUrl != null) {
@@ -115,48 +170,71 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   }
 
   Widget _buildNameField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Name'),
-      initialValue: _currentRecipe.name,
-      keyboardType: TextInputType.text,
-      style: TextStyle(fontSize: 20),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'Name is required';
-        }
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: 'Tiêu đề: Món trứng cút lộn xào me',
+          fillColor: Colors.orangeAccent,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(
+              const Radius.circular(15.0),
+            ),
+          ),
+        ),
+        initialValue: _currentRecipe.name,
+        keyboardType: TextInputType.text,
+        style: TextStyle(fontSize: 20),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Name is required';
+          }
 
-        if (value.length < 3 || value.length > 20) {
-          return 'Name must be more than 3 and less than 20';
-        }
+          if (value.length < 3 || value.length > 20) {
+            return 'Name must be more than 3 and less than 20';
+          }
 
-        return null;
-      },
-      onSaved: (String value) {
-        _currentRecipe.name = value;
-      },
+          return null;
+        },
+        onSaved: (String value) {
+          _currentRecipe.name = value;
+        },
+      ),
     );
   }
 
   Widget _buildCategoryField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Category'),
-      initialValue: _currentRecipe.category,
-      keyboardType: TextInputType.text,
-      style: TextStyle(fontSize: 20),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'Category is required';
-        }
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Loại công thức: Điểm tâm,...',
+          fillColor: Colors.orangeAccent,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(
+              const Radius.circular(10.0),
+            ),
+          ),
+        ),
+        initialValue: _currentRecipe.category,
+        keyboardType: TextInputType.text,
+        style: TextStyle(fontSize: 20),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Category is required';
+          }
+          if (value.length < 3 || value.length > 20) {
+            return 'Category must be more than 3 and less than 20';
+          }
 
-        if (value.length < 3 || value.length > 20) {
-          return 'Category must be more than 3 and less than 20';
-        }
-
-        return null;
-      },
-      onSaved: (String value) {
-        _currentRecipe.category = value;
-      },
+          return null;
+        },
+        onSaved: (String value) {
+          _currentRecipe.category = value;
+        },
+      ),
     );
   }
 
@@ -202,8 +280,22 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Recipe'),
+      appBar: buildAppBar(
+        context,
+        title: '',
+        leading: CustomBackButton(tapEvent: () {
+          Navigator.pop(context);
+        }),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.save_alt_outlined,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                _saveRecipe(context);
+              })
+        ],
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -212,22 +304,22 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             children: <Widget>[
               _showImage(),
               SizedBox(height: 16),
-              Text(
-                widget.isUpdating ? 'Edit recipe' : 'Create recipe',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30),
-              ),
-              _imageFile == null && _imageUrl == null
-                  ? ButtonTheme(
-                      child: RaisedButton(
-                        onPressed: () => _getLocalImage(),
-                        child: Text(
-                          'Add image',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    )
-                  : SizedBox(height: 0),
+              // Text(
+              //   widget.isUpdating ? 'Edit recipe' :  'Create recipe',
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(fontSize: 30),
+              // ),
+              // _imageFile == null && _imageUrl == null
+              //     ? ButtonTheme(
+              //         child: RaisedButton(
+              //           onPressed: () => _getLocalImage(),
+              //           child: Text(
+              //             'Add image',
+              //             style: TextStyle(color: Colors.white),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(height: 0),
               _buildNameField(),
               _buildCategoryField(),
               // _buildYieldsField(),
@@ -285,6 +377,15 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         child: Icon(Icons.save),
         foregroundColor: Colors.white,
       ),
+    );
+  }
+}
+
+class addRecipe extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(children: []),
     );
   }
 }
