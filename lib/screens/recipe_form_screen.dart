@@ -47,7 +47,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     _imageUrl = _currentRecipe.image;
   }
 
-  Widget _showImage() {
+  _showImage() {
     if (_imageFile == null && _imageUrl == null) {
       return GestureDetector(
         onTap: () {
@@ -137,9 +137,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             fit: BoxFit.cover,
             height: 250,
           ),
-          FlatButton(
-            padding: EdgeInsets.all(16),
-            color: Colors.black54,
+          TextButton(
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.black38)),
             onPressed: () => _getLocalImage(),
             child: Text(
               'Change Image',
@@ -330,7 +329,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 children: <Widget>[
                   _buildSubIngredientField(),
                   ButtonTheme(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       child: Text(
                         'Add',
                         style: TextStyle(color: Colors.white),
