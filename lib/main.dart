@@ -1,6 +1,6 @@
 import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/screens/landing_page.dart';
-import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/services/firebase_storage.dart';
 import 'package:cooking_master/services/firebase_userprofile.dart';
 import 'package:flutter/material.dart';

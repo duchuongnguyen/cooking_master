@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/notifier/recipe_notifier.dart';
-import 'package:cooking_master/services/recipe.dart';
+import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +27,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   List _subIngredients = [];
   Recipe _currentRecipe;
   String _imageUrl;
-  PickedFile _imageFile;
+  File _imageFile;
   TextEditingController subIngredientController = new TextEditingController();
 
   @override
@@ -85,7 +84,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       return Stack(
         children: <Widget>[
           Image.file(
-            File(_imageFile.path),
+            _imageFile,
             fit: BoxFit.fitWidth,
             height: 250,
           ),
@@ -155,15 +154,16 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   }
 
   Future _getLocalImage() async {
-    final imageFile = await ImagePicker.platform.pickImage(
+    // ignore: invalid_use_of_visible_for_testing_member
+    final pickedFile = await ImagePicker.platform.pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
       maxWidth: 400,
     );
 
-    if (imageFile != null) {
+    if (pickedFile != null) {
       setState(() {
-        _imageFile = imageFile;
+        _imageFile = File(pickedFile.path);
       });
     }
   }
@@ -267,7 +267,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     _currentRecipe.ingredients = _subIngredients;
 
     uploadRecipeAndImage(
-        _currentRecipe, widget.isUpdating, File(_imageFile.path));
+        _currentRecipe, widget.isUpdating, _imageFile);
 
     print("name: ${_currentRecipe.name}");
     print("category: ${_currentRecipe.category}");
@@ -380,7 +380,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   }
 }
 
-class addRecipe extends StatelessWidget {
+class AddRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

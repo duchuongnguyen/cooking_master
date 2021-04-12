@@ -1,5 +1,5 @@
 import 'package:cooking_master/screens/sign_in/validators.dart';
-import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/services/firebase_userprofile.dart';
 import 'package:cooking_master/widgets/form_submit_button.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
@@ -36,7 +36,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     return [
       EmailField(),
       SizedBox(height: 8.0),
-      PassField(),
+      _passField(),
       Visibility(
         visible: _formType == EmailSignInType.SignIn ?
         false : true,
@@ -71,7 +71,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     ];
   }
 
-  TextField PassField() {
+  TextField _passField() {
     bool passWordValid = submitted && !widget.passwordValidator.isValid(_password);
     return TextField(
       focusNode: _passwordFocusNode,

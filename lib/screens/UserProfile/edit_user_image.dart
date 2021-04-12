@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/services/firebase_storage.dart';
 import 'package:cooking_master/services/firebase_userprofile.dart';
@@ -92,18 +92,25 @@ class _EditUserImageState extends State<EditUserImage> {
   }
 
   Future<void> getImage() async {
-    var pickedImage =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
-    _image = File(pickedImage.path);
-    setState(() {
-      print('Image Path $_image');
-    });
+    // ignore: invalid_use_of_visible_for_testing_member
+    final pickedFile = await ImagePicker.platform.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+      maxWidth: 400,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 
   Future<void> _confirmUpdate(BuildContext context) async {
     final userStorage = Provider.of<StorageRepo>(context, listen: false);
     final userProfile = Provider.of<UserProfile>(context, listen: false);
     final user = Provider.of<AuthBase>(context, listen: false);
+
     final didRequestSignOut = await showAlertDialog(
       context,
       title: 'Save change',
@@ -111,9 +118,13 @@ class _EditUserImageState extends State<EditUserImage> {
       cancelActionText: 'Cancel',
       defaultActionText: 'Save',
     );
+
     if (didRequestSignOut == true) {
       var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
-      await userProfile.updateUser(user.currentUser.uid, 'imageurl', imageurl);
+      if (imageurl != null)
+        await userProfile.updateUser(
+            user.currentUser.uid, 'imageurl', imageurl);
+
       Navigator.pop(context, true);
     }
   }

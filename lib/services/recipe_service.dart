@@ -49,7 +49,7 @@ uploadRecipeAndImage(Recipe recipe, bool isUpdating, File localFile) async {
 
 _uploadRecipe(Recipe recipe, bool isUpdating, {String imageUrl}) async {
   CollectionReference recipeRef =
-      await FirebaseFirestore.instance.collection('Recipes');
+      FirebaseFirestore.instance.collection('Recipes');
 
   if (imageUrl != null) {
     recipe.image = imageUrl;

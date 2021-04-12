@@ -1,6 +1,6 @@
 import 'package:cooking_master/screens/sign_in/sign_in_button.dart';
 import 'package:cooking_master/screens/sign_in/social_sign_in_button.dart';
-import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/services/firebase_userprofile.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';

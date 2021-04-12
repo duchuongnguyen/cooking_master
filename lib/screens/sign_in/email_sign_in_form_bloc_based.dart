@@ -1,4 +1,4 @@
-import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/widgets/form_submit_button.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';

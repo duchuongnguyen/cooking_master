@@ -29,10 +29,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^1.0.3
   firebase_core: ^1.0.3
+  firebase_database: ^6.1.2
   firebase_storage: ^8.0.3
-  flutter_login_facebook: ^1.0.1
+  flutter_facebook_login: ^3.0.0
   flutter_svg: ^0.21.0+1
   font_awesome_flutter: ^9.0.0
+  get_it: ^6.0.0
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
   image_picker: ^0.7.4
@@ -40,7 +42,6 @@ dependencies:
   path: ^1.8.0
   provider: ^5.0.0
   rxdart: ^0.26.0
-  firebase_database: ^6.1.2
   uuid: ^3.0.4
 dev_dependencies:
   flutter_test:
