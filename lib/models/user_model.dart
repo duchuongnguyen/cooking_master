@@ -4,9 +4,9 @@ class UserModel {
   String userAddress;
   String userBio;
   String userImage;
-  int userFollowed;
-  int userFollowing;
-  UserModel(
+  String userFollowed;
+  String userFollowing;
+  UserModel({
     this.userId,
     this.userName,
     this.userAddress,
@@ -14,38 +14,10 @@ class UserModel {
     this.userImage,
     this.userFollowed,
     this.userFollowing,
+  }
   );
+  factory UserModel.fromMap(Map data) {
+    return UserModel(userId: data['uid'], userName: data['name'],userAddress: data['address'], userBio: data['bio'],userFollowed: data['followed'],userFollowing: data['following'],userImage: data['imageurl']);
+  }
 }
 
-List<UserModel> users = userData
-    .map((user) => UserModel(
-          user['userId'],
-          user['userName'],
-          user['userAddress'],
-          user['userBio'],
-          user['userImage'],
-          user['userFollowed'],
-          user['userFollowing'],
-        ))
-    .toList();
-var userData = [
-  {
-    'userId': "001",
-    'userName': "Nguyễn Đức Hướng",
-    'userAddress': "Thị trấn Chư Sê, huyện Chư Sê, Gia Lai",
-    'userBio':
-        "Lấy đam mê làm ánh mặt trời để tâm hồn này không mất phương hướng",
-    'userImage': "assets/images/user.jpg",
-    'userFollowed': 20,
-    'userFollowing': 21,
-  },
-  {
-    'userId': "002",
-    'userName': "Bùi Minh Huy",
-    'userAddress': "Huyện Tiên Phước, Quảng Nam",
-    'userBio': "Aydo whatsssup",
-    'userImage': "assets/images/user.jpg",
-    'userFollowed': 69,
-    'userFollowing': 96,
-  }
-];

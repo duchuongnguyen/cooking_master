@@ -1,5 +1,6 @@
 import 'package:cooking_master/screens/sign_in/validators.dart';
 import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/firebase_userprofile.dart';
 import 'package:cooking_master/widgets/form_submit_button.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -137,7 +138,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       else {
         if(checkConfirmPassWord()) {
-          await auth.createUserWithEmailAndPassword(_email, _password);
+          final userProfile = Provider.of<UserProfile>(context, listen: false);
+          var user =  await auth.createUserWithEmailAndPassword(_email, _password);
+          userProfile.addUser(user.uid);
           Navigator.of(context).pop();
         }
       }
