@@ -3,11 +3,13 @@ import 'package:cooking_master/services/auth.dart';
 import 'package:flutter/foundation.dart';
 import 'email_sign_in_model.dart';
 import 'package:rxdart/rxdart.dart';
+
 class EmailSignInBloc {
   EmailSignInBloc({@required this.auth});
   final AuthBase auth;
 
-  final _modelSubject = BehaviorSubject<EmailSignInModel>.seeded(EmailSignInModel());
+  final _modelSubject =
+      BehaviorSubject<EmailSignInModel>.seeded(EmailSignInModel());
   Stream<EmailSignInModel> get modelStream => _modelSubject.stream;
   EmailSignInModel get _model => _modelSubject.value;
 
@@ -46,7 +48,7 @@ class EmailSignInBloc {
   void updateEmail(String email) => updateWith(email: email);
 
   void updatePassword(String password) => updateWith(password: password);
-  
+
   void updateWith({
     String email,
     String password,

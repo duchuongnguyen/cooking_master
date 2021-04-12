@@ -1,6 +1,10 @@
+import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
+import 'package:cooking_master/screens/edit_user_profile_screen.dart';
 import 'package:cooking_master/services/auth.dart';
 import 'package:cooking_master/widgets/appbar.dart';
+import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
@@ -12,6 +16,7 @@ class UserProfileScreen extends StatefulWidget {
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
+
 Future<void> _signOut(BuildContext context) async {
   try {
     //await manager.signInWithGoogle();
@@ -22,6 +27,7 @@ Future<void> _signOut(BuildContext context) async {
     // _showSignInError(context, e);
   }
 }
+
 Future<void> _confirmSignOut(BuildContext context) async {
   final didRequestSignOut = await showAlertDialog(
     context,
@@ -34,7 +40,10 @@ Future<void> _confirmSignOut(BuildContext context) async {
     _signOut(context);
   }
 }
+
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  UserModel user = users[0];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +54,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Icons.edit_outlined,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditUserProfileScreen(
+                          user: user,
+                        )));
+          },
         ),
         IconButton(
           icon: Icon(
@@ -59,7 +75,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Icons.logout,
             color: Colors.black,
           ),
-          onPressed:() => _confirmSignOut(context),
+          onPressed: () => _confirmSignOut(context),
         ),
       ], leading: CustomBackButton(
         tapEvent: () {
@@ -68,128 +84,154 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       )),
       body: Container(
         padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Center(
-              child: Hero(
-                tag: "avatar",
+        child: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              Center(
+                child: Hero(
+                  tag: "avatar",
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        image:
+                            DecorationImage(image: AssetImage(user.userImage))),
+                  ),
+                ),
+              ),
+              Center(
                 child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(50),
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/user.jpg"))),
-                ),
-              ),
-            ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Text(
-                  "Nguyễn Đức Hướng",
-                  style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 21,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-            ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 15),
-                child: Text(
-                  "Thị trấn Chư Sê, huyện Chư Sê, Gia Lai",
-                  style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 15),
-                child: IntrinsicHeight(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              "Người theo dõi",
-                              style: GoogleFonts.roboto(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.5,
-                                  height: 1.5),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "20",
-                              style: GoogleFonts.roboto(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        VerticalDivider(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Hero(
+                    tag: "username",
+                    child: Text(
+                      user.userName,
+                      style: GoogleFonts.roboto(
                           color: Colors.black,
-                          thickness:0.5,
-                          width: 20,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "Đang theo dõi",
-                              style: GoogleFonts.roboto(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.5,
-                                  height: 1.5),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "20",
-                              style: GoogleFonts.roboto(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ]),
+                          fontSize: 21,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 25),
-                padding: EdgeInsets.only(left: 25, right: 25),
-                child: Text(
-                  "\"Lấy đam mê làm ánh mặt trời để tâm hồn này không mất phương hướng\"",
-                  style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 0.5,
-                      height: 1.5),
-                  textAlign: TextAlign.center,
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: Hero(
+                    tag: "useraddress",
+                    child: Text(
+                      user.userAddress,
+                      style: GoogleFonts.roboto(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: CategoryItem(),
-            ),
-          ],
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: IntrinsicHeight(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "Người theo dõi",
+                                style: GoogleFonts.roboto(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.5,
+                                    height: 1.5),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                user.userFollowed.toString(),
+                                style: GoogleFonts.roboto(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          VerticalDivider(
+                            color: Colors.black,
+                            thickness: 0.5,
+                            width: 20,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                "Đang theo dõi",
+                                style: GoogleFonts.roboto(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.5,
+                                    height: 1.5),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                user.userFollowing.toString(),
+                                style: GoogleFonts.roboto(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ]),
+                  ),
+                ),
+              ),
+              //Bio Text
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 25),
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  child: Hero(
+                    tag: "userbio",
+                    child: Text(
+                      user.userBio,
+                      style: GoogleFonts.roboto(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.5,
+                          height: 1.5),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: CategoryItem(),
+              ),
+              //List recipes
+              Container(
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: cards.length,
+                  itemBuilder: (context, index) {
+                    return RecipeDetailCard(
+                      recipe: cards[index],
+                      size: MediaQuery.of(context).size,
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

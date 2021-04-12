@@ -1,7 +1,5 @@
 import 'package:cooking_master/screens/sign_in/email_sign_in_form.dart';
-import 'package:cooking_master/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'email_sign_in_form_change_notifier.dart';
 
 class EmailSignInPage extends StatelessWidget {
 
