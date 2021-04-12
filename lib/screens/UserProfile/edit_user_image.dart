@@ -92,7 +92,9 @@ class _EditUserImageState extends State<EditUserImage> {
   }
 
   Future<void> getImage() async {
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var pickedImage =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    _image = File(pickedImage.path);
     setState(() {
       print('Image Path $_image');
     });
@@ -110,7 +112,7 @@ class _EditUserImageState extends State<EditUserImage> {
       defaultActionText: 'Save',
     );
     if (didRequestSignOut == true) {
-      var imageurl = await userStorage.uploadFile(_image,user.currentUser.uid );
+      var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
       await userProfile.updateUser(user.currentUser.uid, 'imageurl', imageurl);
       Navigator.pop(context, true);
     }
