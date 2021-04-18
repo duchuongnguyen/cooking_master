@@ -5,7 +5,6 @@ import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
-import 'package:cooking_master/widgets/dismissible_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -27,11 +26,11 @@ class RecipeFormScreen extends StatefulWidget {
 
 class _RecipeFormScreenState extends State<RecipeFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List _subIngredients = [];
-  List _directions = [];
   Recipe _currentRecipe;
   String _imageUrl;
   File _imageFile;
+  var ingredientWidgets = <Widget>[];
+  var directionWidgets = <Widget>[];
 
   @override
   void initState() {
@@ -45,7 +44,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       _currentRecipe = Recipe();
     }
 
-    _subIngredients.addAll(_currentRecipe.ingredients);
+    // _ingredients.addAll(_currentRecipe.ingredients);
+    // _directions.addAll(_currentRecipe.directions);
     _imageUrl = _currentRecipe.image;
   }
 
@@ -297,6 +297,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             return 'Yields is required';
           }
 
+          try {
+            int.parse(value);
+          } on FormatException {
+            return 'Nhập số thui nha';
+          }
+
           return null;
         },
         onSaved: (String value) {
@@ -330,6 +336,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         validator: (String value) {
           if (value.isEmpty) {
             return 'Preptime is required';
+          }
+
+          try {
+            int.parse(value);
+          } on FormatException {
+            return 'Nhập số thui nha';
           }
 
           return null;
@@ -367,6 +379,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             return 'Cooktime is required';
           }
 
+          try {
+            int.parse(value);
+          } on FormatException {
+            return 'Nhập số thui nha';
+          }
+
           return null;
         },
         onSaved: (String value) {
@@ -376,7 +394,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     );
   }
 
-  _buildSubIngredientField(String ingredient) {
+  Widget _buildIngredientField() {
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
@@ -418,7 +436,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     );
   }
 
-  _buildMethodField() {
+  _buildDirectionField() {
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
@@ -435,7 +453,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       borderRadius: BorderRadius.circular(13),
                       color: Colors.black),
                   child: Text(
-                    '1',
+                    (directionWidgets.length + 1).toString(),
                     style: TextStyle(color: Colors.white, fontSize: 13),
                   )),
               IconButton(icon: Icon(Icons.menu), onPressed: () {}),
@@ -521,7 +539,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     }
 
     _formKey.currentState.save();
-    _currentRecipe.ingredients = _subIngredients;
+    // _currentRecipe.ingredients = _ingredients;
+    // _currentRecipe.directionImage = _directions;
 
     uploadRecipeAndImage(_currentRecipe, widget.isUpdating, _imageFile);
 
@@ -539,12 +558,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void dismissIngredientItem(
-        BuildContext context, int index, DismissDirection direction) {
-      setState(() {
-        _subIngredients.removeAt(index);
-      });
-    }
+    // void dismissIngredientItem(
+    //     BuildContext context, int index, DismissDirection direction) {
+    //   setState(() {
+    //     _ingredients.removeAt(index);
+    //   });
+    // }
 
     // void dismissMethodStep(
     //     BuildContext context, int index, DismissDirection direction) {
@@ -605,21 +624,15 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 child: Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
-                    itemCount: _subIngredients.length,
+                    itemCount: ingredientWidgets.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final ingredient = _subIngredients[index];
-                      return DismissibleWidget(
-                        item: ingredient,
-                        child: _buildSubIngredientField(ingredient),
-                        onDismissed: (direction) =>
-                            dismissIngredientItem(context, index, direction),
-                      );
+                      return ingredientWidgets[index];
                     },
                   ),
                 ),
               ),
-              _buildSubIngredientField(""),
               TextButton(
                 child: Text(
                   '+ Thêm nguyên liệu',
@@ -630,8 +643,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                //onPressed: () =>
-                //    _addSubIngredient(subIngredientController.text),
+                onPressed: () => setState(
+                    () => ingredientWidgets.add(_buildIngredientField())),
               ),
               Divider(thickness: 5, color: Colors.orange[80]),
               Container(
@@ -648,28 +661,27 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 ),
               ),
               SizedBox(height: 16),
-              // (_methods).length > 0
-              //     ? SizedBox(
-              //         width: MediaQuery.of(context).size.width,
-              //         child: Expanded(
-              //           child: ListView.builder(
-              //             shrinkWrap: true,
-              //             scrollDirection: Axis.vertical,
-              //             itemCount: _methods.length,
-              //             itemBuilder: (BuildContext context, int index) {
-              //               final step = _methods[index];
-              //               return DismissibleWidget(
-              //                 item: step,
-              //                 child: _buildMethodField(step),
-              //                 onDismissed: (direction) =>
-              //                     dismissMethodStep(context, index, direction),
-              //               );
-              //             },
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(height: 0),
-              _buildMethodField(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: directionWidgets.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return directionWidgets[index];
+                      // final step = _methods[index];
+                      // return DismissibleWidget(
+                      //   item: step,
+                      //   child: _buildMethodField(step),
+                      //   onDismissed: (direction) =>
+                      //       dismissMethodStep(context, index, direction),
+                      // );
+                    },
+                  ),
+                ),
+              ),
               TextButton(
                 child: Text(
                   '+ Thêm bước',
@@ -680,7 +692,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                //onPressed: () => _addDirections(directionController.text),
+                onPressed: () => setState(
+                    () => directionWidgets.add(_buildDirectionField())),
               ),
               SizedBox(height: 20),
             ],
