@@ -32,8 +32,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   Recipe _currentRecipe;
   String _imageUrl;
   File _imageFile;
-  TextEditingController subIngredientController = new TextEditingController();
-  TextEditingController directionController = new TextEditingController();
 
   @override
   void initState() {
@@ -387,10 +385,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           IconButton(icon: Icon(Icons.menu), onPressed: () {}),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
-            child: TextField(
-              controller: ingredient == ""
-                  ? subIngredientController
-                  : TextEditingController(text: ingredient),
+            child: TextFormField(
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 hintText: '200g sữa chua',
@@ -404,6 +399,16 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 ),
               ),
               style: TextStyle(fontSize: 15),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'ingre is required';
+                }
+
+                return null;
+              },
+              onSaved: (String value) {
+                _currentRecipe.ingredients.add(value);
+              },
             ),
           ),
           SizedBox(width: 20),
@@ -411,15 +416,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         ],
       ),
     );
-  }
-
-  _addSubIngredient(String text) {
-    if (text.isNotEmpty) {
-      setState(() {
-        _subIngredients.add(text);
-      });
-      subIngredientController.clear();
-    }
   }
 
   _buildMethodField() {
@@ -450,8 +446,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: directionController,
+                child: TextFormField(
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     hintText: 'Xắt lát hành phi cho vừa ăn',
@@ -466,6 +461,16 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     // enabledBorder: InputBorder.none,
                   ),
                   style: TextStyle(fontSize: 15),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Direct is required';
+                    }
+
+                    return null;
+                  },
+                  onSaved: (String value) {
+                    _currentRecipe.directions.add(value);
+                  },
                 ),
               ),
               Row(
@@ -508,15 +513,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         ],
       ),
     );
-  }
-
-  _addDirections(String text) {
-    if (text.isNotEmpty) {
-      setState(() {
-        _directions.add(text);
-      });
-      directionController.clear();
-    }
   }
 
   _saveRecipe(context) {
@@ -604,27 +600,25 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 ),
               ),
               SizedBox(height: 16),
-              (_subIngredients.length > 0
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _subIngredients.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final ingredient = _subIngredients[index];
-                            return DismissibleWidget(
-                              item: ingredient,
-                              child: _buildSubIngredientField(ingredient),
-                              onDismissed: (direction) => dismissIngredientItem(
-                                  context, index, direction),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  : SizedBox(height: 0)),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: _subIngredients.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final ingredient = _subIngredients[index];
+                      return DismissibleWidget(
+                        item: ingredient,
+                        child: _buildSubIngredientField(ingredient),
+                        onDismissed: (direction) =>
+                            dismissIngredientItem(context, index, direction),
+                      );
+                    },
+                  ),
+                ),
+              ),
               _buildSubIngredientField(""),
               TextButton(
                 child: Text(
@@ -636,8 +630,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                onPressed: () =>
-                    _addSubIngredient(subIngredientController.text),
+                //onPressed: () =>
+                //    _addSubIngredient(subIngredientController.text),
               ),
               Divider(thickness: 5, color: Colors.orange[80]),
               Container(
@@ -686,7 +680,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                onPressed: () => _addDirections(directionController.text),
+                //onPressed: () => _addDirections(directionController.text),
               ),
               SizedBox(height: 20),
             ],
