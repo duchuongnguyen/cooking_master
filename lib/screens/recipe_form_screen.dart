@@ -28,12 +28,12 @@ class RecipeFormScreen extends StatefulWidget {
 class _RecipeFormScreenState extends State<RecipeFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List _subIngredients = [];
-  List _methods = [];
+  List _directions = [];
   Recipe _currentRecipe;
   String _imageUrl;
   File _imageFile;
   TextEditingController subIngredientController = new TextEditingController();
-  TextEditingController methodController = new TextEditingController();
+  TextEditingController directionController = new TextEditingController();
 
   @override
   void initState() {
@@ -94,43 +94,43 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             height: 250,
           ),
           Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white)),
-                width: 120,
-                height: 40,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _getLocalImage(),
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Icon(Icons.camera_alt_outlined,
-                                color: Colors.white),
-                            Text(
-                              " Edit",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+            bottom: 10,
+            right: 10,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white)),
+              width: 120,
+              height: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => _getLocalImage(),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Icon(Icons.camera_alt_outlined, color: Colors.white),
+                          Text(
+                            " Edit",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
                       ),
                     ),
-                    VerticalDivider(
-                      thickness: 1,
-                      color: Colors.white,
-                    ),
-                    Icon(Icons.delete_outlined, color: Colors.white),
-                  ],
-                ),
-              )),
+                  ),
+                  VerticalDivider(
+                    thickness: 1,
+                    color: Colors.white,
+                  ),
+                  Icon(Icons.delete_outlined, color: Colors.white),
+                ],
+              ),
+            ),
+          ),
         ],
       );
     } else if (_imageUrl != null) {
@@ -199,14 +199,43 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             return 'Name is required';
           }
 
-          if (value.length < 3 || value.length > 20) {
-            return 'Name must be more than 3 and less than 20';
+          return null;
+        },
+        onSaved: (String value) {
+          _currentRecipe.name = value;
+        },
+      ),
+    );
+  }
+
+  Widget _buildDescriptionField() {
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText:
+              'Mô tả: An easy peasy pasta dish that’s simple, flavorful and incredibly hearty. And all you need is 20 min to whip this up!',
+          fillColor: Colors.orange[50],
+          filled: true,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              const Radius.circular(15.0),
+            ),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        initialValue: _currentRecipe.description,
+        keyboardType: TextInputType.text,
+        style: TextStyle(fontSize: 15),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Description is required';
           }
 
           return null;
         },
         onSaved: (String value) {
-          _currentRecipe.name = value;
+          _currentRecipe.description = value;
         },
       ),
     );
@@ -234,14 +263,116 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           if (value.isEmpty) {
             return 'Category is required';
           }
-          if (value.length < 3 || value.length > 20) {
-            return 'Category must be more than 3 and less than 20';
-          }
 
           return null;
         },
         onSaved: (String value) {
           _currentRecipe.category = value;
+        },
+      ),
+    );
+  }
+
+  Widget _buildYieldsField() {
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: 'Khẩu phần: 3',
+          fillColor: Colors.orange[50],
+          filled: true,
+          suffix: Text('người'),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              const Radius.circular(15.0),
+            ),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        initialValue: _currentRecipe.yields == null
+            ? ''
+            : _currentRecipe.yields.toString(),
+        keyboardType: TextInputType.number,
+        style: TextStyle(fontSize: 15),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Yields is required';
+          }
+
+          return null;
+        },
+        onSaved: (String value) {
+          _currentRecipe.yields = int.parse(value);
+        },
+      ),
+    );
+  }
+
+  Widget _buildPrepTimeField() {
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: 'Thời gian chuẩn bị: 3',
+          fillColor: Colors.orange[50],
+          filled: true,
+          suffix: Text('mins'),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              const Radius.circular(15.0),
+            ),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        initialValue: _currentRecipe.prepTime == null
+            ? ''
+            : _currentRecipe.prepTime.toString(),
+        keyboardType: TextInputType.number,
+        style: TextStyle(fontSize: 15),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Preptime is required';
+          }
+
+          return null;
+        },
+        onSaved: (String value) {
+          _currentRecipe.prepTime = int.parse(value);
+        },
+      ),
+    );
+  }
+
+  Widget _buildCookTimeField() {
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: 'Thời gian nấu: 3',
+          fillColor: Colors.orange[50],
+          filled: true,
+          suffix: Text('mins'),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              const Radius.circular(15.0),
+            ),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        initialValue: _currentRecipe.cookTime == null
+            ? ''
+            : _currentRecipe.cookTime.toString(),
+        keyboardType: TextInputType.number,
+        style: TextStyle(fontSize: 15),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Cooktime is required';
+          }
+
+          return null;
+        },
+        onSaved: (String value) {
+          _currentRecipe.cookTime = int.parse(value);
         },
       ),
     );
@@ -291,7 +422,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     }
   }
 
-  _buildMethodField(StepMethod step) {
+  _buildMethodField() {
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
@@ -320,9 +451,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: TextField(
-                  controller: step.description == ""
-                      ? methodController
-                      : TextEditingController(text: step.description),
+                  controller: directionController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     hintText: 'Xắt lát hành phi cho vừa ăn',
@@ -341,22 +470,22 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               ),
               Row(
                 children: [
-                  step.description == ""
-                      ? SizedBox(
-                          width: 0,
-                          height: 0,
-                        )
-                      : Container(
-                          width: 100,
-                          height: 80,
-                          //Todo: Update method image after load here
-                          decoration: BoxDecoration(),
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            color: Colors.white,
-                          ),
-                        ),
+                  // step.description == ""
+                  //     ? SizedBox(
+                  //         width: 0,
+                  //         height: 0,
+                  //       )
+                  //     : Container(
+                  //         width: 100,
+                  //         height: 80,
+                  //         //Todo: Update method image after load here
+                  //         decoration: BoxDecoration(),
+                  //         alignment: Alignment.center,
+                  //         child: Icon(
+                  //           Icons.camera_alt_outlined,
+                  //           color: Colors.white,
+                  //         ),
+                  //       ),
                   GestureDetector(
                     child: Container(
                       width: 100,
@@ -381,12 +510,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     );
   }
 
-  _addStep(StepMethod step) {
-    if (step.description.isNotEmpty) {
+  _addDirections(String text) {
+    if (text.isNotEmpty) {
       setState(() {
-        _methods.add(step);
+        _directions.add(text);
       });
-      methodController.clear();
+      directionController.clear();
     }
   }
 
@@ -401,8 +530,13 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     uploadRecipeAndImage(_currentRecipe, widget.isUpdating, _imageFile);
 
     print("name: ${_currentRecipe.name}");
+    print("description: ${_currentRecipe.description}");
     print("category: ${_currentRecipe.category}");
-    print("ingredients: ${_currentRecipe.ingredients.toString()}");
+    print("yields: ${_currentRecipe.yields}");
+    print("prepTime: ${_currentRecipe.prepTime}");
+    print("cookTime: ${_currentRecipe.cookTime}");
+    print("ingredients: ${_currentRecipe.ingredients}");
+    print("directions: ${_currentRecipe.directions}");
     print("imageFile: ${_imageFile.toString()}");
     print("imageUrl: $_imageUrl");
   }
@@ -416,12 +550,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       });
     }
 
-    void dismissMethodStep(
-        BuildContext context, int index, DismissDirection direction) {
-      setState(() {
-        _methods.removeAt(index);
-      });
-    }
+    // void dismissMethodStep(
+    //     BuildContext context, int index, DismissDirection direction) {
+    //   setState(() {
+    //     _methods.removeAt(index);
+    //   });
+    // }
 
     return Scaffold(
       appBar: buildAppBar(
@@ -449,27 +583,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             children: <Widget>[
               _showImage(),
               SizedBox(height: 16),
-              // Text(
-              //   widget.isUpdating ? 'Edit recipe' :  'Create recipe',
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(fontSize: 30),
-              // ),
-              // _imageFile == null && _imageUrl == null
-              //     ? ButtonTheme(
-              //         child: RaisedButton(
-              //           onPressed: () => _getLocalImage(),
-              //           child: Text(
-              //             'Add image',
-              //             style: TextStyle(color: Colors.white),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(height: 0),
               _buildNameField(),
+              _buildDescriptionField(),
               _buildCategoryField(),
-              // _buildYieldsField(),
-              // _buildPreptimeField(),
-              // _buildCooktimeField(),
+              _buildYieldsField(),
+              _buildPrepTimeField(),
+              _buildCookTimeField(),
               Divider(thickness: 5, color: Colors.orange[80]),
               Container(
                 padding: EdgeInsets.only(left: 20),
@@ -484,7 +603,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       height: 1.5),
                 ),
               ),
-
               SizedBox(height: 16),
               (_subIngredients.length > 0
                   ? SizedBox(
@@ -522,7 +640,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     _addSubIngredient(subIngredientController.text),
               ),
               Divider(thickness: 5, color: Colors.orange[80]),
-
               Container(
                 padding: EdgeInsets.only(left: 20),
                 alignment: Alignment.topLeft,
@@ -537,28 +654,28 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 ),
               ),
               SizedBox(height: 16),
-              (_methods).length > 0
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _methods.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final step = _methods[index];
-                            return DismissibleWidget(
-                              item: step,
-                              child: _buildMethodField(step),
-                              onDismissed: (direction) =>
-                                  dismissMethodStep(context, index, direction),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  : SizedBox(height: 0),
-              _buildMethodField(StepMethod('', '')),
+              // (_methods).length > 0
+              //     ? SizedBox(
+              //         width: MediaQuery.of(context).size.width,
+              //         child: Expanded(
+              //           child: ListView.builder(
+              //             shrinkWrap: true,
+              //             scrollDirection: Axis.vertical,
+              //             itemCount: _methods.length,
+              //             itemBuilder: (BuildContext context, int index) {
+              //               final step = _methods[index];
+              //               return DismissibleWidget(
+              //                 item: step,
+              //                 child: _buildMethodField(step),
+              //                 onDismissed: (direction) =>
+              //                     dismissMethodStep(context, index, direction),
+              //               );
+              //             },
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(height: 0),
+              _buildMethodField(),
               TextButton(
                 child: Text(
                   '+ Thêm bước',
@@ -569,8 +686,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                onPressed: () =>
-                    _addStep(StepMethod(methodController.text, '')),
+                onPressed: () => _addDirections(directionController.text),
               ),
               SizedBox(height: 20),
             ],
@@ -579,11 +695,4 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       ),
     );
   }
-}
-
-class StepMethod {
-  final String description;
-  final String mediaPath;
-
-  StepMethod(this.description, this.mediaPath);
 }
