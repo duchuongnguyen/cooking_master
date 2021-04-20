@@ -68,13 +68,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           IconButton(
             icon: Icon(
-              Icons.insights_outlined,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(
               Icons.logout,
               color: Colors.black,
             ),

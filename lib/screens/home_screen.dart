@@ -2,6 +2,9 @@ import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/screens/Home/body.dart';
 import 'package:cooking_master/screens/recipe_form_screen.dart';
+import 'package:cooking_master/screens/saved_recipe_screen.dart';
+import 'package:cooking_master/screens/user_profile_screen.dart';
+import 'package:cooking_master/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -28,12 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
     RecipeNotifier recipeNotifier = Provider.of<RecipeNotifier>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 30,
-        backgroundColor: blue2,
-      ),
-      body: Body(size: size),
+      appBar: _currentTab == 3
+          ? null
+          : AppBar(
+              elevation: 0,
+              toolbarHeight: 30,
+              backgroundColor: blue2,
+            ),
+      body: _currentTab == 3 ? SavedRecipeScreen() : Body(size: size),
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
