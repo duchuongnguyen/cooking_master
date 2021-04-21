@@ -511,7 +511,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             ),
           ),
           SizedBox(width: 20),
-          //IconButton(icon: Icon(Icons.more_horiz_sharp), onPressed: () {})
         ],
       ),
     );
@@ -602,8 +601,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     }
 
     _formKey.currentState.save();
-    // _currentRecipe.ingredients = _ingredients;
-    // _currentRecipe.directionImage = _directions;
 
     uploadRecipeAndImage(_currentRecipe, widget.isUpdating, _imageFile);
 
