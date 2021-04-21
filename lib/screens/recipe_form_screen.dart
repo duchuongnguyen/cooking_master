@@ -29,8 +29,10 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   Recipe _currentRecipe;
   String _imageUrl;
   File _imageFile;
-  var ingredientWidgets = <Widget>[];
-  var directionWidgets = <Widget>[];
+  var _ingredientWidgets = <Widget>[];
+  var _directionWidgets = <Widget>[];
+  var _directionImageUrls = <String>[];
+  var _directionImageFiles = <File>[];
 
   @override
   void initState() {
@@ -44,7 +46,20 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       _currentRecipe = Recipe();
     }
 
+    _directionImageUrls = _currentRecipe.directionImage;
     _imageUrl = _currentRecipe.image;
+
+    Future.delayed(Duration.zero, () {
+      _currentRecipe.ingredients.forEach((element) {
+        _ingredientWidgets.add(_buildIngredientField());
+      });
+
+      _currentRecipe.directions.forEach((element) {
+        _directionWidgets.add(_buildDirectionField());
+      });
+
+      setState(() {});
+    });
   }
 
   _showImage() {
@@ -67,10 +82,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.camera_alt_outlined),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("Upload recipe photo")
+                            SizedBox(width: 5),
+                            Text("Upload recipe photo"),
                           ],
                         ),
                       )
@@ -374,7 +387,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.yields ?? '',
+        initialValue: _currentRecipe.yields == null
+            ? ''
+            : _currentRecipe.yields.toString(),
         keyboardType: TextInputType.number,
         style: TextStyle(fontSize: 15),
         validator: (String value) {
@@ -413,7 +428,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.prepTime ?? '',
+        initialValue: _currentRecipe.prepTime == null
+            ? ''
+            : _currentRecipe.prepTime.toString(),
         keyboardType: TextInputType.number,
         style: TextStyle(fontSize: 15),
         validator: (String value) {
@@ -452,7 +469,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.cookTime ?? '',
+        initialValue: _currentRecipe.cookTime == null
+            ? ''
+            : _currentRecipe.cookTime.toString(),
         keyboardType: TextInputType.number,
         style: TextStyle(fontSize: 15),
         validator: (String value) {
@@ -485,6 +504,11 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: TextFormField(
+              initialValue: _currentRecipe.ingredients
+                      .asMap()
+                      .containsKey(_ingredientWidgets.length)
+                  ? _currentRecipe.ingredients[_ingredientWidgets.length]
+                  : '',
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 hintText: '200g sữa chua',
@@ -526,17 +550,21 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                  width: 26,
-                  height: 26,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(13),
-                      color: Colors.black),
-                  child: Text(
-                    (directionWidgets.length + 1).toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 13),
-                  )),
-              IconButton(icon: Icon(Icons.menu), onPressed: () {}),
+                width: 26,
+                height: 26,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    color: Colors.black),
+                child: Text(
+                  (_directionWidgets.length + 1).toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 13),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {},
+              ),
             ],
           ),
           Column(
@@ -546,6 +574,11 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: TextFormField(
                   keyboardType: TextInputType.text,
+                  initialValue: _currentRecipe.directions
+                          .asMap()
+                          .containsKey(_directionWidgets.length)
+                      ? _currentRecipe.directions[_directionWidgets.length]
+                      : '',
                   decoration: InputDecoration(
                     hintText: 'Xắt lát hành phi cho vừa ăn',
                     filled: true,
@@ -572,6 +605,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               Row(
                 children: [
                   GestureDetector(
+                    onTap: () {},
                     child: Container(
                       width: 100,
                       height: 80,
@@ -672,9 +706,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
-                    itemCount: ingredientWidgets.length,
+                    itemCount: _ingredientWidgets.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return ingredientWidgets[index];
+                      return _ingredientWidgets[index];
                     },
                   ),
                 ),
@@ -690,7 +724,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       height: 1.5),
                 ),
                 onPressed: () => setState(
-                    () => ingredientWidgets.add(_buildIngredientField())),
+                    () => _ingredientWidgets.add(_buildIngredientField())),
               ),
               Divider(thickness: 5, color: Colors.orange[80]),
               Container(
@@ -714,9 +748,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
-                    itemCount: directionWidgets.length,
+                    itemCount: _directionWidgets.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return directionWidgets[index];
+                      return _directionWidgets[index];
                     },
                   ),
                 ),
@@ -732,7 +766,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       height: 1.5),
                 ),
                 onPressed: () => setState(
-                    () => directionWidgets.add(_buildDirectionField())),
+                    () => _directionWidgets.add(_buildDirectionField())),
               ),
               SizedBox(height: 20),
             ],

@@ -9,9 +9,9 @@ class Recipe {
   int yields;
   int prepTime;
   int cookTime;
-  List ingredients = [];
-  List directions = [];
-  List directionImage = [];
+  List<String> ingredients = [];
+  List<String> directions = [];
+  List<String> directionImage = [];
   String image;
   Timestamp createdAt;
   Timestamp updatedAt;
