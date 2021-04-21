@@ -44,8 +44,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       _currentRecipe = Recipe();
     }
 
-    // _ingredients.addAll(_currentRecipe.ingredients);
-    // _directions.addAll(_currentRecipe.directions);
     _imageUrl = _currentRecipe.image;
   }
 
@@ -53,7 +51,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     if (_imageFile == null && _imageUrl == null) {
       return GestureDetector(
         onTap: () {
-          _getLocalImage();
+          _showPicker(context);
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -107,7 +105,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () => _getLocalImage(),
+                    onTap: () => _showPicker(context),
                     child: Container(
                       child: Row(
                         children: [
@@ -124,7 +122,16 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     thickness: 1,
                     color: Colors.white,
                   ),
-                  Icon(Icons.delete_outlined, color: Colors.white),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outlined),
+                    color: Colors.white,
+                    onPressed: () {
+                      setState(() {
+                        _imageFile = null;
+                        _imageUrl = null;
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
@@ -141,16 +148,50 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             fit: BoxFit.cover,
             height: 250,
           ),
-          TextButton(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.black38)),
-            onPressed: () => _getLocalImage(),
-            child: Text(
-              'Change Image',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w400,
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white)),
+              width: 120,
+              height: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => _showPicker(context),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Icon(Icons.camera_alt_outlined, color: Colors.white),
+                          Text(
+                            " Edit",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  VerticalDivider(
+                    thickness: 1,
+                    color: Colors.white,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outlined),
+                    color: Colors.white,
+                    onPressed: () {
+                      setState(() {
+                        _imageFile = null;
+                        _imageUrl = null;
+                      });
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -159,9 +200,55 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     }
   }
 
-  Future _getLocalImage() async {
-    // ignore: invalid_use_of_visible_for_testing_member
-    final pickedFile = await ImagePicker.platform.pickImage(
+  void _showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    leading: new Icon(Icons.photo_library),
+                    title: new Text('Photo Library'),
+                    onTap: () {
+                      _imgFromGallery();
+                      Navigator.of(context).pop();
+                    }),
+                new ListTile(
+                  leading: new Icon(Icons.photo_camera),
+                  title: new Text('Camera'),
+                  onTap: () {
+                    _imgFromCamera();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _imgFromCamera() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+      maxWidth: 400,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future _imgFromGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(
       source: ImageSource.gallery,
       imageQuality: 50,
       maxWidth: 400,
@@ -287,9 +374,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.yields == null
-            ? ''
-            : _currentRecipe.yields.toString(),
+        initialValue: _currentRecipe.yields ?? '',
         keyboardType: TextInputType.number,
         style: TextStyle(fontSize: 15),
         validator: (String value) {
@@ -328,9 +413,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.prepTime == null
-            ? ''
-            : _currentRecipe.prepTime.toString(),
+        initialValue: _currentRecipe.prepTime ?? '',
         keyboardType: TextInputType.number,
         style: TextStyle(fontSize: 15),
         validator: (String value) {
@@ -369,9 +452,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.cookTime == null
-            ? ''
-            : _currentRecipe.cookTime.toString(),
+        initialValue: _currentRecipe.cookTime ?? '',
         keyboardType: TextInputType.number,
         style: TextStyle(fontSize: 15),
         validator: (String value) {
@@ -475,8 +556,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                           const Radius.circular(15.0),
                         ),
                         borderSide: BorderSide.none),
-                    // focusedBorder: InputBorder.none,
-                    // enabledBorder: InputBorder.none,
                   ),
                   style: TextStyle(fontSize: 15),
                   validator: (String value) {
@@ -493,22 +572,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               ),
               Row(
                 children: [
-                  // step.description == ""
-                  //     ? SizedBox(
-                  //         width: 0,
-                  //         height: 0,
-                  //       )
-                  //     : Container(
-                  //         width: 100,
-                  //         height: 80,
-                  //         //Todo: Update method image after load here
-                  //         decoration: BoxDecoration(),
-                  //         alignment: Alignment.center,
-                  //         child: Icon(
-                  //           Icons.camera_alt_outlined,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
                   GestureDetector(
                     child: Container(
                       width: 100,
@@ -558,20 +621,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // void dismissIngredientItem(
-    //     BuildContext context, int index, DismissDirection direction) {
-    //   setState(() {
-    //     _ingredients.removeAt(index);
-    //   });
-    // }
-
-    // void dismissMethodStep(
-    //     BuildContext context, int index, DismissDirection direction) {
-    //   setState(() {
-    //     _methods.removeAt(index);
-    //   });
-    // }
-
     return Scaffold(
       appBar: buildAppBar(
         context,
@@ -624,7 +673,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 child: Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemCount: ingredientWidgets.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -671,13 +720,6 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     itemCount: directionWidgets.length,
                     itemBuilder: (BuildContext context, int index) {
                       return directionWidgets[index];
-                      // final step = _methods[index];
-                      // return DismissibleWidget(
-                      //   item: step,
-                      //   child: _buildMethodField(step),
-                      //   onDismissed: (direction) =>
-                      //       dismissMethodStep(context, index, direction),
-                      // );
                     },
                   ),
                 ),
