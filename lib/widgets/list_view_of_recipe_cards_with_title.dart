@@ -5,22 +5,38 @@ import 'package:flutter/material.dart';
 import 'ListCards/list_view_of_recipe_cards.dart';
 
 class ListViewOfRecipeCardsWithTitle extends StatelessWidget {
-  const ListViewOfRecipeCardsWithTitle({
-    Key key,
-    @required this.size,
-    @required this.cards,
-    @required this.title,
-  }) : super(key: key);
+  const ListViewOfRecipeCardsWithTitle(
+      {Key key,
+      @required this.size,
+      @required this.cards,
+      @required this.title,
+      this.action,
+      this.isEditing,
+      this.parent})
+      : super(key: key);
 
   final Size size;
   final List<RecipeCardModel> cards;
   final String title;
+  final Widget action;
+  final bool isEditing;
+  final parent;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TitleWithCustomUnderline(text: title,),
-        ListViewOfRecipeCards(size: size, cards: cards,),
+        TitleWithCustomUnderline(
+          text: title,
+          action: action,
+        ),
+        cards.length == 0
+            ? Container()
+            : ListViewOfRecipeCards(
+                size: size,
+                cards: cards,
+                action: action,
+                isEditing: isEditing,
+                parent: parent),
       ],
     );
   }

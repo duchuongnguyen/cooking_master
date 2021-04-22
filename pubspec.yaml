@@ -43,6 +43,8 @@ dependencies:
   provider: ^5.0.0
   rxdart: ^0.26.0
   uuid: ^3.0.4
+  focused_menu: ^1.0.2
+  flutter_blurhash: ^0.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
