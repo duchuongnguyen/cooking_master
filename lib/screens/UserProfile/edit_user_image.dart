@@ -113,7 +113,7 @@ class _EditUserImageState extends State<EditUserImage> {
     );
     if (didRequestSignOut == true) {
       var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
-      await userProfile.updateUser(user.currentUser.uid, 'imageurl', imageurl);
+     if(imageurl != null) await userProfile.updateUser(user.currentUser.uid, 'imageurl', imageurl);
       Navigator.pop(context, true);
     }
   }
