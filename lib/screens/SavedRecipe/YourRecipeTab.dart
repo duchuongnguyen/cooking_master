@@ -18,17 +18,17 @@ class YourRecipeTab extends StatelessWidget {
           SizedBox(height: 10),
           SearchBox(),
           SizedBox(height: 10),
-          ListViewOfRecipeCardsWithTitle(
-            title: "All",
-            size: MediaQuery.of(context).size,
-            cards: cards,
-          ),
-          SizedBox(height: 10),
-          ListViewOfRecipeCardsWithTitle(
-            title: "Easy to cook",
-            size: MediaQuery.of(context).size,
-            cards: cards,
-          ),
+          // ListViewOfRecipeCardsWithTitle(
+          //   title: "All",
+          //   size: MediaQuery.of(context).size,
+          //   cards: cards,
+          // ),
+          // SizedBox(height: 10),
+          // ListViewOfRecipeCardsWithTitle(
+          //   title: "Easy to cook",
+          //   size: MediaQuery.of(context).size,
+          //   cards: cards,
+          // ),
           SizedBox(height: 10),
         ],
       ),

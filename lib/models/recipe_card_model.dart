@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+
 class RecipeCardModel {
   String recipeName;
   String recipeCookTime;
@@ -33,9 +35,25 @@ setAllSelected(List<RecipeCardModel> cards) {
   });
 }
 
-removeSelectedCards(
-    List<RecipeCardModel> cards) {
+removeSelectedCards(List<RecipeCardModel> cards) {
   cards.removeWhere((element) => element.isSelected == true);
+}
+
+List<RecipeCardModel> getListRecipe(var data) {
+  List<RecipeCardModel> cards = data
+      .frommap(
+        (item) => RecipeCardModel(
+            item['recipeName'],
+            item['recipeCookTime'],
+            item['recipeKind'],
+            item['recipeServingNumber'],
+            item['recipeIsSaved'],
+            item['recipeOwner'],
+            item['recipeImage'],
+            item['isSelected']),
+      )
+      .toList();
+  return cards;
 }
 
 List<RecipeCardModel> cards = cardData

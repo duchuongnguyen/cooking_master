@@ -1,3 +1,4 @@
+import 'package:cooking_master/models/model-recipe-cuahuy.dart';
 import 'package:cooking_master/models/recipe_card_model.dart';
 import 'ListCards/title_with_custom_underline.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class ListViewOfRecipeCardsWithTitle extends StatelessWidget {
       : super(key: key);
 
   final Size size;
-  final List<RecipeCardModel> cards;
+  final List<RecipeCardModelcuahuy> cards;
   final String title;
   final Widget action;
   final bool isEditing;

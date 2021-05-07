@@ -4,7 +4,8 @@ class Recipe {
   String id;
   //String owner;
   String name;
-  //String description;
+  String description;
+  int min;
   String category;
   // int yields;
   // int prepTime;
@@ -15,22 +16,32 @@ class Recipe {
   Timestamp createdAt;
   Timestamp updatedAt;
 
-  Recipe();
-
-  Recipe.fromMap(Map<String, dynamic> data) {
-    id = data['id'];
-    //owner = data['owner'];
-    name = data['name'];
-    //description = data['description'];
-    category = data['category'];
-    //yields = data['yields'];
-    //prepTime = data['prepTime'];
-    //cookTime = data['cookTime'];
-    ingredients = data['ingredients'];
-    //directions = data['directions'];
-    image = data['image'];
-    createdAt = data['createdAt'];
-    updatedAt = data['updatedAt'];
+  Recipe(
+      {this.id,
+      this.name,
+      this.description,
+      this.min,
+      this.category,
+      this.ingredients,
+      this.image,
+      this.createdAt,
+      this.updatedAt});
+  factory Recipe.fromMap(Map<String, dynamic> data) {
+    return Recipe(
+        id: data['id'],
+        //owner = data['owner'];
+        name: data['name'],
+        description: data['description'],
+        min: data['min'],
+        category: data['category'],
+        //yields = data['yields'];
+        //prepTime = data['prepTime'];
+        //cookTime = data['cookTime'];
+        ingredients: data['ingredients'],
+        //directions = data['directions'];
+        image: data['image'],
+        createdAt: data['createdAt'],
+        updatedAt: data['updatedAt']);
   }
 
   Map<String, dynamic> toMap() {

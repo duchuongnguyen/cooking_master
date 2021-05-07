@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
+import 'package:cooking_master/models/model-recipe-cuahuy.dart';
 import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -18,7 +19,7 @@ class ListViewOfRecipeCards extends StatefulWidget {
       : super(key: key);
 
   final Size size;
-  final List<RecipeCardModel> cards;
+  final List<RecipeCardModelcuahuy> cards;
   final Widget action;
   final bool isEditing;
   final parent;
@@ -45,7 +46,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.only(
               left: defaultPadding, right: defaultPadding * 0.4),
-          itemCount: cards.length,
+          itemCount: widget.cards.length,
           itemBuilder: (context, index) {
             return widget.action != null
                 ? FocusedMenuHolder(
@@ -58,8 +59,8 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                               widget.parent.isEditing = true;
                             });
                             setState(() {
-                              cards[index].isSelected =
-                                  !cards[index].isSelected;
+                              widget.cards[index].isSelected =
+                                  !widget.cards[index].isSelected;
                             });
                           },
                           trailingIcon: Icon(Icons.done)),
@@ -70,7 +71,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                               widget.parent.isEditing = true;
                             });
                             setState(() {
-                              setAllSelected(cards);
+                            
                             });
                           },
                           trailingIcon: Icon(Icons.done_all)),
@@ -78,7 +79,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                           title: Text("Delete"),
                           onPressed: () {
                             widget.parent.setState(() {
-                              cards.removeAt(index);
+                              widget.cards.removeAt(index);
                             });
                           },
                           trailingIcon: Icon(Icons.delete_outline)),
@@ -95,8 +96,8 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                           //Select item
                           () {
                               setState(() {
-                                cards[index].isSelected =
-                                    !cards[index].isSelected;
+                                widget.cards[index].isSelected =
+                                    !widget.cards[index].isSelected;
                               });
                             }
                           :
@@ -118,7 +119,8 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                             borderRadius: BorderRadius.circular(20),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage(cards[index].recipeImage),
+                              image:
+                                  AssetImage(widget.cards[index].recipeImage),
                             )),
                         child: Stack(
                           children: [
@@ -140,7 +142,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                         top: defaultPadding * 0.2,
                                         bottom: defaultPadding * 0.2),
                                     child: Text(
-                                      cards[index].recipeKind,
+                                      widget.cards[index].recipeKind,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -177,7 +179,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                             0.3 *
                                             0.7,
                                         child: Text(
-                                          cards[index].recipeName,
+                                          widget.cards[index].recipeName,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
@@ -201,9 +203,9 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                     Align(
                                       alignment: Alignment.bottomLeft,
                                       child: Text(
-                                        cards[index].recipeCookTime +
+                                        widget.cards[index].recipeCookTime +
                                             ' | ' +
-                                            cards[index]
+                                            widget.cards[index]
                                                 .recipeServingNumber
                                                 .toString() +
                                             " " +
@@ -218,7 +220,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                 ),
                               ),
                             ),
-                            cards[index].isSelected
+                            widget.cards[index].isSelected
                                 ? Align(
                                     alignment: Alignment.bottomRight,
                                     child: Padding(
@@ -254,7 +256,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: AssetImage(cards[index].recipeImage),
+                          image: AssetImage(widget.cards[index].recipeImage),
                         )),
                     child: Stack(
                       children: [
@@ -276,7 +278,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                     top: defaultPadding * 0.2,
                                     bottom: defaultPadding * 0.2),
                                 child: Text(
-                                  cards[index].recipeKind,
+                                  widget.cards[index].recipeKind,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -311,7 +313,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                     height:
                                         widget.size.height * 0.35 * 0.3 * 0.7,
                                     child: Text(
-                                      cards[index].recipeName,
+                                      widget.cards[index].recipeName,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 15,
@@ -333,10 +335,9 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                                 Align(
                                   alignment: Alignment.bottomLeft,
                                   child: Text(
-                                    cards[index].recipeCookTime +
+                                    widget.cards[index].recipeCookTime +
                                         ' | ' +
-                                        cards[index]
-                                            .recipeServingNumber
+                                        widget.cards[index].recipeServingNumber
                                             .toString() +
                                         " " +
                                         AppLocalizations.of(context).serving,
