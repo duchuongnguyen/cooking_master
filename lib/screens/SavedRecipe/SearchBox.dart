@@ -10,6 +10,7 @@ class SearchBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
+      margin: EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: blue1.withOpacity(0.8))),

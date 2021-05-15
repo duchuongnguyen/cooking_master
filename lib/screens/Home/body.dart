@@ -28,25 +28,25 @@ class Body extends StatelessWidget {
               if (snapshot2.hasData) {
                 map = snapshot2.data;
                 print(map);
-               return
-                    ListView.separated(
-                        separatorBuilder: (context, index) => Divider(),
-                        itemCount: map.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 10),
-                              SizedBox(height: 10),
-                              ListViewOfRecipeCardsWithTitle(
-                                title: map.keys.elementAt(index),
-                                size: MediaQuery.of(context).size,
-                                cards: map.values.elementAt(index),
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          );
-                        });                                                                               
+                return ListView.separated(
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: map.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          index == 0
+                              ? HeaderWithSearchBox(size: size)
+                              : SizedBox(height: 0,),
+                          ListViewOfRecipeCardsWithTitle(
+                            title: map.keys.elementAt(index),
+                            size: MediaQuery.of(context).size,
+                            cards: map.values.elementAt(index),
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      );
+                    });
               }
               return LinearProgressIndicator();
             }));

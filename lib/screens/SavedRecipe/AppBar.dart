@@ -98,26 +98,20 @@ AppBar buildSavedRecipeAppBar(
               },
             ),
           ],
-    leading: Builder(builder: (BuildContext context) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => UserProfileScreen()));
-        },
-        child: Hero(
+    leading: GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => UserProfileScreen()));
+      },
+      child: Hero(
           tag: 'avatar',
-          child: Container(
-            height: 20,
-            width: 20,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                    //Todo: Add user image here
-                    image: AssetImage("assets/images/user.jpg"))),
-          ),
-        ),
-      );
-    }),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage("assets/images/user.jpg"),
+            ),
+          )),
+    ),
     bottom: TabBar(
       controller: _tabController,
       tabs: [
