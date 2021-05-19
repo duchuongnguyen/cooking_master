@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 getRecipes(RecipeNotifier recipeNotifier) async {
   QuerySnapshot snapshot = await FirebaseFirestore.instance
-      .collection('Recipes')
+      .collection('recipes')
       .orderBy("createdAt", descending: true)
       .get();
 
@@ -49,7 +49,7 @@ uploadRecipeAndImage(Recipe recipe, bool isUpdating, File localFile) async {
 
 _uploadRecipe(Recipe recipe, bool isUpdating, {String imageUrl}) async {
   CollectionReference recipeRef =
-      FirebaseFirestore.instance.collection('Recipes');
+      FirebaseFirestore.instance.collection('recipes');
 
   if (imageUrl != null) {
     recipe.image = imageUrl;
