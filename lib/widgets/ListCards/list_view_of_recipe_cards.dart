@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +14,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
   }) : super(key: key);
 
   final Size size;
-  final List<RecipeCardModel> cards;
+  final List<Recipe> cards;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(cards[index].recipeImage),
+                      image: NetworkImage(cards[index].image),
                     )),
                 child: Stack(
                   children: [
@@ -76,7 +76,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                 top: defaultPadding * 0.2,
                                 bottom: defaultPadding * 0.2),
                             child: Text(
-                              cards[index].recipeKind,
+                              cards[index].category,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -110,7 +110,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                 width: size.width * 0.45 * 0.6,
                                 height: size.height * 0.35 * 0.3 * 0.7,
                                 child: Text(
-                                  cards[index].recipeName,
+                                  cards[index].name,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,
@@ -132,10 +132,10 @@ class ListViewOfRecipeCards extends StatelessWidget {
                             Align(
                               alignment: Alignment.bottomLeft,
                               child: Text(
-                                cards[index].recipeCookTime +
+                                cards[index].cookTime.toString() +
                                     ' | ' +
                                     cards[index]
-                                        .recipeServingNumber
+                                        .yields
                                         .toString() +
                                     " " +
                                     AppLocalizations.of(context).serving,

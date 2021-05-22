@@ -1,4 +1,4 @@
-import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/AllTips/add_tip_fab.dart';
 import 'package:cooking_master/screens/RecipeDetail/AllTips/tip.dart';
@@ -6,7 +6,7 @@ import 'package:cooking_master/screens/RecipeDetail/AllTips/tip_appbar.dart';
 import 'package:flutter/material.dart';
 
 class AllTipsScreen extends StatelessWidget {
-  final RecipeCardModel recipe;
+  final Recipe recipe;
 
   const AllTipsScreen({Key key, @required this.recipe}) : super(key: key);
   @override

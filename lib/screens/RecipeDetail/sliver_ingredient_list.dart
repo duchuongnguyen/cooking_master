@@ -23,11 +23,11 @@ class SliverIngredientList extends StatelessWidget {
           (BuildContext context, int index) {
             final int itemIndex = index ~/ 2;
             if (index.isEven) {
-              return Ingredient(
-                  name: ingredient[itemIndex].ingredientName,
-                  amount: ingredient[itemIndex].ingredientAmount,
-                  unit: ingredient[itemIndex].ingredientUnit,
-                  proportion: servings / widget.recipe.recipeServingNumber);
+              // return Ingredient(
+              //     name: ingredient[itemIndex].ingredientName,
+              //     amount: ingredient[itemIndex].ingredientAmount,
+              //     unit: ingredient[itemIndex].ingredientUnit,
+              //     proportion: servings / widget.recipe.recipeServingNumber);
             }
             return SizedBox(height: 5);
           },

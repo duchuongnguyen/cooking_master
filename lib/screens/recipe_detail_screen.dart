@@ -1,5 +1,6 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_step_list.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_title.dart';
 import 'package:cooking_master/screens/RecipeDetail/related_recipes.dart';
@@ -11,24 +12,26 @@ import 'RecipeDetail/sliver_ingredient_list.dart';
 import 'RecipeDetail/sliver_recipe_appbar.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
+  final Recipe recipe;
+
   const RecipeDetailScreen({Key key, @required this.recipe}) : super(key: key);
 
   @override
   _RecipeDetailScreenState createState() => _RecipeDetailScreenState();
-  final RecipeCardModel recipe;
 }
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   List<String> _dynamicTopics;
   int servings;
   bool isShowingNutrition;
+
   @override
   void initState() {
     super.initState();
     _dynamicTopics = [
       '#1 cooking recipe this week',
     ];
-    servings = widget.recipe.recipeServingNumber;
+    servings = widget.recipe.yields;
     isShowingNutrition = false;
   }
 

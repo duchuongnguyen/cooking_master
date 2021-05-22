@@ -1,9 +1,9 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:flutter/material.dart';
 
 class AddTipScreen extends StatelessWidget {
-  final RecipeCardModel recipe;
+  final Recipe recipe;
 
   const AddTipScreen({Key key, @required this.recipe}) : super(key: key);
 
@@ -41,7 +41,7 @@ class AddTipScreen extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 25, right: 25),
               child: Text(
-                "Share your tip for " + recipe.recipeName,
+                "Share your tip for " + recipe.name,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

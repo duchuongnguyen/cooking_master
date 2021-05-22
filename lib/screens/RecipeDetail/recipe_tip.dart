@@ -1,12 +1,14 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/add_tip_screen.dart';
 import 'package:cooking_master/screens/RecipeDetail/all_tips_screen.dart';
 import 'package:flutter/material.dart';
 
 class RecipeTip extends StatelessWidget {
-  final RecipeCardModel recipe;
+  final Recipe recipe;
+  
   const RecipeTip({
     Key key, @required this.recipe,
   }) : super(key: key);

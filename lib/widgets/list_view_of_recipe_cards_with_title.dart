@@ -1,4 +1,5 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'ListCards/title_with_custom_underline.dart';
 import 'package:flutter/material.dart';
 
@@ -13,14 +14,18 @@ class ListViewOfRecipeCardsWithTitle extends StatelessWidget {
   }) : super(key: key);
 
   final Size size;
-  final List<RecipeCardModel> cards;
+  final List<Recipe> cards;
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TitleWithCustomUnderline(text: title,),
-        ListViewOfRecipeCards(size: size, cards: cards,),
+        TitleWithCustomUnderline(text: title),
+        ListViewOfRecipeCards(
+          size: size,
+          cards: cards,
+        ),
       ],
     );
   }

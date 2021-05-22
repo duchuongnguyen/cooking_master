@@ -30,8 +30,8 @@ class RecipeImageAndAuthor extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
-                child: Image.asset(
-                  widget.recipe.recipeImage,
+                child: Image.network(
+                  widget.recipe.image,
                   fit: BoxFit.fitWidth,
                 ),
               ),

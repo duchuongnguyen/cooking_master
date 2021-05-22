@@ -47,7 +47,7 @@ class SliverRecipeAppbar extends StatelessWidget {
                     )
                   : null,
               title: Text(
-                widget.recipe.recipeName,
+                widget.recipe.name,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 18.0,

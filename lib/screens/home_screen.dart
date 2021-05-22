@@ -1,6 +1,4 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/recipe_model.dart';
-import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/screens/Home/body.dart';
 import 'package:cooking_master/screens/recipe_form_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -26,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    RecipeNotifier recipeNotifier = Provider.of<RecipeNotifier>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,13 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          recipeNotifier.currentRecipe = null;
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return RecipeFormScreen(
-                  isUpdating: false,
-                );
+                return RecipeFormScreen(isUpdating: false);
               },
             ),
           );

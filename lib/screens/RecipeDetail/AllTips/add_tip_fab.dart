@@ -1,15 +1,15 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/add_tip_screen.dart';
 import 'package:flutter/material.dart';
 
 class AddTipFAB extends StatelessWidget {
+  final Recipe recipe;
+
   const AddTipFAB({
     Key key,
     @required this.recipe,
   }) : super(key: key);
-
-  final RecipeCardModel recipe;
 
   @override
   Widget build(BuildContext context) {

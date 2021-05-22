@@ -26,22 +26,22 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cloud_firestore: ^1.0.4
-  like_button: ^2.0.2
-  flutter_sliding_up_panel: ^1.2.1
   cupertino_icons: ^1.0.2
   firebase_auth: ^1.0.3
   firebase_core: ^1.0.3
   firebase_database: ^6.1.2
   firebase_storage: ^8.0.3
   flutter_facebook_login: ^3.0.0
+  flutter_icons: ^1.1.0
+  flutter_sliding_up_panel: ^1.2.1
   flutter_svg: ^0.21.0+1
   font_awesome_flutter: ^9.0.0
   get_it: ^6.0.0
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
-  flutter_icons: ^1.1.0
   image_picker: ^0.7.4
   intl: ^0.17.0
+  like_button: ^2.0.2
   path: ^1.8.0
   provider: ^5.0.0
   rxdart: ^0.26.0

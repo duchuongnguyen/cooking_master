@@ -15,7 +15,7 @@ class RelatedRecipes extends StatelessWidget {
             delegate: SliverChildListDelegate(<Widget>[
           ListViewOfRecipeCardsWithTitle(
               size: MediaQuery.of(context).size * 0.9,
-              cards: cards,
+              //cards: cards,
               title: "Related Recipes"),
         ])));
   }
