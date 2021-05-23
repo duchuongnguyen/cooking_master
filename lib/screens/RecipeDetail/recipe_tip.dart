@@ -1,5 +1,4 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/add_tip_screen.dart';
