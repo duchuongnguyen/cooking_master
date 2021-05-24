@@ -5,6 +5,7 @@ import 'package:like_button/like_button.dart';
 
 class TipLike extends StatelessWidget {
   final TipModel tip;
+
   const TipLike({
     Key key,
     @required this.tip,
@@ -28,7 +29,7 @@ class TipLike extends StatelessWidget {
           size: 20.0,
         );
       },
-      likeCount: tip.tipLikeCount,
+      likeCount: tip.uidLiked.length,
       countBuilder: (int count, bool isLiked, String text) {
         var color = isLiked ? blue3 : Colors.grey;
         Widget result;

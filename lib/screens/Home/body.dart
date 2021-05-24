@@ -9,28 +9,22 @@ import 'header_with_searchbox.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Body extends StatelessWidget {
-  const Body({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
-
-  final Size size;
+  const Body({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final recipe = Provider.of<RecipeService>(context, listen: false);
 
-    return FutureBuilder<List<Recipe>>(
+    return FutureBuilder<List<RecipeModel>>(
       future: recipe.getRecipes(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(
             children: <Widget>[
-              HeaderWithSearchBox(size: size),
+              HeaderWithSearchBox(),
               //Trending Recipe, can add any kind of recipes in here
               ListViewOfRecipeCardsWithTitle(
                 title: AppLocalizations.of(context).trend,
-                size: size,
                 cards: snapshot.data,
               ),
             ],

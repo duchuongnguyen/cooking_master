@@ -1,4 +1,3 @@
-import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/list_view_of_recipe_cards_with_title.dart';
@@ -14,7 +13,7 @@ class RelatedRecipes extends StatelessWidget {
   Widget build(BuildContext context) {
     final recipe = Provider.of<RecipeService>(context, listen: false);
 
-    return FutureBuilder<List<Recipe>>(
+    return FutureBuilder<List<RecipeModel>>(
       future: recipe.getRecipes(),
       builder: (context, snapshot) {
         return SliverPadding(
@@ -22,7 +21,6 @@ class RelatedRecipes extends StatelessWidget {
             sliver: SliverList(
                 delegate: SliverChildListDelegate(<Widget>[
               ListViewOfRecipeCardsWithTitle(
-                  size: MediaQuery.of(context).size * 0.9,
                   cards: snapshot.data,
                   title: "Related Recipes"),
             ])));

@@ -9,15 +9,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ListViewOfRecipeCards extends StatelessWidget {
   const ListViewOfRecipeCards({
     Key key,
-    @required this.size,
     @required this.cards,
   }) : super(key: key);
 
-  final Size size;
-  final List<Recipe> cards;
+  final List<RecipeModel> cards;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Container(
       padding: EdgeInsets.only(top: defaultPadding * 0.6),
       height: size.height * 0.35,
@@ -134,9 +134,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                               child: Text(
                                 cards[index].cookTime.toString() +
                                     ' | ' +
-                                    cards[index]
-                                        .yields
-                                        .toString() +
+                                    cards[index].yields.toString() +
                                     " " +
                                     AppLocalizations.of(context).serving,
                                 style: TextStyle(

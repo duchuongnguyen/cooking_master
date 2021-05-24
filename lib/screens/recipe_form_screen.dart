@@ -13,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 
 class RecipeFormScreen extends StatefulWidget {
   final bool isUpdating;
-  final Recipe currentRecipe;
+  final RecipeModel currentRecipe;
 
   RecipeFormScreen({
     Key key,
@@ -27,7 +27,7 @@ class RecipeFormScreen extends StatefulWidget {
 class _RecipeFormScreenState extends State<RecipeFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Recipe _currentRecipe;
+  RecipeModel _currentRecipe;
   String _imageUrl;
   File _imageFile;
   var _ingredientWidgets = <Widget>[];
@@ -42,7 +42,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     if (widget.currentRecipe != null) {
       _currentRecipe = widget.currentRecipe;
     } else {
-      _currentRecipe = Recipe();
+      _currentRecipe = RecipeModel();
     }
 
     _directionImageUrls = _currentRecipe.directionImage;

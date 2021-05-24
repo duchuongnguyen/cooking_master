@@ -3,13 +3,11 @@ import 'package:cooking_master/models/user_model.dart';
 
 class UserProfile {
   final ref = FirebaseFirestore.instance.collection("userprofile");
-  UserModel user;
-  // ignore: non_constant_identifier_names
-  Stream<UserModel> LoadProfile(String id) {
-    return ref
-        .doc(id)
-        .snapshots()
-        .map((snapshot) => UserModel.fromMap(snapshot.data()));
+
+  Future<UserModel> loadProfile(String id) async {
+    return await ref.doc(id).get().then((value) {
+      return UserModel.fromMap(value.data());
+    });
   }
 
   Future<bool> updateUser(String uid, String field, String value) async {

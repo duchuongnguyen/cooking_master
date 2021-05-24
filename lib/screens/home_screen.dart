@@ -22,15 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 30,
         backgroundColor: blue2,
       ),
-      body: Body(size: size),
+      body: Body(),
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -52,68 +50,66 @@ class _HomeScreenState extends State<HomeScreen> {
         color: blue4,
         shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
-        child: Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25.0),
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(25.0),
             ),
-            padding: const EdgeInsets.all(0.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      color: _currentTab == 0
-                          ? Colors.black
-                          : Colors.black.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _currentTab = 0;
-                      });
-                    }),
-                IconButton(
-                    icon: Icon(
-                      Icons.people_alt_outlined,
-                      color: _currentTab == 1
-                          ? Colors.black
-                          : Colors.black.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _currentTab = 1;
-                      });
-                    }),
-                SizedBox(),
-                IconButton(
-                    icon: Icon(
-                      Icons.shopping_bag_outlined,
-                      color: _currentTab == 2
-                          ? Colors.black
-                          : Colors.black.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _currentTab = 2;
-                      });
-                    }),
-                IconButton(
-                    icon: FaIcon(
-                      FontAwesomeIcons.heart,
-                      color: _currentTab == 3
-                          ? Colors.black
-                          : Colors.black.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _currentTab = 3;
-                      });
-                    }),
-              ],
-            ),
+          ),
+          padding: const EdgeInsets.all(0.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: _currentTab == 0
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _currentTab = 0;
+                    });
+                  }),
+              IconButton(
+                  icon: Icon(
+                    Icons.people_alt_outlined,
+                    color: _currentTab == 1
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _currentTab = 1;
+                    });
+                  }),
+              SizedBox(),
+              IconButton(
+                  icon: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: _currentTab == 2
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _currentTab = 2;
+                    });
+                  }),
+              IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.heart,
+                    color: _currentTab == 3
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _currentTab = 3;
+                    });
+                  }),
+            ],
           ),
         ),
       ),

@@ -1,18 +1,10 @@
 import 'package:cooking_master/models/ingredient_model.dart';
-import 'package:cooking_master/screens/RecipeDetail/ingredient_item.dart';
+import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../recipe_detail_screen.dart';
 
 class SliverIngredientList extends StatelessWidget {
-  const SliverIngredientList({
-    Key key,
-    @required this.servings,
-    @required this.widget,
-  }) : super(key: key);
-
-  final int servings;
-  final RecipeDetailScreen widget;
+  const SliverIngredientList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

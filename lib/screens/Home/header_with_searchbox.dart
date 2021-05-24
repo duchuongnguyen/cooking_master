@@ -6,15 +6,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cooking_master/screens/user_profile_screen.dart';
 
 class HeaderWithSearchBox extends StatelessWidget {
-  const HeaderWithSearchBox({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
-
-  final Size size;
+  const HeaderWithSearchBox({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    
     return Container(
       margin: EdgeInsets.only(bottom: defaultPadding * 2.5),
       height: size.height * 0.2,

@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import '../recipe_detail_screen.dart';
 
 class RecipeImageAndAuthor extends StatelessWidget {
-  const RecipeImageAndAuthor({
-    Key key,
-    @required this.widget,
-  }) : super(key: key);
-
-  final RecipeDetailScreen widget;
+  const RecipeImageAndAuthor({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +26,7 @@ class RecipeImageAndAuthor extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
-                  widget.recipe.image,
+                  RecipeDetailScreen.of(context).recipe.image,
                   fit: BoxFit.fitWidth,
                 ),
               ),

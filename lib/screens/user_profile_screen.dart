@@ -90,9 +90,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget _buildBody(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
     final userProfile = Provider.of<UserProfile>(context, listen: false);
-    return StreamBuilder<UserModel>(
-      stream: userProfile.LoadProfile(auth.currentUser.uid),
-      // ignore: missing_return
+    return FutureBuilder<UserModel>(
+      future: userProfile.loadProfile(auth.currentUser.uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           user = snapshot.data;

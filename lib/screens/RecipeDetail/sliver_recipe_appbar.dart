@@ -7,12 +7,10 @@ import '../recipe_detail_screen.dart';
 class SliverRecipeAppbar extends StatelessWidget {
   const SliverRecipeAppbar({
     Key key,
-    @required this.widget,
     @required List<String> dynamicTopics,
   })  : _dynamicTopics = dynamicTopics,
         super(key: key);
 
-  final RecipeDetailScreen widget;
   final List<String> _dynamicTopics;
 
   @override
@@ -47,7 +45,7 @@ class SliverRecipeAppbar extends StatelessWidget {
                     )
                   : null,
               title: Text(
-                widget.recipe.name,
+                RecipeDetailScreen.of(context).recipe.name,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 18.0,

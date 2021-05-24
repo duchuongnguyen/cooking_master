@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cooking_master/models/tip_model.dart';
 
-class Recipe {
+class RecipeModel {
   String id;
   String owner;
   String name;
@@ -16,9 +17,9 @@ class Recipe {
   Timestamp createdAt;
   Timestamp updatedAt;
 
-  Recipe();
+  RecipeModel();
 
-  Recipe.fromMap(Map data) {
+  RecipeModel.fromMap(Map data) {
     id = data['id'] as String;
     owner = data['owner'] as String;
     name = data['name'] as String;

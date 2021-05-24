@@ -2,10 +2,10 @@ import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/AllTips/tip_like.dart';
 import 'package:flutter/material.dart';
 
-class Tip extends StatelessWidget {
+class Tip1 extends StatelessWidget {
   final TipModel tip;
 
-  const Tip({
+  const Tip1({
     Key key,
     @required this.tip,
   }) : super(key: key);
@@ -20,9 +20,7 @@ class Tip extends StatelessWidget {
           Expanded(
             flex: 2,
             child: CircleAvatar(
-              backgroundImage: AssetImage(
-                tip.tipUserImage,
-              ),
+              backgroundImage: NetworkImage(tip.image),
             ),
           ),
           Expanded(
@@ -31,20 +29,20 @@ class Tip extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tip.tipUserName,
+                      tip.owner,
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     SizedBox(height: 5),
                     ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset(
-                          tip.tipImage,
+                        child: Image.network(
+                          tip.image,
                           fit: BoxFit.fitWidth,
                         )),
                     SizedBox(height: 5),
                     Text(
-                      tip.tipDescription,
+                      tip.content,
                       style: TextStyle(
                           fontWeight: FontWeight.normal, fontSize: 18),
                     ),
@@ -53,7 +51,9 @@ class Tip extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          tip.tipTime,
+                          DateTime.now()
+                              .difference(tip.createdAt.toDate())
+                              .toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.w300, fontSize: 14),
                         ),

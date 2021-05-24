@@ -1,11 +1,10 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
+import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class AddTipScreen extends StatelessWidget {
-  final Recipe recipe;
-
-  const AddTipScreen({Key key, @required this.recipe}) : super(key: key);
+  const AddTipScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class AddTipScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-                  child: Container(
+          child: Container(
             margin: EdgeInsets.only(top: 10, left: 12),
             child: Text(
               "Cancel",
@@ -41,7 +40,8 @@ class AddTipScreen extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 25, right: 25),
               child: Text(
-                "Share your tip for " + recipe.name,
+                "Share your tip for " +
+                    RecipeDetailScreen.of(context).recipe.name,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

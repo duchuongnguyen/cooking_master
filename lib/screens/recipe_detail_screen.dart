@@ -1,5 +1,4 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_step_list.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_title.dart';
@@ -12,12 +11,15 @@ import 'RecipeDetail/sliver_ingredient_list.dart';
 import 'RecipeDetail/sliver_recipe_appbar.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
-  final Recipe recipe;
+  final RecipeModel recipe;
 
   const RecipeDetailScreen({Key key, @required this.recipe}) : super(key: key);
 
   @override
   _RecipeDetailScreenState createState() => _RecipeDetailScreenState();
+
+  static RecipeDetailScreen of(BuildContext context) =>
+      context.findAncestorWidgetOfExactType<RecipeDetailScreen>();
 }
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
@@ -42,20 +44,16 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
         slivers: [
-          SliverRecipeAppbar(widget: widget, dynamicTopics: _dynamicTopics),
-          RecipeImageAndAuthor(widget: widget),
+          SliverRecipeAppbar(dynamicTopics: _dynamicTopics),
+          RecipeImageAndAuthor(),
           buildIngredientTabBar(),
-          SliverIngredientList(servings: servings, widget: widget),
+          SliverIngredientList(),
           buildNutritionInfoTabBar(),
           isShowingNutrition
-              ? SliverNutritionList()
-              : SliverList(
-                  delegate:
-                      SliverChildListDelegate(<Widget>[Container()]), //Empty
-                ),
-          RecipeTip(
-            recipe: widget.recipe,
-          ),
+             ? SliverNutritionList()
+             : SliverList(
+                 delegate: SliverChildListDelegate(<Widget>[Container()])),
+          RecipeTip(),
           RelatedRecipes(),
           PreparationTitle(),
           PreparationStepList()
