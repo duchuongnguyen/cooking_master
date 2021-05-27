@@ -3,7 +3,7 @@ import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
 import 'package:cooking_master/screens/edit_user_profile_screen.dart';
 import 'package:cooking_master/services/auth_service.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
@@ -89,10 +89,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Widget _buildBody(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    final userProfile = Provider.of<UserProfile>(context, listen: false);
-    return StreamBuilder<UserModel>(
-      stream: userProfile.LoadProfile(auth.currentUser.uid),
-      // ignore: missing_return
+    final userProfile = Provider.of<UserProfileService>(context, listen: false);
+    return FutureBuilder<UserModel>(
+      future: userProfile.loadProfile(auth.currentUser.uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           user = snapshot.data;

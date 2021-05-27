@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cooking_master/models/recipe_model.dart';
-import 'package:cooking_master/notifier/recipe_notifier.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
@@ -11,14 +10,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class RecipeFormScreen extends StatefulWidget {
   final bool isUpdating;
+  final RecipeModel currentRecipe;
 
   RecipeFormScreen({
     Key key,
     @required this.isUpdating,
+    this.currentRecipe,
   }) : super(key: key);
 
   _RecipeFormScreenState createState() => _RecipeFormScreenState();
@@ -26,7 +26,8 @@ class RecipeFormScreen extends StatefulWidget {
 
 class _RecipeFormScreenState extends State<RecipeFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Recipe _currentRecipe;
+
+  RecipeModel _currentRecipe;
   String _imageUrl;
   File _imageFile;
   var _ingredientWidgets = <Widget>[];
@@ -37,13 +38,11 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   @override
   void initState() {
     super.initState();
-    RecipeNotifier recipeNotifier =
-        Provider.of<RecipeNotifier>(context, listen: false);
 
-    if (recipeNotifier.currentRecipe != null) {
-      _currentRecipe = recipeNotifier.currentRecipe;
+    if (widget.currentRecipe != null) {
+      _currentRecipe = widget.currentRecipe;
     } else {
-      _currentRecipe = Recipe();
+      _currentRecipe = RecipeModel();
     }
 
     _directionImageUrls = _currentRecipe.directionImage;
@@ -636,7 +635,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
 
     _formKey.currentState.save();
 
-    uploadRecipeAndImage(_currentRecipe, widget.isUpdating, _imageFile);
+    RecipeService()
+        .uploadRecipeAndImage(_currentRecipe, widget.isUpdating, _imageFile);
 
     print("name: ${_currentRecipe.name}");
     print("description: ${_currentRecipe.description}");
@@ -701,16 +701,14 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               SizedBox(height: 16),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemCount: _ingredientWidgets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _ingredientWidgets[index];
-                    },
-                  ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: _ingredientWidgets.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _ingredientWidgets[index];
+                  },
                 ),
               ),
               TextButton(
@@ -743,16 +741,14 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               SizedBox(height: 16),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemCount: _directionWidgets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _directionWidgets[index];
-                    },
-                  ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: _directionWidgets.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _directionWidgets[index];
+                  },
                 ),
               ),
               TextButton(

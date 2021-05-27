@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cooking_master/models/tip_model.dart';
 
-class Recipe {
+class RecipeModel {
   String id;
   String owner;
   String name;
@@ -16,23 +17,23 @@ class Recipe {
   Timestamp createdAt;
   Timestamp updatedAt;
 
-  Recipe();
+  RecipeModel();
 
-  Recipe.fromMap(Map<String, dynamic> data) {
-    id = data['id'];
-    owner = data['owner'];
-    name = data['name'];
-    description = data['description'];
-    category = data['category'];
-    yields = data['yields'];
-    prepTime = data['prepTime'];
-    cookTime = data['cookTime'];
-    ingredients = data['ingredients'];
-    directions = data['directions'];
-    directionImage = data['directionImage'];
-    image = data['image'];
-    createdAt = data['createdAt'];
-    updatedAt = data['updatedAt'];
+  RecipeModel.fromMap(Map data) {
+    id = data['id'] as String;
+    owner = data['owner'] as String;
+    name = data['name'] as String;
+    description = data['description'] as String;
+    category = data['category'] as String;
+    yields = data['yields'] as int;
+    prepTime = data['prepTime'] as int;
+    cookTime = data['cookTime'] as int;
+    ingredients = data['ingredients'].cast<String>();
+    directions = data['directions'].cast<String>();
+    directionImage = data['directionImage'].cast<String>();
+    image = data['image'] as String;
+    createdAt = data['createdAt'] as Timestamp;
+    updatedAt = data['updatedAt'] as Timestamp;
   }
 
   Map<String, dynamic> toMap() {

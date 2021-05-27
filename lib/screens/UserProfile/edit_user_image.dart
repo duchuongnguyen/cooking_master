@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/services/firebase_storage.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
@@ -108,7 +108,7 @@ class _EditUserImageState extends State<EditUserImage> {
 
   Future<void> _confirmUpdate(BuildContext context) async {
     final userStorage = Provider.of<StorageRepo>(context, listen: false);
-    final userProfile = Provider.of<UserProfile>(context, listen: false);
+    final userProfile = Provider.of<UserProfileService>(context, listen: false);
     final user = Provider.of<AuthBase>(context, listen: false);
 
     final didRequestSignOut = await showAlertDialog(
