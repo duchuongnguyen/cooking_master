@@ -1,18 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_master/models/user_model.dart';
 
-class UserProfile {
-  final ref = FirebaseFirestore.instance.collection("userprofile");
+class UserProfileService {
+  final _ref = FirebaseFirestore.instance.collection("userprofile");
 
   Future<UserModel> loadProfile(String id) async {
-    return await ref.doc(id).get().then((value) {
+    return await _ref.doc(id).get().then((value) {
       return UserModel.fromMap(value.data());
     });
   }
 
+  List<UserModel> loadListProfile(List<String> listUid) {
+    List<UserModel> listUser = [];
+
+    _ref.get().then((value) {
+      value.docs.forEach((element) {
+        listUser.add(UserModel.fromMap(element.data()));
+      });
+    });
+
+    return listUser;
+  }
+
   Future<bool> updateUser(String uid, String field, String value) async {
     var resultUpdate = false;
-    await ref
+    await _ref
         .doc(uid)
         .update({field: value})
         .then((value) => resultUpdate = true)
@@ -22,7 +34,7 @@ class UserProfile {
 
   Future<bool> addUser(String uid) async {
     var resultCreate = false;
-    await ref
+    await _ref
         .doc(uid)
         .set({
           'uid': uid,

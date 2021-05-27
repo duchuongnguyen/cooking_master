@@ -3,7 +3,7 @@ import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/EditUserProfile/edit_user_profile_information.dart';
 import 'package:cooking_master/screens/UserProfile/edit_user_image.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +35,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    final userProfile = Provider.of<UserProfile>(context, listen: false);
+    final userProfile = Provider.of<UserProfileService>(context, listen: false);
     var uid = widget.user.userId;
     return FutureBuilder<UserModel>(
       future: userProfile.loadProfile(uid),

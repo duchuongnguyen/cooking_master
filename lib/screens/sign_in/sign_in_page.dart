@@ -1,7 +1,7 @@
 import 'package:cooking_master/screens/sign_in/sign_in_button.dart';
 import 'package:cooking_master/screens/sign_in/social_sign_in_button.dart';
 import 'package:cooking_master/services/auth_service.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
     try {
       //await manager.signInWithGoogle();
       final auth = Provider.of<AuthBase>(context, listen: false);
-      final userProfile = Provider.of<UserProfile>(context, listen: false);
+      final userProfile = Provider.of<UserProfileService>(context, listen: false);
       var user = await auth.signInWithGoogle();
       userProfile.addUser(user.uid);
     } on Exception catch (e) {
@@ -58,7 +58,7 @@ class _SignInPageState extends State<SignInPage> {
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
       final auth = Provider.of<AuthBase>(context, listen: false);
-      final userProfile = Provider.of<UserProfile>(context, listen: false);
+      final userProfile = Provider.of<UserProfileService>(context, listen: false);
       var user = await auth.signInWithFacebook();
       userProfile.addUser(user.uid);
     } on Exception catch (e) {

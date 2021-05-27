@@ -24,11 +24,11 @@ class AllTipsScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             if (index == listTip.length - 1)
               return Column(children: [
-                Tip1(tip: listTip[index]),
+                Tip(tip: listTip[index]),
                 SizedBox(height: 50),
               ]);
             else
-              return Tip1(tip: listTip[index]);
+              return Tip(tip: listTip[index]);
           },
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),

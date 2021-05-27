@@ -1,7 +1,7 @@
 import 'package:cooking_master/screens/landing_page.dart';
 import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/services/firebase_storage.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,7 +26,7 @@ class CookingMasterApp extends StatelessWidget {
           create: (_) => StorageRepo(),
         ),
         Provider(
-            create:(_) => UserProfile()
+            create:(_) => UserProfileService()
         ),
         Provider(
             create:(_) => RecipeService()

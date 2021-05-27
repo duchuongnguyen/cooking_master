@@ -2,13 +2,10 @@ import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/AllTips/tip_like.dart';
 import 'package:flutter/material.dart';
 
-class Tip1 extends StatelessWidget {
+class Tip extends StatelessWidget {
   final TipModel tip;
 
-  const Tip1({
-    Key key,
-    @required this.tip,
-  }) : super(key: key);
+  const Tip({Key key, @required this.tip}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

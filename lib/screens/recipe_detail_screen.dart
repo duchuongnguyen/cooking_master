@@ -46,13 +46,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         slivers: [
           SliverRecipeAppbar(dynamicTopics: _dynamicTopics),
           RecipeImageAndAuthor(),
-          buildIngredientTabBar(),
-          SliverIngredientList(),
-          buildNutritionInfoTabBar(),
-          isShowingNutrition
-             ? SliverNutritionList()
-             : SliverList(
-                 delegate: SliverChildListDelegate(<Widget>[Container()])),
+          //buildIngredientTabBar(),
+          //SliverIngredientList(),
+          //buildNutritionInfoTabBar(),
+          // isShowingNutrition
+          //    ? SliverNutritionList()
+          //    : SliverList(
+          //        delegate: SliverChildListDelegate(<Widget>[Container()])),
           RecipeTip(),
           RelatedRecipes(),
           PreparationTitle(),

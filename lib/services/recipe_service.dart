@@ -75,7 +75,9 @@ class RecipeService {
         _listTip.add(tip);
       });
     });
-    
+
+    _listTip.sort((a, b) => b.uidLiked.length.compareTo(a.uidLiked.length));
+
     return _listTip;
   }
 

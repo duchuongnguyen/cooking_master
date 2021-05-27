@@ -64,8 +64,7 @@ class RecipeImageAndAuthor extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."),
+            Text(RecipeDetailScreen.of(context).recipe.description),
           ],
         ),
       ),
