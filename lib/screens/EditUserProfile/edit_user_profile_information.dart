@@ -1,6 +1,6 @@
 
 import 'package:cooking_master/models/user_model.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
@@ -33,7 +33,7 @@ class EditUserProfileInformation extends StatelessWidget {
   final UserModel user;
   final usernameController = TextEditingController();
   Future<void> _confirmUpdate(BuildContext context) async {
-    final userProfile = Provider.of<UserProfile>(context, listen: false);
+    final userProfile = Provider.of<UserProfileService>(context, listen: false);
     final didRequestSignOut = await showAlertDialog(
       context,
       title: 'Save change',

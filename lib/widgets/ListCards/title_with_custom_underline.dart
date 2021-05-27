@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class TitleWithCustomUnderline extends StatelessWidget {
   const TitleWithCustomUnderline({
     Key key,
-    this.text
+    this.text,
   }) : super(key: key);
 
   final String text;
@@ -37,8 +37,7 @@ class TitleWithCustomUnderline extends StatelessWidget {
                 ),
               )
             ],
-          )
-      ),
+          )),
     );
   }
 }

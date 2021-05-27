@@ -1,5 +1,5 @@
 import 'package:cooking_master/screens/sign_in/validators.dart';
-import 'package:cooking_master/services/auth.dart';
+import 'package:cooking_master/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'email_sign_in_model.dart';
 

@@ -1,6 +1,6 @@
 import 'package:cooking_master/screens/sign_in/validators.dart';
-import 'package:cooking_master/services/auth.dart';
-import 'package:cooking_master/services/firebase_userprofile.dart';
+import 'package:cooking_master/services/auth_service.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/form_submit_button.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,7 +36,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     return [
       EmailField(),
       SizedBox(height: 8.0),
-      PassField(),
+      _passField(),
       Visibility(
         visible: _formType == EmailSignInType.SignIn ?
         false : true,
@@ -71,7 +71,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     ];
   }
 
-  TextField PassField() {
+  TextField _passField() {
     bool passWordValid = submitted && !widget.passwordValidator.isValid(_password);
     return TextField(
       focusNode: _passwordFocusNode,
@@ -138,7 +138,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       else {
         if(checkConfirmPassWord()) {
-          final userProfile = Provider.of<UserProfile>(context, listen: false);
+          final userProfile = Provider.of<UserProfileService>(context, listen: false);
           var user =  await auth.createUserWithEmailAndPassword(_email, _password);
           userProfile.addUser(user.uid);
           Navigator.of(context).pop();

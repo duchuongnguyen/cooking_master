@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:cooking_master/models/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'auth.dart';
 import 'package:path/path.dart' as path;
 class StorageRepo {
  
-  Future<String> uploadFile(File file, String uid) async {
+  uploadFile(File file, String uid) async {
     FirebaseStorage _storage = FirebaseStorage.instance;
     //_storage.bucket = "gs://cooking-master-5dc52.appspot.com";
     try {
