@@ -21,34 +21,34 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final db = Provider.of<FirebaseUserSaveRecipe>(context, listen: false);
     var map = new Map<String, List<RecipeCardModelcuahuy>>();
-    return Scaffold(
-        body: StreamBuilder<Map<String, List<RecipeCardModelcuahuy>>>(
-            stream: db.mapListCardStream(),
-            builder: (context, snapshot2) {
-              if (snapshot2.hasData) {
-                map = snapshot2.data;
-                print(map);
-                return ListView.separated(
-                    separatorBuilder: (context, index) => Divider(),
-                    itemCount: map.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          index == 0
-                              ? HeaderWithSearchBox(size: size)
-                              : SizedBox(height: 0,),
-                          ListViewOfRecipeCardsWithTitle(
-                            title: map.keys.elementAt(index),
-                            size: MediaQuery.of(context).size,
-                            cards: map.values.elementAt(index),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      );
-                    });
-              }
-              return LinearProgressIndicator();
-            }));
+    // return Scaffold(
+    //     body: StreamBuilder<Map<String, List<RecipeCardModelcuahuy>>>(
+    //         stream: db.mapListCardStream(),
+    //         builder: (context, snapshot2) {
+    //           if (snapshot2.hasData) {
+    //             map = snapshot2.data;
+    //             print(map);
+    //             return ListView.separated(
+    //                 separatorBuilder: (context, index) => Divider(),
+    //                 itemCount: map.length,
+    //                 itemBuilder: (BuildContext context, int index) {
+    //                   return Column(
+    //                     crossAxisAlignment: CrossAxisAlignment.center,
+    //                     children: [
+    //                       index == 0
+    //                           ? HeaderWithSearchBox(size: size)
+    //                           : SizedBox(height: 0,),
+    //                       ListViewOfRecipeCardsWithTitle(
+    //                         title: map.keys.elementAt(index),
+    //                         size: MediaQuery.of(context).size,
+    //                         cards: map.values.elementAt(index),
+    //                       ),
+    //                       SizedBox(height: 10),
+    //                     ],
+    //                   );
+    //                 });
+    //           }
+    //           return LinearProgressIndicator();
+    //         }));
   }
 }

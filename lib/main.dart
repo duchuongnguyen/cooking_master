@@ -1,4 +1,5 @@
 import 'package:cooking_master/notifier/recipe_notifier.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/landing_page.dart';
 import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/services/firebase_storage.dart';
@@ -31,6 +32,7 @@ class CookingMasterApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => RecipeNotifier(),
         ),
+        ChangeNotifierProvider(create: (_) => SavedRecipeProvider())
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

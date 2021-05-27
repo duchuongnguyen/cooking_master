@@ -1,7 +1,12 @@
+//import 'package:cooking_master/models/model-recipe-cuahuy.dart';
+import 'dart:ffi';
+
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../user_profile_screen.dart';
 import 'package:cooking_master/screens/saved_recipe_screen.dart';
 
@@ -41,6 +46,7 @@ AppBar buildSavedRecipeAppBar(
     TabController _tabController,
     TextEditingController _categoryController,
     SavedRecipeScreenState parent) {
+  final savedRecipe = Provider.of<SavedRecipeProvider>(context, listen: false);
   return buildAppBar(
     context,
     //Todo: Add username here
@@ -80,8 +86,8 @@ AppBar buildSavedRecipeAppBar(
               ),
               onPressed: () {
                 parent.setState(() {
-                  removeSelectedCards(cards);
                   parent.isEditing = false;
+                  savedRecipe.removeRecipe();
                 });
               },
             ),
@@ -93,7 +99,7 @@ AppBar buildSavedRecipeAppBar(
               onPressed: () {
                 parent.setState(() {
                   parent.isEditing = false;
-                  setNoSelected(cards);
+                  savedRecipe.setUnselected();
                 });
               },
             ),

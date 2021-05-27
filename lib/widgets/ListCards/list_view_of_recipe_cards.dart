@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:cooking_master/models/model-recipe-cuahuy.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
+//import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -71,7 +71,7 @@ class _ListViewOfRecipeCardsState extends State<ListViewOfRecipeCards> {
                               widget.parent.isEditing = true;
                             });
                             setState(() {
-                            
+                              setAllSelected(widget.cards);
                             });
                           },
                           trailingIcon: Icon(Icons.done_all)),
