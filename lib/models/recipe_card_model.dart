@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+
 class RecipeCardModel {
   String recipeName;
   String recipeCookTime;
@@ -6,24 +8,67 @@ class RecipeCardModel {
   bool recipeIsSaved;
   String recipeOwner;
   String recipeImage;
+  bool isSelected;
 
-  RecipeCardModel(this.recipeName, this.recipeCookTime, this.recipeKind,
-      this.recipeServingNumber, this.recipeIsSaved, this.recipeOwner, this.recipeImage);
+  RecipeCardModel(
+      this.recipeName,
+      this.recipeCookTime,
+      this.recipeKind,
+      this.recipeServingNumber,
+      this.recipeIsSaved,
+      this.recipeOwner,
+      this.recipeImage,
+      this.isSelected);
 }
 
 //Todo: Update Time cooking for right form.
 
-List<RecipeCardModel> cards = cardData.map(
-    (item) => RecipeCardModel(
-        item['recipeName'],
-        item['recipeCookTime'],
-        item['recipeKind'],
-        item['recipeServingNumber'],
-        item['recipeIsSaved'],
-        item['recipeOwner'],
-        item['recipeImage'],
-    ),
-).toList();
+setNoSelected(List<RecipeCardModel> cards) {
+  cards.forEach((element) {
+    element.isSelected = false;
+  });
+}
+
+setAllSelected(List<RecipeCardModel> cards) {
+  cards.forEach((element) {
+    element.isSelected = true;
+  });
+}
+
+removeSelectedCards(List<RecipeCardModel> cards) {
+  cards.removeWhere((element) => element.isSelected == true);
+}
+
+List<RecipeCardModel> getListRecipe(var data) {
+  List<RecipeCardModel> cards = data
+      .frommap(
+        (item) => RecipeCardModel(
+            item['recipeName'],
+            item['recipeCookTime'],
+            item['recipeKind'],
+            item['recipeServingNumber'],
+            item['recipeIsSaved'],
+            item['recipeOwner'],
+            item['recipeImage'],
+            item['isSelected']),
+      )
+      .toList();
+  return cards;
+}
+
+List<RecipeCardModel> cards = cardData
+    .map(
+      (item) => RecipeCardModel(
+          item['recipeName'],
+          item['recipeCookTime'],
+          item['recipeKind'],
+          item['recipeServingNumber'],
+          item['recipeIsSaved'],
+          item['recipeOwner'],
+          item['recipeImage'],
+          item['isSelected']),
+    )
+    .toList();
 
 var cardData = [
   {
@@ -34,8 +79,8 @@ var cardData = [
     "recipeIsSaved": true,
     "recipeOwner": "Duc Huong",
     "recipeImage": "assets/images/recipe1.jpg",
+    "isSelected": false,
   },
-
   {
     "recipeName": "Spagetti with Coffee sause",
     "recipeCookTime": "20 mins",
@@ -44,8 +89,8 @@ var cardData = [
     "recipeIsSaved": true,
     "recipeOwner": "Minh Huy",
     "recipeImage": "assets/images/recipe2.jpg",
+    "isSelected": false,
   },
-
   {
     "recipeName": "Spagetti with Coffee sause",
     "recipeCookTime": "20 mins",
@@ -54,6 +99,6 @@ var cardData = [
     "recipeIsSaved": true,
     "recipeOwner": "Minh Huy",
     "recipeImage": "assets/images/recipe2.jpg",
+    "isSelected": false,
   },
-
 ];

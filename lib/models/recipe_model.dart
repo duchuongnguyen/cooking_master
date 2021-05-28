@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cooking_master/models/tip_model.dart';
 
 class RecipeModel {
   String id;
@@ -16,7 +15,7 @@ class RecipeModel {
   String image;
   Timestamp createdAt;
   Timestamp updatedAt;
-
+  bool isSelected = false;
   RecipeModel();
 
   RecipeModel.fromMap(Map data) {
@@ -54,4 +53,20 @@ class RecipeModel {
       'updatedAt': updatedAt,
     };
   }
+}
+
+setNoSelected(List<RecipeModel> cards) {
+  cards.forEach((element) {
+    element.isSelected = false;
+  });
+}
+
+setAllSelected(List<RecipeModel> cards) {
+  cards.forEach((element) {
+    element.isSelected = true;
+  });
+}
+
+removeSelectedCards(List<RecipeModel> cards) {
+  cards.removeWhere((element) => element.isSelected == true);
 }

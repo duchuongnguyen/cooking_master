@@ -13,7 +13,7 @@ class HeaderWithSearchBox extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     
     return Container(
-      margin: EdgeInsets.only(bottom: defaultPadding * 2.5),
+      margin: EdgeInsets.only(bottom: defaultPadding),
       height: size.height * 0.2,
       child: Stack(
         children: <Widget>[

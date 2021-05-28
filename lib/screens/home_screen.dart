@@ -1,6 +1,7 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/screens/Home/body.dart';
 import 'package:cooking_master/screens/recipe_form_screen.dart';
+import 'package:cooking_master/screens/saved_recipe_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -23,12 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 30,
-        backgroundColor: blue2,
-      ),
-      body: Body(),
+      appBar: _currentTab == 3
+          ? null
+          : AppBar(
+              elevation: 0,
+              toolbarHeight: 30,
+              backgroundColor: blue2,
+            ),
+      body: _currentTab == 3 ? SavedRecipeScreen() : Body(),
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {

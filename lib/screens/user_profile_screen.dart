@@ -7,6 +7,7 @@ import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
@@ -45,7 +46,6 @@ Future<void> _confirmSignOut(BuildContext context) async {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   UserModel user;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,13 +64,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             user: user,
                           )));
             },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.insights_outlined,
-              color: Colors.black,
-            ),
-            onPressed: () {},
           ),
           IconButton(
             icon: Icon(
