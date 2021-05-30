@@ -23,11 +23,11 @@ class _RecipeTipState extends State<RecipeTip> {
     final recipeService = Provider.of<RecipeService>(context, listen: false);
     final userprofileService =
         Provider.of<UserProfileService>(context, listen: false);
-    
+
     return FutureBuilder<List<TipModel>>(
       future: recipeService.getTips(recipe.id),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.isNotEmpty) {
             return SliverPadding(
               padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 30),
@@ -45,38 +45,48 @@ class _RecipeTipState extends State<RecipeTip> {
                                     text: 'Tips',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
-                                snapshot.data.length != null
-                                    ? TextSpan(
-                                        text:
-                                            '(${snapshot.data.length.toString()})')
-                                    : TextSpan(text: '(0)'),
+                                TextSpan(
+                                    text:
+                                        '(${snapshot.data.length.toString()})'),
                               ]),
                         )),
-                    MediaQuery(
-                      data: MediaQueryData(padding: EdgeInsets.zero),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(snapshot.data[0].image),
-                        ),
-                        title: Text(
-                          'Top tip',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.black,
-                          ),
-                        ),
-                        subtitle: Text(
-                          snapshot.data[0].owner,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
+                    FutureBuilder<UserModel>(
+                        future: userprofileService
+                            .loadProfile(snapshot.data[0].owner),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return MediaQuery(
+                              data: MediaQueryData(padding: EdgeInsets.zero),
+                              child: ListTile(
+                                contentPadding:
+                                    EdgeInsets.only(left: 0.0, right: 0.0),
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(snapshot.data.userImage),
+                                ),
+                                title: Text(
+                                  'Top tip',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  snapshot.data.userName,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
                     Text(snapshot.data[0].content),
                     SizedBox(
                       height: 10,

@@ -22,12 +22,8 @@ class CookingMasterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthBase>(
-          create: (_) => Auth(),
-        ),
-        Provider<StorageRepo>(
-          create: (_) => StorageRepo(),
-        ),
+        Provider<AuthBase>(create: (_) => Auth()),
+        Provider<StorageRepo>(create: (_) => StorageRepo()),
         Provider(create: (_) => UserProfileService()),
         Provider(create: (_) => RecipeService()),
         Provider(create: (_) => FirebaseUserSaveRecipe()),
