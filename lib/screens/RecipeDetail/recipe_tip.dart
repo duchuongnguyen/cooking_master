@@ -23,7 +23,7 @@ class _RecipeTipState extends State<RecipeTip> {
     final recipeService = Provider.of<RecipeService>(context, listen: false);
     final userprofileService =
         Provider.of<UserProfileService>(context, listen: false);
-
+    
     return FutureBuilder<List<TipModel>>(
       future: recipeService.getTips(recipe.id),
       builder: (context, snapshot) {

@@ -1,4 +1,6 @@
 import 'package:cooking_master/constants/color_constant.dart';
+import 'package:cooking_master/notifier/recipes_notifier.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/Home/body.dart';
 import 'package:cooking_master/screens/recipe_form_screen.dart';
 import 'package:cooking_master/screens/saved_recipe_screen.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -17,12 +20,37 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentTab = 0;
-
+  bool isLoading = true;
   List<IconData> icons = [
     FontAwesomeIcons.search,
   ];
+  fecthdata() async {
+    final savedRecipe =
+        Provider.of<SavedRecipeProvider>(context, listen: false);
+    final recipe = Provider.of<RecipeNotifier>(context, listen: false);
+    await savedRecipe.loadMapRecipe();
+    await recipe.loadListRecipes();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fecthdata();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isLoading)
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    else
     return Scaffold(
       appBar: _currentTab == 3
           ? null
