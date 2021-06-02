@@ -13,14 +13,14 @@ import 'package:focused_menu/modals.dart';
 import 'package:provider/provider.dart';
 
 class ListViewOfRecipeCards extends StatelessWidget {
-  const ListViewOfRecipeCards({
-    Key key,
-    @required this.cards,
-    @required this.action,
-    @required this.isEditing,
-    @required this.parent,
-    @required this.size
-  }) : super(key: key);
+  const ListViewOfRecipeCards(
+      {Key key,
+      @required this.cards,
+      @required this.action,
+      @required this.isEditing,
+      @required this.parent,
+      @required this.size})
+      : super(key: key);
 
   final List<RecipeModel> cards;
   final Size size;
@@ -30,8 +30,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final db =
-        Provider.of<SavedRecipeProvider>(context, listen: false);
+
     return Container(
       padding: EdgeInsets.only(top: defaultPadding * 0.6),
       height: size.height * 0.35,
@@ -52,9 +51,8 @@ class ListViewOfRecipeCards extends StatelessWidget {
                           onPressed: () {
                             parent.setState(() {
                               parent.isEditing = true;
-                            });                     
-                            cards[index].isSelected =
-                                  !cards[index].isSelected;  
+                            });
+                            cards[index].isSelected = !cards[index].isSelected;
                           },
                           trailingIcon: Icon(Icons.done)),
                       FocusedMenuItem(
@@ -62,8 +60,8 @@ class ListViewOfRecipeCards extends StatelessWidget {
                           onPressed: () {
                             parent.setState(() {
                               parent.isEditing = true;
-                            });                
-                              setAllSelected(cards);
+                            });
+                            setAllSelected(cards);
                           },
                           trailingIcon: Icon(Icons.done_all)),
                       FocusedMenuItem(
@@ -84,16 +82,14 @@ class ListViewOfRecipeCards extends StatelessWidget {
                     duration: Duration(seconds: 0),
                     animateMenuItems: false,
                     child: GestureDetector(
-                      onTap: 
-                          
-                          () {
-                            Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RecipeDetailScreen(
-                              recipe: cards[index],
-                            )));
-                          },
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RecipeDetailScreen(
+                                      recipe: cards[index],
+                                    )));
+                      },
                       child: Container(
                         width: size.width * 0.5,
                         height: size.width * 0.5,
@@ -110,8 +106,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image:
-                                  NetworkImage(cards[index].image),
+                              image: NetworkImage(cards[index].image),
                             )),
                         child: Stack(
                           children: [
@@ -164,13 +159,10 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
-                                        width:size.width * 0.45 * 0.6,
-                                        height: size.height *
-                                            0.35 *
-                                            0.3 *
-                                            0.7,
+                                        width: size.width * 0.45 * 0.6,
+                                        height: size.height * 0.35 * 0.3 * 0.7,
                                         child: Text(
-                                         cards[index].name,
+                                          cards[index].name,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
@@ -196,9 +188,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                       child: Text(
                                         cards[index].cookTime.toString() +
                                             ' | ' +
-                                            cards[index]
-                                                .yields
-                                                .toString() +
+                                            cards[index].yields.toString() +
                                             " " +
                                             AppLocalizations.of(context)
                                                 .serving,
@@ -228,132 +218,127 @@ class ListViewOfRecipeCards extends StatelessWidget {
                       ),
                     ),
                   )
-                :
-                GestureDetector(
-                      onTap: 
-               
-                          () {
-                            Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RecipeDetailScreen(
-                              recipe: cards[index],
-                            )));
-                          },
-                child:      Container(
-                    width: size.width * 0.5,
-                    height: size.width * 0.5,
-                    margin: EdgeInsets.only(right: defaultPadding * 0.7),
-                    
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: blue2.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 6,
-                            offset: Offset(0, 3),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(20),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(cards[index].image),
-                        )),
-                    child: 
-                    Stack(
-                      children: [
-                        //Kind of recipe
-                        Positioned(
-                          top: defaultPadding,
-                          left: defaultPadding,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaY: 19.2,
-                                sigmaX: 19.2,
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    left: defaultPadding * 0.5,
-                                    right: defaultPadding * 0.5,
-                                    top: defaultPadding * 0.2,
-                                    bottom: defaultPadding * 0.2),
-                                child: Text(
-                                  cards[index].category,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14),
+                : GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RecipeDetailScreen(
+                                    recipe: cards[index],
+                                  )));
+                    },
+                    child: Container(
+                      width: size.width * 0.5,
+                      height: size.width * 0.5,
+                      margin: EdgeInsets.only(right: defaultPadding * 0.7),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: blue2.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 6,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(cards[index].image),
+                          )),
+                      child: Stack(
+                        children: [
+                          //Kind of recipe
+                          Positioned(
+                            top: defaultPadding,
+                            left: defaultPadding,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaY: 19.2,
+                                  sigmaX: 19.2,
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      left: defaultPadding * 0.5,
+                                      right: defaultPadding * 0.5,
+                                      top: defaultPadding * 0.2,
+                                      bottom: defaultPadding * 0.2),
+                                  child: Text(
+                                    cards[index].category,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: size.width * 0.5,
-                        ),
-                        //Detail Information
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            padding: EdgeInsets.all(defaultPadding * 0.45),
-                            margin: EdgeInsets.only(bottom: defaultPadding),
-                            width: size.width * 0.45,
-                            height: size.height * 0.35 * 0.25,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.black.withOpacity(0.7),
-                            ),
-                            child: Stack(
-                              children: [
-                                //Recipe Name
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    width: size.width * 0.45 * 0.6,
-                                    height:
-                                        size.height * 0.35 * 0.3 * 0.7,
-                                    child: Text(
-                                      cards[index].name,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600),
+                          SizedBox(
+                            width: size.width * 0.5,
+                          ),
+                          //Detail Information
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              padding: EdgeInsets.all(defaultPadding * 0.45),
+                              margin: EdgeInsets.only(bottom: defaultPadding),
+                              width: size.width * 0.45,
+                              height: size.height * 0.35 * 0.25,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.black.withOpacity(0.7),
+                              ),
+                              child: Stack(
+                                children: [
+                                  //Recipe Name
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Container(
+                                      width: size.width * 0.45 * 0.6,
+                                      height: size.height * 0.35 * 0.3 * 0.7,
+                                      child: Text(
+                                        cards[index].name,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                //Recipe Save
-                                Positioned(
-                                    top: -defaultPadding + 5,
-                                    right: -defaultPadding + 5,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.bookmark_border_rounded,
-                                          color: Colors.white, size: 18),
-                                    )),
+                                  //Recipe Save
+                                  Positioned(
+                                      top: -defaultPadding + 5,
+                                      right: -defaultPadding + 5,
+                                      child: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                            Icons.bookmark_border_rounded,
+                                            color: Colors.white,
+                                            size: 18),
+                                      )),
 
-                                //Time & Serving
-                                Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: Text(
-                                    cards[index].cookTime.toString() +
-                                        ' | ' +
-                                        cards[index].yields
-                                            .toString() +
-                                        " " +
-                                        AppLocalizations.of(context).serving,
-                                    style: TextStyle(
-                                        color: Colors.blueGrey, fontSize: 12),
+                                  //Time & Serving
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: Text(
+                                      cards[index].cookTime.toString() +
+                                          ' | ' +
+                                          cards[index].yields.toString() +
+                                          " " +
+                                          AppLocalizations.of(context).serving,
+                                      style: TextStyle(
+                                          color: Colors.blueGrey, fontSize: 12),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ));
+                        ],
+                      ),
+                    ));
           }),
     );
   }

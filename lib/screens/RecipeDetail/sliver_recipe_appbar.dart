@@ -1,3 +1,4 @@
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -5,13 +6,15 @@ import 'package:flutter/material.dart';
 import '../recipe_detail_screen.dart';
 
 class SliverRecipeAppbar extends StatelessWidget {
+  final RecipeModel recipe;
+  final List<String> dynamicTopics;
+
   const SliverRecipeAppbar({
     Key key,
-    @required List<String> dynamicTopics,
-  })  : _dynamicTopics = dynamicTopics,
+    @required this.dynamicTopics,
+    @required this.recipe,
+  })  : assert(recipe != null),
         super(key: key);
-
-  final List<String> _dynamicTopics;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,7 @@ class SliverRecipeAppbar extends StatelessWidget {
                     )
                   : null,
               title: Text(
-                RecipeDetailScreen.of(context).recipe.name,
+                recipe.name,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 18.0,
@@ -61,12 +64,12 @@ class SliverRecipeAppbar extends StatelessWidget {
                     child: Wrap(
                       spacing: 10.0,
                       runSpacing: 10.0,
-                      children: List<Widget>.generate(_dynamicTopics.length,
+                      children: List<Widget>.generate(dynamicTopics.length,
                           (int index) {
                         //List of Favorite Topics
                         return Chip(
                           label: Text(
-                            _dynamicTopics[index],
+                            dynamicTopics[index],
                             style: TextStyle(
                                 color: Color.fromARGB(255, 255, 144, 71),
                                 fontWeight: FontWeight.w800),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
@@ -55,7 +56,10 @@ class RecipeService {
 
       await _ref.doc(recipe.id).update(recipe.toMap());
     } else {
+      final _userUid = FirebaseAuth.instance.currentUser.uid;
+
       recipe.createdAt = Timestamp.now();
+      recipe.owner = _userUid;
 
       DocumentReference documentRef = await _ref.add(recipe.toMap());
 
@@ -77,7 +81,7 @@ class RecipeService {
     });
 
     _listTip.sort((a, b) => b.uidLiked.length.compareTo(a.uidLiked.length));
-
+    print(_listTip);
     return _listTip;
   }
 

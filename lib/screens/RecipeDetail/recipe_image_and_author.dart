@@ -1,9 +1,13 @@
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:flutter/material.dart';
 
-import '../recipe_detail_screen.dart';
-
 class RecipeImageAndAuthor extends StatelessWidget {
-  const RecipeImageAndAuthor({Key key}) : super(key: key);
+  final RecipeModel recipe;
+
+  const RecipeImageAndAuthor({
+    Key key,
+    @required this.recipe,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class RecipeImageAndAuthor extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
-                  RecipeDetailScreen.of(context).recipe.image,
+                  recipe.image,
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -64,7 +68,7 @@ class RecipeImageAndAuthor extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text(RecipeDetailScreen.of(context).recipe.description),
+            Text(recipe.description),
           ],
         ),
       ),
