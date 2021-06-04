@@ -4,7 +4,7 @@ import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
-import 'package:cooking_master/screens/recipe_detail_screen.dart';
+import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 //import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -106,7 +106,9 @@ class ListViewOfRecipeCards extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(cards[index].image),
+                              image: cards[index].image != null
+                                  ? NetworkImage(cards[index].image)
+                                  : AssetImage("assets/images/recipe2.jpg"),
                             )),
                         child: Stack(
                           children: [
@@ -243,7 +245,9 @@ class ListViewOfRecipeCards extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(cards[index].image),
+                            image: cards[index].image != null
+                                ? NetworkImage(cards[index].image)
+                                : AssetImage("assets/images/recipe2.jpg"),
                           )),
                       child: Stack(
                         children: [

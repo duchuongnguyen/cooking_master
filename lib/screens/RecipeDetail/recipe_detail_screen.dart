@@ -3,12 +3,10 @@ import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_step_list.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_title.dart';
 import 'package:cooking_master/screens/RecipeDetail/related_recipes.dart';
-import 'package:cooking_master/screens/RecipeDetail/sliver_nutrition_list.dart';
 import 'package:flutter/material.dart';
-import 'RecipeDetail/recipe_image_and_author.dart';
-import 'RecipeDetail/recipe_tip.dart';
-import 'RecipeDetail/sliver_ingredient_list.dart';
-import 'RecipeDetail/sliver_recipe_appbar.dart';
+import 'recipe_image_and_author.dart';
+import 'recipe_tip.dart';
+import 'sliver_recipe_appbar.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final RecipeModel recipe;

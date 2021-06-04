@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'ListCards/list_view_of_recipe_cards.dart';
 
 class ListViewOfRecipeCardsWithTitle extends StatelessWidget {
-
-   ListViewOfRecipeCardsWithTitle(
+  ListViewOfRecipeCardsWithTitle(
       {Key key,
       this.size,
       @required this.cards,
@@ -15,9 +14,9 @@ class ListViewOfRecipeCardsWithTitle extends StatelessWidget {
       this.isEditing,
       this.parent})
       : super(key: key);
-   final List<RecipeModel> cards;
+  final List<RecipeModel> cards;
   Size size;
-  final String title; 
+  final String title;
   // ignore: avoid_init_to_null
   Widget action;
   bool isEditing = false;

@@ -1,5 +1,5 @@
 import 'package:cooking_master/models/ingredient_model.dart';
-import 'package:cooking_master/screens/recipe_detail_screen.dart';
+import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 

@@ -8,14 +8,7 @@ class TipModel {
   Timestamp createdAt;
   List<String> uidLiked;
 
-  TipModel(
-    this.id,
-    this.owner,
-    this.image,
-    this.content,
-    this.createdAt,
-    this.uidLiked,
-  );
+  TipModel();
 
   TipModel.fromMap(Map data) {
     id = data['id'] as String;
