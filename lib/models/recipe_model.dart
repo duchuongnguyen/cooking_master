@@ -29,10 +29,10 @@ class RecipeModel {
     cookTime = data['cookTime'] as int;
     ingredients = data['ingredients'].cast<String>();
     directions = data['directions'].cast<String>();
-    directionImage = data['directionImage'].cast<String>();
+    //directionImage = data['directionImage'].cast<String>();
     image = data['image'] as String;
-    createdAt = data['createdAt'] as Timestamp;
-    updatedAt = data['updatedAt'] as Timestamp;
+    createdAt = data['createdAt'] as Timestamp ?? Timestamp.now();
+    updatedAt = data['updatedAt'] as Timestamp ?? Timestamp.now();
   }
 
   Map<String, dynamic> toMap() {

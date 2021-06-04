@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:cooking_master/screens/Search/recipe_search.dart';
+import 'package:cooking_master/services/search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class SearchModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-
+  final _service = SearchService();
   List<RecipeSearch> _suggestions = history;
   List<RecipeSearch> get suggestions => _suggestions;
 
@@ -23,19 +24,21 @@ class SearchModel extends ChangeNotifier {
     if (query.isEmpty) {
       _suggestions = history;
     } else {
-      final response = await http.get(
-          Uri.parse(
-              'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=$query'),
-          headers: {
-            'x-rapidapi-key':
-                'b5cb77ca4cmsh6d7443b3c0531dbp164d0ejsnf5baa63bf442',
-            'x-rapidapi-host': 'tasty.p.rapidapi.com'
-          });
-      final body = json.decode(utf8.decode(response.bodyBytes));
-      final results = body['results'] as List;
+      // final response = await http.get(
+      //     Uri.parse(
+      //         'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=$query'),
+      //     headers: {
+      //       'x-rapidapi-key':
+      //           'b5cb77ca4cmsh6d7443b3c0531dbp164d0ejsnf5baa63bf442',
+      //       'x-rapidapi-host': 'tasty.p.rapidapi.com'
+      //     });
+      // final body = json.decode(utf8.decode(response.bodyBytes));
+      // final results = body['results'] as List;
 
-      _suggestions =
-          results.map((e) => RecipeSearch.fromJson(e)).toSet().toList();
+      // _suggestions =
+      //     results.map((e) => RecipeSearch.fromJson(e)).toSet().toList();
+      print(query);
+      _suggestions = await _service.searchBy('rice', query);
     }
 
     _isLoading = false;
@@ -51,15 +54,15 @@ class SearchModel extends ChangeNotifier {
 const List<RecipeSearch> history = [
   RecipeSearch(
     name: 'Bun dau mam tom',
-    author: 'Ngo Duong Kha',
+    serving: 'Ngo Duong Kha',
   ),
   RecipeSearch(
     name: 'Com ga Tam Ky',
-    author: 'Bui Minh Huy',
+    serving: 'Bui Minh Huy',
   ),
   RecipeSearch(
     name: 'Banh xeo',
-    author: 'Nguyen Duc Huong',
+    serving: 'Nguyen Duc Huong',
   ),
 ];
 

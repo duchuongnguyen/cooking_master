@@ -26,7 +26,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   margin: EdgeInsets.only(
                       top: 20.0, left: 20.0, bottom: 16.0, right: 50.0),
                   child: Text(
-                      "Hello, i am Cooking Master! What would you like to search?",
+                      "Hello, I am Cooking Master! What would you like to search?",
                       style: TextStyle(
                           fontSize: 26.0, fontWeight: FontWeight.w500))),
               SearchBar(),
@@ -112,7 +112,7 @@ class SearchBar extends StatelessWidget {
 
 List<String> chipsRecipe = [
   "Chicken",
-  "Rice",
+  "rice",
   "Pork",
   "Watermelon",
   "Beefsteak",

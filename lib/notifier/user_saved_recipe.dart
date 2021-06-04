@@ -1,4 +1,3 @@
-import 'package:cooking_master/models/model-recipe-cuahuy.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/services/user_save_recipe.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,11 +9,11 @@ class SavedRecipeProvider with ChangeNotifier {
 
   loadMapRecipe() async {
     _mapSavedRecipe = await _saveRecipeService.getmaprecipe();
+    //_saveRecipeService.addrecipe('uiid');
     notifyListeners();
   }
 
-  Map<String, List<RecipeModel>> get mapSavedRecipe =>
-      _mapSavedRecipe;
+  Map<String, List<RecipeModel>> get mapSavedRecipe => _mapSavedRecipe;
 
   removeRecipe() {
     _mapSavedRecipe.forEach((key, value) {

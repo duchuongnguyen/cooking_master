@@ -1,6 +1,10 @@
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/Search/recipe_search.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
 import 'package:cooking_master/screens/Search/search_model.dart';
+import 'package:cooking_master/screens/recipe_detail_screen.dart';
+import 'package:cooking_master/services/recipe_service.dart';
+import 'package:cooking_master/services/search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -52,21 +56,25 @@ class _HomeState extends State<Home> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.keyword == null)
         controller.open();
-      else { //Run when user tap on chips in previous screen
+      else {
+        //Run when user tap on chips in previous screen
         String query = widget.keyword;
-        final response = await http.get(
-            Uri.parse(
-                'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=$query'),
-            headers: {
-              'x-rapidapi-key':
-                  'b5cb77ca4cmsh6d7443b3c0531dbp164d0ejsnf5baa63bf442',
-              'x-rapidapi-host': 'tasty.p.rapidapi.com'
-            });
-        final body = json.decode(utf8.decode(response.bodyBytes));
-        final results = body['results'] as List;
-        setState(() {
-          cards = results.map((e) => RecipeSearch.fromJson(e)).toSet().toList();
-        });
+        // final response = await http.get(
+        //     Uri.parse(
+        //         'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=$query'),
+        //     headers: {
+        //       'x-rapidapi-key':
+        //           'b5cb77ca4cmsh6d7443b3c0531dbp164d0ejsnf5baa63bf442',
+        //       'x-rapidapi-host': 'tasty.p.rapidapi.com'
+        //     });
+        // final body = json.decode(utf8.decode(response.bodyBytes));
+        // final results = body['results'] as List;
+        // setState(() {
+        //   cards = results.map((e) => RecipeSearch.fromJson(e)).toSet().toList();
+        // });
+        final _searchSer = SearchService();
+        cards = await _searchSer.searchByCate(query);
+        setState(() {});
         isFirstRender = false;
       }
     });
@@ -130,7 +138,8 @@ class _HomeState extends State<Home> {
         onQueryChanged: model.onQueryChanged,
         scrollPadding: EdgeInsets.zero,
         transition: CircularFloatingSearchBarTransition(spacing: 16),
-        builder: (context, _) => buildExpandableBody(model), // Data of searching suggestion here
+        builder: (context, _) =>
+            buildExpandableBody(model), // Data of searching suggestion here
         body: buildBody(), //Data of recipe render here
         onSubmitted: (_) => setState(() {
           cards = model.suggestions.toList();
@@ -199,17 +208,27 @@ class _HomeState extends State<Home> {
     final textTheme = theme.textTheme;
 
     final model = Provider.of<SearchModel>(context, listen: false);
-
+    final _recipedetail = Provider.of<RecipeService>(context, listen: false);
+    RecipeModel recipedetail = null;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         InkWell(
-          onTap: () {
+          onTap: () async {
+            recipedetail = await _recipedetail.getRecipe(recipe.id);
             FloatingSearchBar.of(context).close();
             Future.delayed(
-              const Duration(milliseconds: 500),
+              const Duration(milliseconds: 800),
               () => model.clear(),
             );
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if(recipedetail != null)
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          RecipeDetailScreen(recipe: recipedetail)));
+            });
           },
           child: Padding(
             padding:
@@ -242,7 +261,7 @@ class _HomeState extends State<Home> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        recipe.level2Address,
+                        recipe.serving,
                         style: textTheme.bodyText2
                             .copyWith(color: Colors.grey.shade600),
                       ),
