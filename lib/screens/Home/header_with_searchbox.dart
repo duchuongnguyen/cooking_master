@@ -1,6 +1,7 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:cooking_master/screens/Search/detail_search_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,7 +38,9 @@ class HeaderWithSearchBox extends StatelessWidget {
                   children: <Widget>[
                     //Todo: Add name user
                     Text(
-                      AppLocalizations.of(context).hello + ' Huy,',
+                      AppLocalizations.of(context).hello +
+                          ", " +
+                          FirebaseAuth.instance.currentUser.displayName,
                       style: Theme.of(context).textTheme.headline5.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -53,13 +56,12 @@ class HeaderWithSearchBox extends StatelessWidget {
                       },
                       child: Hero(
                         tag: 'avatar',
-                        child: Container(
-                          height: 45,
-                          width: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                  image: AssetImage("assets/images/user.jpg"))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                FirebaseAuth.instance.currentUser.photoURL),
+                          ),
                         ),
                       ),
                     )
@@ -85,7 +87,9 @@ class HeaderWithSearchBox extends StatelessWidget {
             child: GestureDetector(
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => DetailSearchScreen(),
+                  builder: (context) => DetailSearchScreen(
+                    keyword: 'all',
+                  ),
                 ),
               ),
               child: Container(

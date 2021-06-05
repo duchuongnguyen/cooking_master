@@ -50,6 +50,7 @@ class _HomeState extends State<Home> {
   final controller = FloatingSearchBarController();
   var cards = [];
   bool isFirstRender = true;
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -59,29 +60,26 @@ class _HomeState extends State<Home> {
       else {
         //Run when user tap on chips in previous screen
         String query = widget.keyword;
-        // final response = await http.get(
-        //     Uri.parse(
-        //         'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=$query'),
-        //     headers: {
-        //       'x-rapidapi-key':
-        //           'b5cb77ca4cmsh6d7443b3c0531dbp164d0ejsnf5baa63bf442',
-        //       'x-rapidapi-host': 'tasty.p.rapidapi.com'
-        //     });
-        // final body = json.decode(utf8.decode(response.bodyBytes));
-        // final results = body['results'] as List;
-        // setState(() {
-        //   cards = results.map((e) => RecipeSearch.fromJson(e)).toSet().toList();
-        // });
         final _searchSer = SearchService();
         cards = await _searchSer.searchByCate(query);
+        final searchnotifier = Provider.of<SearchModel>(context, listen: false);
+        searchnotifier.cate = query;
+        await searchnotifier.initdata();
         setState(() {});
         isFirstRender = false;
+        isLoading = false;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading == true)
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0.0,
@@ -175,6 +173,11 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildExpandableBody(SearchModel model) {
+    if (model.suggestions == null)
+      return Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+      );
+    List<RecipeSearch> list = [RecipeSearch(name: '', serving: 0)];
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Material(
@@ -184,7 +187,9 @@ class _HomeState extends State<Home> {
         child: ImplicitlyAnimatedList<RecipeSearch>(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          items: model.suggestions.take(6).toList(),
+          items: model.suggestions != null
+              ? model.suggestions.take(6).toList()
+              : list,
           areItemsTheSame: (a, b) => a == b,
           itemBuilder: (context, animation, recipe, i) {
             return SizeFadeTransition(
@@ -206,7 +211,6 @@ class _HomeState extends State<Home> {
   Widget buildItem(BuildContext context, RecipeSearch recipe) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-
     final model = Provider.of<SearchModel>(context, listen: false);
     final _recipedetail = Provider.of<RecipeService>(context, listen: false);
     RecipeModel recipedetail = null;
@@ -215,19 +219,21 @@ class _HomeState extends State<Home> {
       children: [
         InkWell(
           onTap: () async {
+            print(recipe.id);
             recipedetail = await _recipedetail.getRecipe(recipe.id);
+            //model.updateHistory(recipe);
             FloatingSearchBar.of(context).close();
             Future.delayed(
               const Duration(milliseconds: 800),
               () => model.clear(),
             );
             Future.delayed(const Duration(milliseconds: 500), () {
-              if(recipedetail != null)
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          RecipeDetailScreen(recipe: recipedetail)));
+              if (recipedetail != null)
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RecipeDetailScreen(recipe: recipedetail)));
             });
           },
           child: Padding(
@@ -239,7 +245,7 @@ class _HomeState extends State<Home> {
                   width: 45,
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 500),
-                    child: model.suggestions == history
+                    child: model.suggestions == model.history
                         ? const Icon(Icons.history, key: Key('history'))
                         : (recipe.image == null)
                             ? Container()
@@ -261,7 +267,7 @@ class _HomeState extends State<Home> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        recipe.serving,
+                        "Serving: " + recipe.serving.toString(),
                         style: textTheme.bodyText2
                             .copyWith(color: Colors.grey.shade600),
                       ),

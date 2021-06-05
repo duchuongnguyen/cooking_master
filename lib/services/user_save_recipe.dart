@@ -35,9 +35,9 @@ class FirebaseUserSaveRecipe {
           .then((value) {
         value.docs.forEach((element) {
           list_recipe.add(RecipeModel.fromMap(element.data()));
-          print(element.data());
+         // print(element.data());
         });
-        print(list_recipe.length);
+        //print(list_recipe.length);
       });
       results.putIfAbsent(mycategory.category, () => list_recipe.toList());
       list_recipe.clear();

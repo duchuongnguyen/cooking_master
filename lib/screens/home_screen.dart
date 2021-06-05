@@ -1,10 +1,12 @@
 import 'package:cooking_master/constants/color_constant.dart';
+import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/Home/body.dart';
 import 'package:cooking_master/screens/recipe_form_screen.dart';
 import 'package:cooking_master/screens/saved_recipe_screen.dart';
 import 'package:cooking_master/screens/search_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final savedRecipe =
         Provider.of<SavedRecipeProvider>(context, listen: false);
     final recipe = Provider.of<RecipeNotifier>(context, listen: false);
+    final mytopic = Provider.of<MyTopicsNotifier>(context, listen: false);
+    await mytopic.loadMyTopics(FirebaseAuth.instance.currentUser.uid);
     await savedRecipe.loadMapRecipe();
     await recipe.loadListRecipes();
     setState(() {

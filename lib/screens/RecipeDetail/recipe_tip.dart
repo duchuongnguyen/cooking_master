@@ -1,16 +1,21 @@
 import 'package:cooking_master/constants/color_constant.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/add_tip_screen.dart';
 import 'package:cooking_master/screens/RecipeDetail/all_tips_screen.dart';
-import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecipeTip extends StatefulWidget {
-  const RecipeTip({Key key}) : super(key: key);
+  final RecipeModel recipe;
+
+  const RecipeTip({
+    Key key,
+    @required this.recipe,
+  }) : super(key: key);
 
   @override
   _RecipeTipState createState() => _RecipeTipState();
@@ -19,13 +24,12 @@ class RecipeTip extends StatefulWidget {
 class _RecipeTipState extends State<RecipeTip> {
   @override
   Widget build(BuildContext context) {
-    final recipe = RecipeDetailScreen.of(context).recipe;
     final recipeService = Provider.of<RecipeService>(context, listen: false);
     final userprofileService =
         Provider.of<UserProfileService>(context, listen: false);
 
     return FutureBuilder<List<TipModel>>(
-      future: recipeService.getTips(recipe.id),
+      future: recipeService.getTips(widget.recipe.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.isNotEmpty) {
@@ -97,7 +101,8 @@ class _RecipeTipState extends State<RecipeTip> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AllTipsScreen(
-                                    recipe: recipe, listTip: snapshot.data)));
+                                    recipe: widget.recipe,
+                                    listTip: snapshot.data)));
                       },
                       child: Text(
                         "See all tips and photos >",
@@ -117,7 +122,8 @@ class _RecipeTipState extends State<RecipeTip> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AddTipScreen()));
+                                builder: (context) =>
+                                    AddTipScreen(recipe: widget.recipe)));
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: 8, bottom: 8),
@@ -161,7 +167,6 @@ class _RecipeTipState extends State<RecipeTip> {
                                 TextSpan(text: '(0)'),
                               ]),
                         )),
-                    Text(snapshot.data[0].content),
                     SizedBox(
                       height: 10,
                     ),
@@ -171,7 +176,8 @@ class _RecipeTipState extends State<RecipeTip> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AllTipsScreen(
-                                    recipe: recipe, listTip: snapshot.data)));
+                                    recipe: widget.recipe,
+                                    listTip: snapshot.data)));
                       },
                       child: Text(
                         "See all tips and photos >",
@@ -191,7 +197,8 @@ class _RecipeTipState extends State<RecipeTip> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AddTipScreen()));
+                                builder: (context) =>
+                                    AddTipScreen(recipe: widget.recipe)));
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: 8, bottom: 8),

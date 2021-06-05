@@ -6,8 +6,20 @@ class MyTopicsNotifier extends ChangeNotifier {
   List<String> _myTopics;
   List<String> get MyTopics => _myTopics;
 
-  loadMayTopics(String id) async {
+  loadMyTopics(String id) async {
     _myTopics = await _ser.getMyTopics(id);
+    notifyListeners();
+  }
+
+  deleteTopic(String topic) async {
+    _myTopics.remove(topic);
+    _ser.update(_myTopics);
+    notifyListeners();
+  }
+
+  addTopic(String topic) async {
+    _myTopics.add(topic);
+    _ser.update(_myTopics);
     notifyListeners();
   }
 }

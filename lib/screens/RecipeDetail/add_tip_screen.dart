@@ -4,7 +4,13 @@ import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class AddTipScreen extends StatelessWidget {
-  const AddTipScreen({Key key}) : super(key: key);
+  final RecipeModel recipe;
+
+  const AddTipScreen({
+    Key key,
+    @required this.recipe,
+  })  : assert(recipe != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +32,13 @@ class AddTipScreen extends StatelessWidget {
         actions: [
           Container(
             margin: EdgeInsets.only(top: 10, right: 12),
-            child: Text(
-              "Submit",
-              style: TextStyle(
-                  color: blue2, fontSize: 14, fontWeight: FontWeight.bold),
+            child: TextButton(
+              child: Text(
+                "Submit",
+                style: TextStyle(
+                    color: blue2, fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {},
             ),
           )
         ],
@@ -40,8 +49,7 @@ class AddTipScreen extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 25, right: 25),
               child: Text(
-                "Share your tip for " +
-                    RecipeDetailScreen.of(context).recipe.name,
+                "Share your tip for ${recipe.name}",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

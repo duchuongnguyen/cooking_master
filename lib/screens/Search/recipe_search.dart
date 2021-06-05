@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class RecipeSearch {
   final String id;
   final String name;
-  final String serving;
+  final int serving;
   final String image;
   const RecipeSearch({
     @required this.name,
@@ -23,7 +23,7 @@ class RecipeSearch {
   factory RecipeSearch.fromMap(Map map) {
     return RecipeSearch(
       name: map['name'] ?? '',
-      serving: map['yields'] ?? '',
+      serving: map['yields'] ?? 2,
       image: map['image'] ?? '',
       id: map['id'] ?? '',
     );

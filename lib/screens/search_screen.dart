@@ -79,7 +79,7 @@ class SearchBar extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => DetailSearchScreen(),
+          builder: (context) => DetailSearchScreen(keyword: 'all',),
         ),
       ),
       child: AbsorbPointer(
@@ -111,21 +111,22 @@ class SearchBar extends StatelessWidget {
 }
 
 List<String> chipsRecipe = [
-  "Chicken",
+  "bread",
   "rice",
-  "Pork",
-  "Watermelon",
-  "Beefsteak",
-  "BBQ",
-  "Drink",
-  "Vietnamese Food",
+  "pasta",
+  "beef",
+  "cake",
+  "soup",
+  "sauce",
+  "chicken",
 ];
 
 List<String> chipsCategories = [
-  "Fastfood",
-  "Kimbap",
+  "vegetables",
+  "fastfood",
+  "eggs",
   "Dinner",
-  "Breakfast",
-  "BBQ",
-  "Fastfood",
+  "vietnamese",
+  "nooodles",
+  "fish",
 ];

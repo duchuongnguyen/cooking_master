@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
@@ -13,7 +14,7 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
-    await _ref.get().then((value) {
+    await _ref.limit(20).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);
@@ -23,9 +24,9 @@ class RecipeService {
     return _recipeList;
   }
 
-  Future<RecipeModel> getRecipe(String owner) async {
+  Future<RecipeModel> getRecipe(String id) async {
     RecipeModel _recipe;
-    await _ref.where('owner', isEqualTo: owner).get().then((value) {
+    await _ref.where('id', isEqualTo: id).get().then((value) {
       if (value.docs.length > 0)
         _recipe = RecipeModel.fromMap(value.docs.first.data());
     });
@@ -64,7 +65,10 @@ class RecipeService {
 
       await _ref.doc(recipe.id).update(recipe.toMap());
     } else {
+      final _userUid = FirebaseAuth.instance.currentUser.uid;
+
       recipe.createdAt = Timestamp.now();
+      recipe.owner = _userUid;
 
       DocumentReference documentRef = await _ref.add(recipe.toMap());
 
@@ -86,7 +90,7 @@ class RecipeService {
     });
 
     _listTip.sort((a, b) => b.uidLiked.length.compareTo(a.uidLiked.length));
-
+    print(_listTip);
     return _listTip;
   }
 

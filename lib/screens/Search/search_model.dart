@@ -1,18 +1,45 @@
+import 'dart:collection';
 import 'dart:convert';
+import 'package:cooking_master/models/history_model.dart';
 import 'package:cooking_master/screens/Search/recipe_search.dart';
 import 'package:cooking_master/services/search_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class SearchModel extends ChangeNotifier {
+  String _cate = 'all';
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   final _service = SearchService();
-  List<RecipeSearch> _suggestions = history;
+  Queue<RecipeSearch> history; //= list as Queue<RecipeSearch>;
+  List<RecipeSearch> _suggestions; // = list;
   List<RecipeSearch> get suggestions => _suggestions;
-
   String _query = '';
   String get query => _query;
+  set cate(String cate) {
+    _cate = cate;
+  }
+
+  Future<void> initdata() async {
+
+    // await _service.getHistory().then((value) {
+    //   if (value.length > 0) {
+    //     value.forEach((element) {
+    //       history.addFirst(element);
+    //     });
+    //   }
+    // });
+    // _suggestions = history as List<RecipeSearch>;
+  }
+
+  void updateHistory(RecipeSearch recipeSearch) {
+    history.addFirst(recipeSearch);
+    if (history.length > 3) history.removeLast();
+    List<HistoryModel> historyModels;
+    history.forEach((element) {
+      historyModels.add(HistoryModel.fromRecipe(element));
+    });
+    _service.updateHistory(historyModels);
+  }
 
   void onQueryChanged(String query) async {
     if (query == _query) return;
@@ -20,51 +47,23 @@ class SearchModel extends ChangeNotifier {
     _query = query;
     _isLoading = true;
     notifyListeners();
-
     if (query.isEmpty) {
-      _suggestions = history;
+      _suggestions = history as List<RecipeSearch>;
     } else {
-      // final response = await http.get(
-      //     Uri.parse(
-      //         'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes&q=$query'),
-      //     headers: {
-      //       'x-rapidapi-key':
-      //           'b5cb77ca4cmsh6d7443b3c0531dbp164d0ejsnf5baa63bf442',
-      //       'x-rapidapi-host': 'tasty.p.rapidapi.com'
-      //     });
-      // final body = json.decode(utf8.decode(response.bodyBytes));
-      // final results = body['results'] as List;
-
-      // _suggestions =
-      //     results.map((e) => RecipeSearch.fromJson(e)).toSet().toList();
-      print(query);
-      _suggestions = await _service.searchBy('rice', query);
+      //print(query);
+      _suggestions = await _service.searchBy(_cate, query);
     }
-
     _isLoading = false;
     notifyListeners();
   }
 
   void clear() {
-    _suggestions = history;
+    _suggestions = history as List<RecipeSearch>;
     notifyListeners();
   }
 }
 
-const List<RecipeSearch> history = [
-  RecipeSearch(
-    name: 'Bun dau mam tom',
-    serving: 'Ngo Duong Kha',
-  ),
-  RecipeSearch(
-    name: 'Com ga Tam Ky',
-    serving: 'Bui Minh Huy',
-  ),
-  RecipeSearch(
-    name: 'Banh xeo',
-    serving: 'Nguyen Duc Huong',
-  ),
-];
+
 
 /*
 {

@@ -17,9 +17,6 @@ class RecipeDetailScreen extends StatefulWidget {
 
   @override
   _RecipeDetailScreenState createState() => _RecipeDetailScreenState();
-
-  static RecipeDetailScreen of(BuildContext context) =>
-      context.findAncestorWidgetOfExactType<RecipeDetailScreen>();
 }
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
@@ -44,8 +41,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
         slivers: [
-          SliverRecipeAppbar(dynamicTopics: _dynamicTopics),
-          RecipeImageAndAuthor(),
+          SliverRecipeAppbar(
+              recipe: widget.recipe, dynamicTopics: _dynamicTopics),
+          RecipeImageAndAuthor(recipe: widget.recipe),
           //buildIngredientTabBar(),
           //SliverIngredientList(),
           //buildNutritionInfoTabBar(),
@@ -53,7 +51,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           //    ? SliverNutritionList()
           //    : SliverList(
           //        delegate: SliverChildListDelegate(<Widget>[Container()])),
-          RecipeTip(),
+          RecipeTip(recipe: widget.recipe),
           RelatedRecipes(),
           PreparationTitle(),
           PreparationStepList()

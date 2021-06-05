@@ -1,9 +1,11 @@
 //import 'package:cooking_master/models/model-recipe-cuahuy.dart';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/widgets/appbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +52,7 @@ AppBar buildSavedRecipeAppBar(
   return buildAppBar(
     context,
     //Todo: Add username here
-    title: "Minh Huy Bui",
+    title: FirebaseAuth.instance.currentUser.displayName,
     actions: !parent.isEditing
         ? [
             IconButton(
@@ -114,7 +116,7 @@ AppBar buildSavedRecipeAppBar(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
-              backgroundImage: AssetImage("assets/images/user.jpg"),
+              backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
             ),
           )),
     ),

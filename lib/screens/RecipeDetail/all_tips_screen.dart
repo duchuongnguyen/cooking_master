@@ -33,7 +33,7 @@ class AllTipsScreen extends StatelessWidget {
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
           itemCount: listTip.length),
-      floatingActionButton: AddTipFAB(),
+      floatingActionButton: AddTipFAB(recipe: recipe),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

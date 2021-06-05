@@ -14,10 +14,15 @@ class UserModel {
     this.userImage,
     this.userFollowed,
     this.userFollowing,
-  }
-  );
+  });
   factory UserModel.fromMap(Map data) {
-    return UserModel(userId: data['uid'], userName: data['name'],userAddress: data['address'], userBio: data['bio'],userFollowed: data['followed'],userFollowing: data['following'],userImage: data['imageurl']);
+    return UserModel(
+        userId: data['uid'],
+        userName: data['name'],
+        userAddress: data['address'],
+        userBio: data['bio'],
+        userFollowed: data['followed'],
+        userFollowing: data['following'],
+        userImage: data['imageurl']);
   }
 }
-
