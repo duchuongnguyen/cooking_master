@@ -3,7 +3,7 @@ import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
 
-import '../recipe_detail_screen.dart';
+import 'recipe_detail_screen.dart';
 
 class SliverRecipeAppbar extends StatelessWidget {
   final RecipeModel recipe;

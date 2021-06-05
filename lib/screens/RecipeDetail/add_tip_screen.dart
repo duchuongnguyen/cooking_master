@@ -1,16 +1,21 @@
+import 'dart:io';
+
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
-import 'package:cooking_master/screens/recipe_detail_screen.dart';
+import 'package:cooking_master/models/tip_model.dart';
+import 'package:cooking_master/services/recipe_service.dart';
 import 'package:flutter/material.dart';
 
 class AddTipScreen extends StatelessWidget {
   final RecipeModel recipe;
+  final TextEditingController controller = TextEditingController();
 
-  const AddTipScreen({
+  File _imageFile;
+
+  AddTipScreen({
     Key key,
     @required this.recipe,
-  })  : assert(recipe != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,14 @@ class AddTipScreen extends StatelessWidget {
                 style: TextStyle(
                     color: blue2, fontSize: 14, fontWeight: FontWeight.bold),
               ),
-              onPressed: () {},
+              onPressed: () {
+                TipModel tip = TipModel();
+                tip.content = controller.text;
+                tip.image = null;
+                tip.uidLiked = new List<String>();
+                RecipeService().uploadTipAndImage(recipe.id, tip, _imageFile);
+                Navigator.pop(context);
+              },
             ),
           )
         ],
@@ -57,6 +69,7 @@ class AddTipScreen extends StatelessWidget {
         Expanded(
             flex: 12,
             child: TextFormField(
+              controller: controller,
               autofocus: true,
               decoration: const InputDecoration(
                 border: InputBorder.none,

@@ -27,9 +27,15 @@ class RecipeModel {
     yields = data['yields'] as int;
     prepTime = data['prepTime'] as int;
     cookTime = data['cookTime'] as int;
-    ingredients = data['ingredients'].cast<String>();
-    directions = data['directions'].cast<String>();
-    //directionImage = data['directionImage'].cast<String>();
+
+    if (data['ingredients'] != null)
+      ingredients = data['ingredients'].cast<String>();
+
+    if (data['directions'] != null)
+      directions = data['directions'].cast<String>();
+
+    if (data['directionImage'] != null)
+      directionImage = data['directionImage'].cast<String>();
     image = data['image'] as String;
     createdAt = data['createdAt'] as Timestamp ?? Timestamp.now();
     updatedAt = data['updatedAt'] as Timestamp ?? Timestamp.now();

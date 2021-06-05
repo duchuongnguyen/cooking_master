@@ -14,7 +14,8 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
-    await _ref.limit(20).get().then((value) {
+
+    await _ref.limit(10).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);
@@ -89,12 +90,19 @@ class RecipeService {
       });
     });
 
-    _listTip.sort((a, b) => b.uidLiked.length.compareTo(a.uidLiked.length));
-    print(_listTip);
+    _listTip.sort((a, b) {
+      int cmp = b.uidLiked.length.compareTo(a.uidLiked.length);
+      if (cmp != 0)
+        return cmp;
+      else {
+        return b.createdAt.compareTo(a.createdAt);
+      }
+    });
+
     return _listTip;
   }
 
-  uploadTipAndImage(RecipeModel recipe, TipModel tip, File localFile) async {
+  uploadTipAndImage(String idRecipe, TipModel tip, File localFile) async {
     if (localFile != null) {
       var fileExtension = path.extension(localFile.path);
 
@@ -102,29 +110,39 @@ class RecipeService {
 
       final Reference firebaseStorageRef = FirebaseStorage.instance
           .ref()
-          .child('recipes/${recipe.id}/tips/$uuid$fileExtension');
+          .child('recipes/$idRecipe/tips/$uuid$fileExtension');
 
       await firebaseStorageRef.putFile(localFile);
 
       String url = await firebaseStorageRef.getDownloadURL();
 
-      _uploadTip(tip, imageUrl: url);
+      _uploadTip(idRecipe, tip, imageUrl: url);
     } else {
-      _uploadTip(tip);
+      _uploadTip(idRecipe, tip);
     }
   }
 
-  void _uploadTip(TipModel tip, {String imageUrl}) async {
+  void _uploadTip(String idRecipe, TipModel tip, {String imageUrl}) async {
+    final _tipRef = _ref.doc(idRecipe).collection("tips");
+
     if (imageUrl != null) {
       tip.image = imageUrl;
     }
 
-    tip.createdAt = Timestamp.now();
+    final _userUid = FirebaseAuth.instance.currentUser.uid;
 
-    DocumentReference documentRef = await _ref.add(tip.toMap());
+    if (tip.id == null) {
+      tip.owner = _userUid;
+      tip.createdAt = Timestamp.now();
 
-    tip.id = documentRef.id;
+      DocumentReference documentRef = await _tipRef.add(tip.toMap());
 
-    documentRef.set(tip.toMap());
+      tip.id = documentRef.id;
+
+      documentRef.set(tip.toMap());
+    } else {
+      DocumentReference documentRef = _tipRef.doc(tip.id);
+      documentRef.update(tip.toMap());
+    }
   }
 }

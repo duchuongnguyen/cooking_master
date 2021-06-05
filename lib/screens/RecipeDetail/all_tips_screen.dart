@@ -24,11 +24,11 @@ class AllTipsScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             if (index == listTip.length - 1)
               return Column(children: [
-                Tip(tip: listTip[index]),
+                Tip(recipe: recipe, tip: listTip[index]),
                 SizedBox(height: 50),
               ]);
             else
-              return Tip(tip: listTip[index]);
+              return Tip(recipe: recipe, tip: listTip[index]);
           },
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
@@ -43,9 +43,7 @@ class AllTipsScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text(
-        " " +
-            listTip.length.toString() +
-            " tips", //Todo: Update tips count from database
+        "${listTip.length.toString()} tips", //Todo: Update tips count from database
         style: TextStyle(color: blue1, fontWeight: FontWeight.bold),
       ),
       leading: CustomBackButton(

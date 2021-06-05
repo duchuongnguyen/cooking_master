@@ -1,3 +1,5 @@
+import 'package:cooking_master/extension.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/AllTips/tip_like.dart';
@@ -6,9 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Tip extends StatefulWidget {
+  final RecipeModel recipe;
   final TipModel tip;
 
-  const Tip({Key key, @required this.tip}) : super(key: key);
+  const Tip({
+    Key key,
+    @required this.recipe,
+    @required this.tip,
+  }) : super(key: key);
 
   @override
   _TipState createState() => _TipState();
@@ -21,28 +28,7 @@ class _TipState extends State<Tip> {
   void initState() {
     super.initState();
 
-    Duration duration =
-        DateTime.now().difference(widget.tip.createdAt.toDate());
-
-    if (duration.inDays ~/ 365 >= 2) {
-      differenceString = '${(duration.inDays ~/ 365).toString()} years';
-    } else if (duration.inDays ~/ 365 == 1) {
-      differenceString = 'a year';
-    } else if (duration.inDays >= 2) {
-      differenceString = '${duration.inDays.toString()} days';
-    } else if (duration.inDays == 1) {
-      differenceString = 'a day';
-    } else if (duration.inHours >= 2) {
-      differenceString = '${duration.inHours.toString()} hours';
-    } else if (duration.inHours == 1) {
-      differenceString = 'a hour';
-    } else if (duration.inMinutes >= 2) {
-      differenceString = '${duration.inMinutes.toString()} minutes';
-    } else if (duration.inMinutes == 1) {
-      differenceString = 'a minute';
-    } else {
-      differenceString = 'less than a minutes';
-    }
+    differenceString = getDurationString(widget.tip.createdAt.toDate());
   }
 
   @override
@@ -76,10 +62,12 @@ class _TipState extends State<Tip> {
                           SizedBox(height: 5),
                           ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                widget.tip.image,
-                                fit: BoxFit.fitWidth,
-                              )),
+                              child: widget.tip.image != null
+                                  ? Image.network(
+                                      widget.tip.image,
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                  : SizedBox()),
                           SizedBox(height: 5),
                           Text(
                             widget.tip.content,
@@ -95,7 +83,7 @@ class _TipState extends State<Tip> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300, fontSize: 14),
                               ),
-                              TipLike(tip: widget.tip),
+                              TipLike(recipe: widget.recipe, tip: widget.tip),
                             ],
                           )
                         ]))

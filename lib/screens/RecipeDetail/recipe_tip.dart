@@ -101,8 +101,9 @@ class _RecipeTipState extends State<RecipeTip> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AllTipsScreen(
-                                    recipe: widget.recipe,
-                                    listTip: snapshot.data)));
+                                      recipe: widget.recipe,
+                                      listTip: snapshot.data,
+                                    )));
                       },
                       child: Text(
                         "See all tips and photos >",
@@ -176,8 +177,9 @@ class _RecipeTipState extends State<RecipeTip> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AllTipsScreen(
-                                    recipe: widget.recipe,
-                                    listTip: snapshot.data)));
+                                      recipe: widget.recipe,
+                                      listTip: snapshot.data,
+                                    )));
                       },
                       child: Text(
                         "See all tips and photos >",
