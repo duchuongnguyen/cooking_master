@@ -328,10 +328,10 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                     alignment: Alignment.bottomLeft,
                                     child: Text(
                                       cards[index].cookTime.toString() +
-                                          ' | ' +
+                                          ' min | ' +
                                           cards[index].yields.toString() +
-                                          " " +
-                                          AppLocalizations.of(context).serving,
+                                          " serving",// +
+                                        //  AppLocalizations.of(context).serving?? '',
                                       style: TextStyle(
                                           color: Colors.blueGrey, fontSize: 12),
                                     ),

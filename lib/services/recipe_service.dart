@@ -14,6 +14,7 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
+
     await _ref.limit(10).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
@@ -22,6 +23,15 @@ class RecipeService {
     });
 
     return _recipeList;
+  }
+
+  Future<RecipeModel> getRecipe(String id) async {
+    RecipeModel _recipe;
+    await _ref.where('id', isEqualTo: id).get().then((value) {
+      if (value.docs.length > 0)
+        _recipe = RecipeModel.fromMap(value.docs.first.data());
+    });
+    return _recipe;
   }
 
   void uploadRecipeAndImage(
