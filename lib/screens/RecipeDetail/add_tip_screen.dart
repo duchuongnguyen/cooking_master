@@ -14,7 +14,7 @@ class AddTipScreen extends StatelessWidget {
 
   AddTipScreen({
     Key key,
-    @required this.recipe,s
+    @required this.recipe,
   }) : super(key: key);
 
   @override

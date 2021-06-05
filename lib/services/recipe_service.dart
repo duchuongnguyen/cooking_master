@@ -14,7 +14,7 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
-    await _ref.get().then((value) {
+    await _ref.limit(10).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);
@@ -124,8 +124,11 @@ class RecipeService {
     if (tip.id == null) {
       tip.owner = _userUid;
       tip.createdAt = Timestamp.now();
+
       DocumentReference documentRef = await _tipRef.add(tip.toMap());
+
       tip.id = documentRef.id;
+
       documentRef.set(tip.toMap());
     } else {
       DocumentReference documentRef = _tipRef.doc(tip.id);
