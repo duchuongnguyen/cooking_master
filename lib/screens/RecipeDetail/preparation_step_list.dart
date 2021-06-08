@@ -1,12 +1,15 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/preparation_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class PreparationStepList extends StatelessWidget {
+  final RecipeModel recipe;
+
   const PreparationStepList({
     Key key,
+    @required this.recipe,
   }) : super(key: key);
 
   @override
@@ -16,7 +19,7 @@ class PreparationStepList extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            final int itemIndex = index ~/ 2;
+            final int itemIndex = (index) ~/ 2;
             if (index.isEven) {
               return Ink(
                 decoration: BoxDecoration(
@@ -31,8 +34,8 @@ class PreparationStepList extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PreparationScreen(
-                                  startIndex: itemIndex,
-                                )));
+                                startIndex: itemIndex,
+                                directions: recipe.directions)));
                   },
                   child: Container(
                     padding: EdgeInsets.all(10),
@@ -43,7 +46,7 @@ class PreparationStepList extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            preparation[itemIndex].preparationStepNumber,
+                            (itemIndex + 1).toString(),
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -51,7 +54,7 @@ class PreparationStepList extends StatelessWidget {
                         Expanded(
                           flex: 9,
                           child: Text(
-                            preparation[itemIndex].preparationDetail,
+                            recipe.directions[itemIndex],
                             style: TextStyle(fontSize: 18),
                           ),
                         )
@@ -69,7 +72,7 @@ class PreparationStepList extends StatelessWidget {
             }
             return null;
           },
-          childCount: math.max(0, preparation.length * 2 - 1),
+          childCount: math.max(0, recipe.directions.length * 2 - 1),
         ),
       ),
     );

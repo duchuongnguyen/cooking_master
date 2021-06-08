@@ -52,7 +52,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           RecipeTip(recipe: widget.recipe),
           RelatedRecipes(),
           PreparationTitle(),
-          PreparationStepList()
+          widget.recipe.directions.isNotEmpty && widget.recipe.directions != null
+              ? PreparationStepList(recipe: widget.recipe)
+              : SizedBox(),
         ],
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/ingredient_model.dart';
-import 'package:cooking_master/models/preparation_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/detail_preparation_step.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/preparation_header.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/preparation_step_progress.dart';
@@ -9,9 +8,14 @@ import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 
 class PreparationScreen extends StatefulWidget {
   final int startIndex;
+  final List<String> directions;
 
-  const PreparationScreen({Key key, @required this.startIndex})
-      : super(key: key);
+  const PreparationScreen({
+    Key key,
+    @required this.startIndex,
+    @required this.directions,
+  }) : super(key: key);
+
   @override
   _PreparationScreenState createState() => _PreparationScreenState();
 }
@@ -19,16 +23,15 @@ class PreparationScreen extends StatefulWidget {
 class _PreparationScreenState extends State<PreparationScreen> {
   ScrollController scrollController;
 
-  ///The controller of sliding up panel
   SlidingUpPanelController panelController = SlidingUpPanelController();
   @override
   void initState() {
-    // TODO: implement initState
     _pageController = PageController(
       initialPage: widget.startIndex,
     );
+
     currentIndex = widget.startIndex;
-    totalPages = preparation.length;
+    totalPages = widget.directions.length;
     super.initState();
   }
 
@@ -109,7 +112,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
                     },
                     itemBuilder: (context, position) {
                       return DetailPreparationStep(
-                          preparationStep: preparation[position]);
+                          direction: widget.directions[position]);
                     },
                     itemCount: totalPages,
                     scrollDirection: Axis.horizontal,
