@@ -46,24 +46,24 @@ class ListViewOfRecipeCards extends StatelessWidget {
                 ? FocusedMenuHolder(
                     menuWidth: size.width * 0.5,
                     menuItems: [
-                      FocusedMenuItem(
-                          title: Text("Select Item"),
-                          onPressed: () {
-                            parent.setState(() {
-                              parent.isEditing = true;
-                            });
-                            cards[index].isSelected = !cards[index].isSelected;
-                          },
-                          trailingIcon: Icon(Icons.done)),
-                      FocusedMenuItem(
-                          title: Text("Select All"),
-                          onPressed: () {
-                            parent.setState(() {
-                              parent.isEditing = true;
-                            });
-                            setAllSelected(cards);
-                          },
-                          trailingIcon: Icon(Icons.done_all)),
+                      // FocusedMenuItem(
+                      //     title: Text("Select Item"),
+                      //     onPressed: () {
+                      //       parent.setState(() {
+                      //         parent.isEditing = true;
+                      //       });
+                      //       cards[index].isSelected = !cards[index].isSelected;
+                      //     },
+                      //     trailingIcon: Icon(Icons.done)),
+                      // FocusedMenuItem(
+                      //     title: Text("Select All"),
+                      //     onPressed: () {
+                      //       parent.setState(() {
+                      //         parent.isEditing = true;
+                      //       });
+                      //       setAllSelected(cards);
+                      //     },
+                      //     trailingIcon: Icon(Icons.done_all)),
                       FocusedMenuItem(
                           title: Text("Delete"),
                           onPressed: () {
@@ -330,8 +330,8 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                       cards[index].cookTime.toString() +
                                           ' min | ' +
                                           cards[index].yields.toString() +
-                                          " serving",// +
-                                        //  AppLocalizations.of(context).serving?? '',
+                                          " serving", // +
+                                      //  AppLocalizations.of(context).serving?? '',
                                       style: TextStyle(
                                           color: Colors.blueGrey, fontSize: 12),
                                     ),

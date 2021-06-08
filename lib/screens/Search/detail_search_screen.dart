@@ -1,8 +1,8 @@
 import 'package:cooking_master/models/recipe_model.dart';
+import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/Search/recipe_search.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
 import 'package:cooking_master/screens/Search/search_model.dart';
-import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/services/search_service.dart';
 import 'package:flutter/material.dart';

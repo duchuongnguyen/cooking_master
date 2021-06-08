@@ -95,6 +95,10 @@ class CategoryPopupMenu extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
+            child: Text('Add recipe'),
+            value: 'Add',
+          ),
+          PopupMenuItem(
             child: Text('Delete Category'),
             value: 'Delete',
           ),
