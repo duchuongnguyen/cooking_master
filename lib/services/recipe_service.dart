@@ -24,6 +24,15 @@ class RecipeService {
     return _recipeList;
   }
 
+  Future<RecipeModel> getRecipe(String id) async {
+    RecipeModel _recipe;
+    await _ref.where('id', isEqualTo: id).get().then((value) {
+      if (value.docs.length > 0)
+        _recipe = RecipeModel.fromMap(value.docs.first.data());
+    });
+    return _recipe;
+  }
+
   void uploadRecipeAndImage(
       RecipeModel recipe, bool isUpdating, File localFile) async {
     if (localFile != null) {

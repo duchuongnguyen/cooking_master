@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserProfileService {
   final _ref = FirebaseFirestore.instance.collection("userprofile");
@@ -29,6 +30,13 @@ class UserProfileService {
         .update({field: value})
         .then((value) => resultUpdate = true)
         .catchError((error) => resultUpdate = false);
+    if (field == 'name') {
+    await  FirebaseAuth.instance.currentUser.updateProfile(displayName: value);
+    }
+    if (field == 'imageurl') {
+     await FirebaseAuth.instance.currentUser.updateProfile(photoURL: value);
+    }
+   // print(FirebaseAuth.instance.currentUser.displayName);
     return resultUpdate;
   }
 
@@ -48,6 +56,10 @@ class UserProfileService {
         })
         .then((value) => resultCreate = true)
         .catchError((error) => resultCreate = false);
+    await FirebaseAuth.instance.currentUser.updateProfile(
+        displayName: "New friend",
+        photoURL:
+            'https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/user%2Fno_avatar.jpg?alt=media&token=98aeb858-f003-47ca-8bf7-a9bb82cc59c8');
     return resultCreate;
   }
 }

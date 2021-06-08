@@ -38,6 +38,7 @@ class SavedTabState extends State<SavedTab> {
   Widget build(BuildContext context) {
     SavedRecipeProvider db =
         Provider.of<SavedRecipeProvider>(context, listen: false);
+    
     Future<void> onRefresh() async {
       setState(() {});
     }
