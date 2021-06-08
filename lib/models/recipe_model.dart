@@ -36,7 +36,6 @@ class RecipeModel {
 
     if (data['directionImage'] != null)
       directionImage = data['directionImage'].cast<String>();
-
     image = data['image'] as String;
     createdAt = data['createdAt'] as Timestamp ?? Timestamp.now();
     updatedAt = data['updatedAt'] as Timestamp ?? Timestamp.now();
