@@ -1,5 +1,5 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/ingredient_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/detail_preparation_step.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/preparation_header.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/preparation_step_progress.dart';
@@ -8,12 +8,12 @@ import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 
 class PreparationScreen extends StatefulWidget {
   final int startIndex;
-  final List<String> directions;
+  final RecipeModel recipe;
 
   const PreparationScreen({
     Key key,
     @required this.startIndex,
-    @required this.directions,
+    @required this.recipe,
   }) : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
     );
 
     currentIndex = widget.startIndex;
-    totalPages = widget.directions.length;
+    totalPages = widget.recipe.directions.length;
     super.initState();
   }
 
@@ -52,7 +52,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
               Text('Ingredients for',
                   style: TextStyle(fontSize: 22, color: Colors.white)),
               SizedBox(height: 10),
-              Text('4 servings',
+              Text('${widget.recipe.yields} servings',
                   style: TextStyle(fontSize: 20, color: Colors.white)),
               Expanded(
                 child: ListView.separated(
@@ -60,15 +60,15 @@ class _PreparationScreenState extends State<PreparationScreen> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(ingredient[index].ingredientName,
+                          Text(widget.recipe.ingredients[index],
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white)),
-                          Text(
-                              ingredient[index].ingredientAmount.toString() +
-                                  " " +
-                                  ingredient[index].ingredientUnit.toString(),
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white))
+                          // Text(
+                          //     ingredient[index].ingredientAmount.toString() +
+                          //         " " +
+                          //         ingredient[index].ingredientUnit.toString(),
+                          //     style:
+                          //         TextStyle(fontSize: 18, color: Colors.white))
                         ],
                       );
                     },
@@ -76,7 +76,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
                         Divider(
                           thickness: 1.5,
                         ),
-                    itemCount: ingredient.length),
+                    itemCount: widget.recipe.ingredients.length),
               )
             ],
           ),
@@ -112,7 +112,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
                     },
                     itemBuilder: (context, position) {
                       return DetailPreparationStep(
-                          direction: widget.directions[position]);
+                          direction: widget.recipe.directions[position]);
                     },
                     itemCount: totalPages,
                     scrollDirection: Axis.horizontal,

@@ -35,7 +35,7 @@ class PreparationStepList extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => PreparationScreen(
                                 startIndex: itemIndex,
-                                directions: recipe.directions)));
+                                recipe: recipe)));
                   },
                   child: Container(
                     padding: EdgeInsets.all(10),
