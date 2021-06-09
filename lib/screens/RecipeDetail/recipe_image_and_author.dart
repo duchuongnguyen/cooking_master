@@ -1,5 +1,7 @@
+import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/screens/user_profile_watch_screen.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,13 +51,51 @@ class RecipeImageAndAuthor extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return ListTile(
                       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(snapshot.data.userImage),
+                      leading: Stack(children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UserProfileWatchScreen(snapshot.data)));
+                          },
+                          child: Container(
+                            width: 55,
+                            height: 55,
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(snapshot.data.userImage),
+                            ),
+                          ),
                         ),
-                      ),
+                        //if(user.isFollow == false) Only show when user haven't follow before
+                        Positioned(
+                          bottom: -12,
+                          right: -12,
+                          child: AnimatedIconButton(
+                            size: 20,
+                            onPressed: () => print('all icons pressed'),
+                            icons: [
+                              AnimatedIconItem(
+                                icon: Icon(
+                                  Icons.add_circle,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () => print('follow pressed'),
+                              ),
+                              AnimatedIconItem(
+                                icon: Icon(
+                                  Icons.done_rounded,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () => print('unfollow pressed'),
+                              ),
+                            ],
+                          ),
+                        )
+                      ]),
                       title: Text(
                         'Recipe by',
                         style: TextStyle(

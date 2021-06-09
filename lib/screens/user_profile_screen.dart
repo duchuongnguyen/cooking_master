@@ -1,5 +1,6 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/screens/UserProfile/FollowScreen.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
 import 'package:cooking_master/screens/edit_user_profile_screen.dart';
 import 'package:cooking_master/services/auth_service.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 class UserProfileScreen extends StatefulWidget {
   UserProfileScreen();
@@ -49,6 +51,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         extendBody: true,
         appBar: buildAppBar(context, title: '', actions: [
           IconButton(
@@ -149,56 +152,76 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    "Người theo dõi",
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: 0.5,
-                                        height: 1.5),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    user.userFollowed.toString(),
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FollowScreen(
+                                                tab: "followers",
+                                              )));
+                                },
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Followers",
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: 0.5,
+                                          height: 1.5),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      user.userFollowed.toString(),
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
                               VerticalDivider(
-                                color: Colors.black,
+                                color: Colors.black.withOpacity(0.7),
                                 thickness: 0.5,
                                 width: 20,
                               ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "Đang theo dõi",
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: 0.5,
-                                        height: 1.5),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    user.userFollowing.toString(),
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FollowScreen(
+                                                tab: "following",
+                                              )));
+                                },
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Following",
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: 0.5,
+                                          height: 1.5),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      user.userFollowing.toString(),
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -208,7 +231,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     //Bio Text
                     Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 25),
+                        margin: EdgeInsets.only(top: 25, bottom: 15),
                         padding: EdgeInsets.only(left: 25, right: 25),
                         child: Hero(
                           tag: "userbio",
@@ -226,11 +249,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                     Center(
-                      child: CategoryItem(),
-                    ),
-                    //List recipes
-                    Container(
-                      child: ListView.builder(
+                        child: StickyHeader(
+                      header: CategoryItem(),
+                      content: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: cards.length,
@@ -241,7 +262,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           );
                         },
                       ),
-                    )
+                    ))
                   ],
                 ),
               ));
