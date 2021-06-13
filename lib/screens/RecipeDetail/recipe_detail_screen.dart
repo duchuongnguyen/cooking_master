@@ -1,10 +1,13 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
+import 'package:cooking_master/screens/RecipeDetail/SaveRecipeDrawer/add_category_drawer.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_step_list.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_title.dart';
 import 'package:cooking_master/screens/RecipeDetail/related_recipes.dart';
 import 'package:cooking_master/screens/RecipeDetail/sliver_ingredient_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'recipe_image_and_author.dart';
 import 'recipe_tip.dart';
 import 'sliver_recipe_appbar.dart';
@@ -19,36 +22,65 @@ class RecipeDetailScreen extends StatefulWidget {
 }
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
-  List<String> _dynamicTopics;
+  final GlobalKey<InnerDrawerState> _innerDrawerKey =
+      GlobalKey<InnerDrawerState>();
 
   @override
   void initState() {
     super.initState();
-    _dynamicTopics = [
-      '#1 cooking recipe this week',
-    ];
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      //systemNavigationBarColor: Colors.blue,
+      statusBarColor: Colors.transparent,
+      //statusBarBrightness: Brightness.dark,
+    ));
   }
+
+  Color currentColor = Colors.black54;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          SliverRecipeAppbar(
-              recipe: widget.recipe, dynamicTopics: _dynamicTopics),
-          RecipeImageAndAuthor(recipe: widget.recipe),
-          buildIngredientTabBar(),
-          SliverIngredientList(ingredientList: widget.recipe.ingredients),
-          RecipeTip(recipe: widget.recipe),
-          RelatedRecipes(),
-          PreparationTitle(),
-          widget.recipe.directions.isNotEmpty &&
-                  widget.recipe.directions != null
-              ? PreparationStepList(recipe: widget.recipe)
-              : SizedBox(),
-        ],
+    return InnerDrawer(
+      borderRadius: 20.0,
+      key: _innerDrawerKey,
+      onTapClose: false,
+      tapScaffoldEnabled: true,
+      velocity: 20,
+      swipeChild: true,
+      scale: IDOffset.horizontal(0.9),
+      offset: IDOffset.horizontal(0.6),
+      swipe: true,
+      colorTransitionChild: Colors.black54,
+      colorTransitionScaffold: Colors.black87,
+      rightAnimationType: InnerDrawerAnimation.linear,
+      rightChild: AddCategoryDrawer(idRecipe: widget.recipe.id),
+      scaffold: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          toolbarHeight: 0.0,
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+        ),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverRecipeAppbar(
+              recipe: widget.recipe,
+              innerDrawerKey: _innerDrawerKey,
+            ),
+            RecipeImageAndAuthor(recipe: widget.recipe),
+            buildIngredientTabBar(),
+            SliverIngredientList(
+              ingredientList: widget.recipe.ingredients,
+            ),
+            RecipeTip(recipe: widget.recipe),
+            RelatedRecipes(),
+            PreparationTitle(),
+            PreparationStepList(
+              recipe: widget.recipe,
+            )
+          ],
+        ),
       ),
     );
   }

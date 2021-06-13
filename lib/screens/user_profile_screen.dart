@@ -237,7 +237,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         itemBuilder: (context, index) {
                           return RecipeDetailCard(
                             recipe: cards[index],
-                            size: MediaQuery.of(context).size,
                           );
                         },
                       ),

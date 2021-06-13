@@ -4,15 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class RecipeDetailCard extends StatelessWidget {
   final RecipeCardModel recipe;
-  final size;
 
-  const RecipeDetailCard({Key key, this.recipe, this.size}) : super(key: key);
+  const RecipeDetailCard({Key key, this.recipe}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.all(10),
-        height: size.width * 0.35,
+        height: MediaQuery.of(context).size.width * 0.35,
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.25),
           borderRadius: BorderRadius.circular(20),
