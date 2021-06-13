@@ -1,16 +1,13 @@
-import 'dart:ffi';
 import 'dart:ui';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
-import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
-//import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
-import 'package:provider/provider.dart';
+import 'package:cooking_master/extension.dart';
 
 class ListViewOfRecipeCards extends StatelessWidget {
   const ListViewOfRecipeCards(
@@ -130,7 +127,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                         top: defaultPadding * 0.2,
                                         bottom: defaultPadding * 0.2),
                                     child: Text(
-                                      cards[index].category,
+                                      cards[index].category.capitalizeFirstofEach,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -269,7 +266,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                       top: defaultPadding * 0.2,
                                       bottom: defaultPadding * 0.2),
                                   child: Text(
-                                    cards[index].category,
+                                    cards[index].category.capitalizeFirstofEach,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
