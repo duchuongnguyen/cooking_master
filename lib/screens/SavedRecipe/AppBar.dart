@@ -84,7 +84,7 @@ AppBar buildSavedRecipeAppBar(
               onPressed: () {
                 parent.setState(() {
                   parent.isEditing = false;
-                  savedRecipe.removeRecipe();
+                  //savedRecipe.removeRecipe();
                 });
               },
             ),
@@ -96,7 +96,7 @@ AppBar buildSavedRecipeAppBar(
               onPressed: () {
                 parent.setState(() {
                   parent.isEditing = false;
-                  savedRecipe.setUnselected();
+                  //savedRecipe.setUnselected();
                 });
               },
             ),

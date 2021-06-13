@@ -56,7 +56,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       colorTransitionChild: Colors.black54,
       colorTransitionScaffold: Colors.black87,
       rightAnimationType: InnerDrawerAnimation.linear,
-      rightChild: AddCategoryDrawer(),
+      rightChild: AddCategoryDrawer(idRecipe: widget.recipe.id),
       scaffold: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(

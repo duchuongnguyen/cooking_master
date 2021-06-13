@@ -1,7 +1,9 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 class RecipesChoicesBuilder extends StatefulWidget {
   @override
@@ -21,6 +23,8 @@ class _RecipesChoicesBuilderState extends State<RecipesChoicesBuilder> {
   ThemeData get theme => Theme.of(context);
   @override
   Widget build(BuildContext context) {
+    final savedRecipeNotifier =
+        Provider.of<SavedRecipeProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: selectedCount > 0
@@ -35,7 +39,7 @@ class _RecipesChoicesBuilderState extends State<RecipesChoicesBuilder> {
             ? [
                 GestureDetector(
                     onTap: () {
-                      //Add recipe into category
+                      savedRecipeNotifier.updateListRecipe();
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -57,19 +61,31 @@ class _RecipesChoicesBuilderState extends State<RecipesChoicesBuilder> {
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    if (cards[index].isSelected == false) {
+                    if (savedRecipeNotifier.mapSavedRecipe['All']
+                            .elementAt(index)
+                            .isSelected ==
+                        false) {
                       isCheck = true;
                       selectedCount++;
                     } else {
                       selectedCount--;
                     }
-                    cards[index].isSelected = !cards[index].isSelected;
+                    String id = savedRecipeNotifier.mapSavedRecipe['All']
+                        .elementAt(index)
+                        .id;
+                    savedRecipeNotifier.setSelected(id);
                   });
                 },
                 child: RecipeSearchItem(
-                  image: cards[index].image,
-                  name: cards[index].recipeName,
-                  isSelected: cards[index].isSelected,
+                  image: savedRecipeNotifier.mapSavedRecipe['All']
+                      .elementAt(index)
+                      .image,
+                  name: savedRecipeNotifier.mapSavedRecipe['All']
+                      .elementAt(index)
+                      .name,
+                  isSelected: savedRecipeNotifier.mapSavedRecipe['All']
+                      .elementAt(index)
+                      .isSelected,
                 ),
               );
             }),

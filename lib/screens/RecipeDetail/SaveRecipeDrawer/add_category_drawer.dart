@@ -1,7 +1,14 @@
 import 'package:cooking_master/constants/color_constant.dart';
+import 'package:cooking_master/models/nton_user_saved_recipe.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
+import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddCategoryDrawer extends StatefulWidget {
+  final String idRecipe;
+
+  const AddCategoryDrawer({Key key, this.idRecipe}) : super(key: key);
   @override
   _AddCategoryDrawerState createState() => _AddCategoryDrawerState();
 }
@@ -28,101 +35,134 @@ class _AddCategoryDrawerState extends State<AddCategoryDrawer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        toolbarHeight: 0.0,
         backgroundColor: Theme.of(context).backgroundColor,
-      ),
-      body: Material(
-        color: Theme.of(context).backgroundColor,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    if (isSaved) {
-                      deleteAllCategory();
-                    }
-                    isSaved = !isSaved;
-                  });
-                },
-                child: CategoryTile(
-                  name: "Save recipe",
-                  isSelected: isSaved,
-                  isBold: true,
-                  color: blue3.withOpacity(0.5),
-                ),
-              ),
-              isAdding
-                  ? Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 10.0),
-                      child: TextField(
-                        controller: myController,
-                        focusNode: myFocusNode,
-                        onSubmitted: (String value) {
-                          setState(() {
-                            categories.add(RecipeCategoryModel(value, true));
-                            isAdding = false;
-                            isSaved = true;
-                            myController.clear();
-                          });
-                        },
-                        decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            // contentPadding: EdgeInsets.only(
-                            //     left: 15, bottom: 11, top: 11, right: 15),
-                            hintText: "New Collection"),
-                      ))
-                  : InkWell(
-                      splashColor: blue5,
-                      highlightColor: blue5,
-                      onTap: () {
-                        setState(() {
-                          isAdding = true;
-                          myFocusNode.requestFocus();
-                        });
-                      },
-                      child: AddCategoryTile()),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  scrollDirection: Axis.vertical,
-                  itemCount: categories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      splashColor: blue5,
-                      highlightColor: blue5,
-                      onTap: () {
-                        setState(() {
-                          if (checkIsSaved() == false) {
-                            isSaved = true;
-                          }
-                          categories[index].isSelected =
-                              !categories[index].isSelected;
-                        });
-                      },
-                      child: CategoryTile(
-                        name: categories[index].name,
-                        isSelected: categories[index].isSelected,
-                        color: index % 2 == 0 ? blue3.withOpacity(0.5) : null,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+        appBar: AppBar(
+          toolbarHeight: 0.0,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
-      ),
-    );
+        body: Consumer<SavedRecipeProvider>(
+            builder: (context, saveRecipeProvider, child) {
+          return Material(
+            color: Theme.of(context).backgroundColor,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (isSaved) {
+                          saveRecipeProvider.removeRecipeToMycategory(
+                              widget.idRecipe, 'All');
+                        }
+                        isSaved = !isSaved;
+                      });
+                    },
+                    child: CategoryTile(
+                      name: "Save recipe",
+                      isSelected: isSaved,
+                      isBold: true,
+                      color: blue3.withOpacity(0.5),
+                    ),
+                  ),
+                  isAdding
+                      ? Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 10.0),
+                          child: TextField(
+                            controller: myController,
+                            focusNode: myFocusNode,
+                            onSubmitted: (String value) {
+                              if (saveRecipeProvider
+                                  .checkNameCategoryExist(value)) {
+                                final didRequest = showAlertDialog(
+                                  context,
+                                  title: 'Exist',
+                                  content: 'This name is exist',
+                                  defaultActionText: 'OK',
+                                );
+                              } else {
+                                setState(() {
+                                  saveRecipeProvider.addRecipeToMycategory(
+                                      widget.idRecipe, value);
+                                  isAdding = false;
+                                  isSaved = true;
+                                  myController.clear();
+                                });
+                              }
+                            },
+                            decoration: new InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                // contentPadding: EdgeInsets.only(
+                                //     left: 15, bottom: 11, top: 11, right: 15),
+                                hintText: "New Collection"),
+                          ))
+                      : InkWell(
+                          splashColor: blue5,
+                          highlightColor: blue5,
+                          onTap: () {
+                            setState(() {
+                              isAdding = true;
+                              myFocusNode.requestFocus();
+                            });
+                          },
+                          child: AddCategoryTile()),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.vertical,
+                      itemCount: saveRecipeProvider.listMyCategory.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          splashColor: blue5,
+                          highlightColor: blue5,
+                          onTap: () {
+                            setState(() {
+                              if (checkIsSaved(
+                                      saveRecipeProvider.listMyCategory
+                                          .elementAt(index),
+                                      widget.idRecipe) ==
+                                  false) {
+                                isSaved = true;
+                                saveRecipeProvider.addRecipeToMycategory(
+                                    widget.idRecipe,
+                                    saveRecipeProvider.listMyCategory
+                                        .elementAt(index)
+                                        .category);
+                              } else {
+                                saveRecipeProvider.removeRecipeToMycategory(
+                                    widget.idRecipe,
+                                    saveRecipeProvider.listMyCategory
+                                        .elementAt(index)
+                                        .category);
+                              }
+                            });
+                          },
+                          child: CategoryTile(
+                            name: saveRecipeProvider.listMyCategory
+                                .elementAt(index)
+                                .category,
+                            isSelected: 
+                                saveRecipeProvider.listMyCategory
+                                    .elementAt(index).idRecipe.contains(widget.idRecipe)
+                                ,
+                            color:
+                                index % 2 == 0 ? blue3.withOpacity(0.5) : null,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }));
   }
 }
 
@@ -191,9 +231,10 @@ deleteAllCategory() {
   });
 }
 
-bool checkIsSaved() {
-  categories.forEach((category) {
-    if (category.isSelected == true) {
+bool checkIsSaved(NtoNUserSavedRecipe listcate, String idRecipe) {
+  listcate.idRecipe.forEach((element) {
+    if (element == idRecipe) {
+      print('Dung roi a');
       return true;
     }
   });

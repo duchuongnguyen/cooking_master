@@ -1,8 +1,10 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/SavedRecipe/RecipeCategoryScreen.dart';
 import 'package:cooking_master/screens/SavedRecipe/RecipesChoicesBuilder.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TitleWithCustomUnderline extends StatelessWidget {
   const TitleWithCustomUnderline({Key key, this.text, this.action})
@@ -16,6 +18,8 @@ class TitleWithCustomUnderline extends StatelessWidget {
     return GestureDetector(
       onTap: action != null
           ? () {
+              Provider.of<SavedRecipeProvider>(context, listen: false)
+                  .SetCurCategory(text);
               Navigator.push(
                   context,
                   MaterialPageRoute(

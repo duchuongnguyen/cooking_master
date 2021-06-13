@@ -1,12 +1,18 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/notifier/user_saved_recipe.dart';
+import 'package:cooking_master/screens/RecipeDetail/preparation_screen.dart';
+import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/SavedRecipe/AddCategoryScreen.dart';
 import 'package:cooking_master/screens/SavedRecipe/RecipesChoicesBuilder.dart';
 import 'package:cooking_master/screens/Search/detail_search_screen.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
+import 'package:cooking_master/widgets/recipe_detail_card.dart';
+import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:provider/provider.dart';
 import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 import 'dart:math' as math;
 
@@ -29,6 +35,8 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
   @override
   void initState() {
     super.initState();
+    final savedRecipeNotifier =
+        Provider.of<SavedRecipeProvider>(context, listen: false);
     if (widget.name != null) {
       name = widget.name;
     }
@@ -43,6 +51,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
 
         if (result != null) {
           setState(() {
+            savedRecipeNotifier.SetCurCategory(result);
             name = result;
           });
         } else {
@@ -54,6 +63,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //final recipelist = Provider.of<SavedRecipeProvider>(context, listen: false);
     final theme = Theme.of(context);
     final expandedStyle =
         theme.textTheme.headline4.copyWith(color: Colors.white);
@@ -61,8 +71,10 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
         theme.textTheme.headline6.copyWith(color: Colors.white);
     const padding = EdgeInsets.symmetric(horizontal: 26, vertical: 26);
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: CustomScrollView(
+      backgroundColor: Colors.white,
+      body:
+          Consumer<SavedRecipeProvider>(builder: (context, recipelist, child) {
+        return CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPersistentHeader(
@@ -77,7 +89,11 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                   ),
                   collapsedColor: blue3.withAlpha(255),
                 ),
-                actions: [PopupMenu()],
+                actions: [
+                  PopupMenu(
+                    name: name,
+                  )
+                ],
                 children: [
                   FlexibleTextItem(
                     //Name of category
@@ -91,7 +107,8 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                 ],
               ),
             ),
-            cards.length > 0 //Check if category already have recipes
+            recipelist.curCategoryList.length >
+                    0 //Check if category already have recipes
                 ? SliverPadding(
                     padding: EdgeInsets.only(
                         left: 20.0, right: 20.0, bottom: 30, top: 20),
@@ -108,7 +125,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                                     title: Text("Delete"),
                                     onPressed: () {
                                       setState(() {
-                                        cards.removeAt(index);
+                                        recipelist.deleterecipe(index);
                                       });
                                     },
                                     trailingIcon: Icon(Icons.delete_outline)),
@@ -126,14 +143,20 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                                   highlightColor: blue4,
                                   onTap: () {
                                     //Move to DetailRecipeScreen
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => PreparationScreen()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RecipeDetailScreen(
+                                                    recipe: recipelist
+                                                            .curCategoryList[
+                                                        itemIndex])));
                                   },
                                   child: RecipeSearchItem(
-                                    name: cards[itemIndex].recipeName,
-                                    image: cards[itemIndex].image,
+                                    name: recipelist
+                                        .curCategoryList[itemIndex].name,
+                                    image: recipelist
+                                        .curCategoryList[itemIndex].image,
                                   )),
                             );
                           }
@@ -153,7 +176,9 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                     child: _buildEmptyItem(),
                   )
           ],
-        ));
+        );
+      }),
+    );
   }
 
   Widget _buildEmptyItem() {
@@ -189,7 +214,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DetailSearchScreen(
-                            keyword: name,
+                            keyword: 'all',
                           )));
             },
             child: Text(
@@ -215,6 +240,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => RecipesChoicesBuilder()));
+              setState(() {});
             },
             child: Text(
               "Add recipes from your saved list",
@@ -229,18 +255,42 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
 }
 
 class PopupMenu extends StatelessWidget {
-  const PopupMenu({
-    Key key,
-  }) : super(key: key);
-
+  const PopupMenu({Key key, this.name}) : super(key: key);
+  final String name;
   @override
   Widget build(BuildContext context) {
+    final recipelist = Provider.of<SavedRecipeProvider>(context, listen: false);
     return PopupMenuButton(
-      onSelected: (MenuKind result) {
+      onSelected: (MenuKind result) async {
         switch (result) {
           case MenuKind.delete:
-            //Delete this category
-            Navigator.pop(context);
+            if (name != "All") {
+              //Delete this category
+              final didRequest = await showAlertDialog(
+                context,
+                title: 'Delete',
+                content: 'Are you sure that you want to delete this?',
+                cancelActionText: 'Cancel',
+                defaultActionText: 'Delete',
+              );
+              if (didRequest == true) {
+                recipelist.deleteCatergory(name);
+                Navigator.pop(context);
+              }
+            } else {
+              final didRequest = await showAlertDialog(
+                context,
+                title: 'Delete',
+                content:
+                    'If you delete All, All your collections will be delete?',
+                cancelActionText: 'Cancel',
+                defaultActionText: 'Delete',
+              );
+              if (didRequest == true) {
+                recipelist.deleteCatergory(name);
+                Navigator.pop(context);
+              }
+            }
             break;
           case MenuKind.add:
             //Add recipe
