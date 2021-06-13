@@ -31,12 +31,12 @@ class UserProfileService {
         .then((value) => resultUpdate = true)
         .catchError((error) => resultUpdate = false);
     if (field == 'name') {
-    await  FirebaseAuth.instance.currentUser.updateProfile(displayName: value);
+      await FirebaseAuth.instance.currentUser.updateProfile(displayName: value);
     }
     if (field == 'imageurl') {
-     await FirebaseAuth.instance.currentUser.updateProfile(photoURL: value);
+      await FirebaseAuth.instance.currentUser.updateProfile(photoURL: value);
     }
-   // print(FirebaseAuth.instance.currentUser.displayName);
+    // print(FirebaseAuth.instance.currentUser.displayName);
     return resultUpdate;
   }
 

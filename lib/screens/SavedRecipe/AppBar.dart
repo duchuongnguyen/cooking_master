@@ -1,9 +1,6 @@
 //import 'package:cooking_master/models/model-recipe-cuahuy.dart';
-import 'dart:ffi';
-import 'dart:io';
-
-import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
+import 'package:cooking_master/screens/SavedRecipe/RecipeCategoryScreen.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,33 +11,31 @@ import 'package:cooking_master/screens/saved_recipe_screen.dart';
 
 buildAddCategoryButton(BuildContext context, TabController _tabController,
     TextEditingController _categoryController) {
-  String alertTitle;
   switch (_tabController.index) {
     case 2:
-      alertTitle = "New Favorite Topic";
-      break;
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("New Favorite Topic"),
+              content: TextField(
+                controller: _categoryController,
+              ),
+              actions: [
+                MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pop(_categoryController.text.toString());
+                    },
+                    child: Text("Submit"))
+              ],
+            );
+          });
     default:
-      alertTitle = "New Category";
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RecipeCategoryScreen(kind: "saved")));
       break;
   }
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(alertTitle),
-          content: TextField(
-            controller: _categoryController,
-          ),
-          actions: [
-            MaterialButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(_categoryController.text.toString());
-                },
-                child: Text("Submit"))
-          ],
-        );
-      });
 }
 
 AppBar buildSavedRecipeAppBar(
@@ -89,7 +84,7 @@ AppBar buildSavedRecipeAppBar(
               onPressed: () {
                 parent.setState(() {
                   parent.isEditing = false;
-                  savedRecipe.removeRecipe();
+                  //savedRecipe.removeRecipe();
                 });
               },
             ),
@@ -101,7 +96,7 @@ AppBar buildSavedRecipeAppBar(
               onPressed: () {
                 parent.setState(() {
                   parent.isEditing = false;
-                  savedRecipe.setUnselected();
+                  //savedRecipe.setUnselected();
                 });
               },
             ),
@@ -116,7 +111,8 @@ AppBar buildSavedRecipeAppBar(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
-              backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+              backgroundImage:
+                  NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
             ),
           )),
     ),
