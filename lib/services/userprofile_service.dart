@@ -5,9 +5,41 @@ import 'package:firebase_auth/firebase_auth.dart';
 class UserProfileService {
   final _ref = FirebaseFirestore.instance.collection("userprofile");
 
-  Future<UserModel> loadProfile(String id) async {
-    return await _ref.doc(id).get().then((value) {
-      return UserModel.fromMap(value.data());
+  Stream<UserModel> loadProfile(String id) {
+    return _ref
+        .doc(id)
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => UserModel.fromMap(snapshot.data()));
+  }
+
+  Stream<bool> isFollow(String idFollower, String idFollowing) {
+    return _ref.doc(idFollower).snapshots(includeMetadataChanges: true).map(
+        (value) => UserModel.fromMap(value.data())
+            .userFollowing
+            .contains(idFollowing));
+  }
+
+  Future<void> unfollowUser(String idFollower, String idFollowing) async {
+    final _followerRef = _ref.doc(idFollower);
+    final _followingRef = _ref.doc(idFollowing);
+
+    await _followerRef.update({
+      "following": FieldValue.arrayRemove([idFollowing])
+    });
+    await _followingRef.update({
+      "followed": FieldValue.arrayRemove([idFollower])
+    });
+  }
+
+  Future<void> followUser(String idFollower, String idFollowing) async {
+    final _followerRef = _ref.doc(idFollower);
+    final _followingRef = _ref.doc(idFollowing);
+
+    await _followerRef.update({
+      "following": FieldValue.arrayUnion([idFollowing])
+    });
+    await _followingRef.update({
+      "followed": FieldValue.arrayUnion([idFollower])
     });
   }
 
@@ -31,12 +63,12 @@ class UserProfileService {
         .then((value) => resultUpdate = true)
         .catchError((error) => resultUpdate = false);
     if (field == 'name') {
-    await  FirebaseAuth.instance.currentUser.updateProfile(displayName: value);
+      await FirebaseAuth.instance.currentUser.updateProfile(displayName: value);
     }
     if (field == 'imageurl') {
-     await FirebaseAuth.instance.currentUser.updateProfile(photoURL: value);
+      await FirebaseAuth.instance.currentUser.updateProfile(photoURL: value);
     }
-   // print(FirebaseAuth.instance.currentUser.displayName);
+    // print(FirebaseAuth.instance.currentUser.displayName);
     return resultUpdate;
   }
 
@@ -49,8 +81,8 @@ class UserProfileService {
           'name': "Tên hiển thị",
           'bio': "Thêm tiểu sử của bạn",
           'address': "Thêm địa chỉ của bạn",
-          'followed': "0",
-          'following': "0",
+          'followed': [],
+          'following': [],
           'imageurl':
               "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/user%2Fno_avatar.jpg?alt=media&token=98aeb858-f003-47ca-8bf7-a9bb82cc59c8"
         })

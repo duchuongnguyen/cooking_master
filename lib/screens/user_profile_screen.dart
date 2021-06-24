@@ -8,7 +8,6 @@ import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
@@ -51,9 +50,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        extendBody: true,
-        appBar: buildAppBar(context, title: '', actions: [
+      backgroundColor: Colors.white,
+      extendBody: true,
+      appBar: buildAppBar(
+        context,
+        title: '',
+        actions: [
           IconButton(
             icon: Icon(
               Icons.edit_outlined,
@@ -75,21 +77,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             onPressed: () => _confirmSignOut(context),
           ),
-        ], leading: CustomBackButton(
+        ],
+        leading: CustomBackButton(
           tapEvent: () {
             Navigator.pop(context);
           },
-        )),
-        body: _buildBody(context));
+        ),
+      ),
+      body: _buildBody(context),
+    );
   }
 
   Widget _buildBody(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    final userProfile = Provider.of<UserProfileService>(context, listen: false);
-    return FutureBuilder<UserModel>(
-      future: userProfile.loadProfile(auth.currentUser.uid),
+    return StreamBuilder<UserModel>(
+      stream: UserProfileService().loadProfile(auth.currentUser.uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.active) {
           user = snapshot.data;
           return Container(
               padding: EdgeInsets.all(10),
@@ -121,7 +125,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Hero(
                           tag: "username",
                           child: Text(
-                            user.userName,
+                            user.userName ?? "",
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 21,
@@ -136,7 +140,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Hero(
                           tag: "useraddress",
                           child: Text(
-                            user.userAddress,
+                            user.userAddress ?? "",
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -159,6 +163,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       MaterialPageRoute(
                                           builder: (context) => FollowScreen(
                                                 tab: "followers",
+                                                followers: user.userFollower,
+                                                following: user.userFollowing,
                                               )));
                                 },
                                 child: Column(
@@ -176,7 +182,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       height: 10,
                                     ),
                                     Text(
-                                      user.userFollowed.toString(),
+                                      user.userFollower.length.toString() ??
+                                          "0",
                                       style: GoogleFonts.roboto(
                                           color: Colors.black,
                                           fontSize: 16,
@@ -197,6 +204,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       MaterialPageRoute(
                                           builder: (context) => FollowScreen(
                                                 tab: "following",
+                                                followers: user.userFollower,
+                                                following: user.userFollowing,
                                               )));
                                 },
                                 child: Column(
@@ -214,7 +223,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       height: 10,
                                     ),
                                     Text(
-                                      user.userFollowing.toString(),
+                                      user.userFollowing.length.toString() ??
+                                          "0",
                                       style: GoogleFonts.roboto(
                                           color: Colors.black,
                                           fontSize: 16,
@@ -236,7 +246,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Hero(
                           tag: "userbio",
                           child: Text(
-                            user.userBio,
+                            user.userBio ?? "",
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 15,

@@ -15,7 +15,7 @@ class RecipeService {
     List<RecipeModel> _recipeList = [];
 
 
-    await _ref.limit(10).get().then((value) {
+    await _ref.get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);

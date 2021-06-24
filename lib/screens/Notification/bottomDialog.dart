@@ -1,5 +1,5 @@
 import 'package:cooking_master/screens/notification_screen.dart';
-import 'package:cooking_master/screens/user_profile_watch_screen.dart';
+import 'package:cooking_master/screens/UserProfileWatch/user_profile_watch_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

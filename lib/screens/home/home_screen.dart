@@ -54,12 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         return Body();
-      case 3:
-        return SavedRecipeScreen();
       case 1:
         return SearchScreen();
-        case 2:
+      case 2:
         return NotificationScreen();
+      case 3:
+        return SavedRecipeScreen();
       default:
         return Body();
     }
@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 IconButton(
                     icon: Icon(
-                      Icons.home,
+                      Icons.home_outlined,
                       color: _currentTab == 0
                           ? Colors.black
                           : Colors.black.withOpacity(0.3),
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                 IconButton(
                     icon: Icon(
-                      Icons.search,
+                      Icons.search_outlined,
                       color: _currentTab == 1
                           ? Colors.black
                           : Colors.black.withOpacity(0.3),
