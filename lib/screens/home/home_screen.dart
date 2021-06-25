@@ -1,8 +1,10 @@
+import 'package:badges/badges.dart';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/Home/body.dart';
+import 'package:cooking_master/screens/notification_screen.dart';
 import 'package:cooking_master/screens/recipe_form_screen.dart';
 import 'package:cooking_master/screens/saved_recipe_screen.dart';
 import 'package:cooking_master/screens/search_screen.dart';
@@ -24,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentTab = 0;
   bool isLoading = true;
+  bool showNoti;
   List<IconData> icons = [
     FontAwesomeIcons.search,
   ];
@@ -43,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    showNoti = true;
     fecthdata();
   }
 
@@ -50,10 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         return Body();
-      case 3:
-        return SavedRecipeScreen();
       case 1:
         return SearchScreen();
+      case 2:
+        return NotificationScreen();
+      case 3:
+        return SavedRecipeScreen();
       default:
         return Body();
     }
@@ -110,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 IconButton(
                     icon: Icon(
-                      Icons.home,
+                      Icons.home_outlined,
                       color: _currentTab == 0
                           ? Colors.black
                           : Colors.black.withOpacity(0.3),
@@ -122,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                 IconButton(
                     icon: Icon(
-                      Icons.search,
+                      Icons.search_outlined,
                       color: _currentTab == 1
                           ? Colors.black
                           : Colors.black.withOpacity(0.3),
@@ -133,18 +139,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     }),
                 SizedBox(),
-                IconButton(
-                    icon: Icon(
-                      Icons.shopping_bag_outlined,
-                      color: _currentTab == 2
-                          ? Colors.black
-                          : Colors.black.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _currentTab = 2;
-                      });
-                    }),
+                Badge(
+                  position: BadgePosition.topEnd(top: 0, end: 3),
+                  animationDuration: Duration(milliseconds: 300),
+                  animationType: BadgeAnimationType.slide,
+                  badgeContent: Text(
+                    "8",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  showBadge: showNoti,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.notifications_outlined,
+                        color: _currentTab == 2
+                            ? Colors.black
+                            : Colors.black.withOpacity(0.3),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _currentTab = 2;
+                          showNoti = false;
+                        });
+                      }),
+                ),
                 IconButton(
                     icon: FaIcon(
                       FontAwesomeIcons.heart,

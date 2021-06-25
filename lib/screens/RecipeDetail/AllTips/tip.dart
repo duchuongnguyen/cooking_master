@@ -35,10 +35,10 @@ class _TipState extends State<Tip> {
   Widget build(BuildContext context) {
     final userProfileService = Provider.of<UserProfileService>(context);
 
-    return FutureBuilder<UserModel>(
-      future: userProfileService.loadProfile(widget.tip.owner),
+    return StreamBuilder<UserModel>(
+      stream: userProfileService.loadProfile(widget.tip.owner),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.active) {
           return Container(
             padding: EdgeInsets.only(top: 15, bottom: 15, right: 15),
             child: Row(

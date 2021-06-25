@@ -15,15 +15,89 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final recipe = Provider.of<RecipeNotifier>(context, listen: false);
     if (recipe.listrecipes.isNotEmpty)
-      return Column(
-        children: <Widget>[
-          HeaderWithSearchBox(),
-          //Trending Recipe, can add any kind of recipes in here
-          ListViewOfRecipeCardsWithTitle(
-            title: AppLocalizations.of(context).trend,
-            cards: recipe.listrecipes,
-          ),
-        ],
+      return SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            HeaderWithSearchBox(),
+            //Trending Recipe, can add any kind of recipes in here
+            ListViewOfRecipeCardsWithTitle(
+              title: AppLocalizations.of(context).trend,
+              cards: recipe.listrecipes.take(10).toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Pasta',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'pasta')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Beef',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'beef')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Rice',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'rice')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Cake',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'cake')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Soup',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'soup')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Bread',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'bread')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Sauce',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'sauce')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Chicken',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'chicken')
+                  .take(10)
+                  .toList(),
+            ),
+            SizedBox(height: 20),
+            ListViewOfRecipeCardsWithTitle(
+              title: 'Fish',
+              cards: recipe.listrecipes
+                  .where((element) => element.category == 'fish')
+                  .take(10)
+                  .toList(),
+            ),
+          ],
+        ),
       );
     return Scaffold();
   }

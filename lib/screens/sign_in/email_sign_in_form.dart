@@ -140,7 +140,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         if(checkConfirmPassWord()) {
           final userProfile = Provider.of<UserProfileService>(context, listen: false);
           var user =  await auth.createUserWithEmailAndPassword(_email, _password);
-           await userProfile.addUser(user.uid);
+          await userProfile.addUser(user.uid);
           Navigator.of(context).pop();
         }
       }

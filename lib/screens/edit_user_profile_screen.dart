@@ -37,8 +37,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
   Widget _buildBody(BuildContext context) {
     final userProfile = Provider.of<UserProfileService>(context, listen: false);
     var uid = widget.user.userId;
-    return FutureBuilder<UserModel>(
-      future: userProfile.loadProfile(uid),
+    return StreamBuilder<UserModel>(
+      stream: userProfile.loadProfile(uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           widget.user = snapshot.data;

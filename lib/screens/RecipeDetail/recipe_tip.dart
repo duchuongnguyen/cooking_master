@@ -54,12 +54,12 @@ class _RecipeTipState extends State<RecipeTip> {
                                         '(${snapshot.data.length.toString()})'),
                               ]),
                         )),
-                    FutureBuilder<UserModel>(
-                        future: userprofileService
+                    StreamBuilder<UserModel>(
+                        stream: userprofileService
                             .loadProfile(snapshot.data[0].owner),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
-                              ConnectionState.done) {
+                              ConnectionState.active) {
                             return MediaQuery(
                               data: MediaQueryData(padding: EdgeInsets.zero),
                               child: ListTile(
