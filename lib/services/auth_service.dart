@@ -11,7 +11,7 @@ abstract class AuthBase {
 
   Future<User> signInAnonymously();
 
-  Future<User> signInWithEmailAndPassword(String email, String password);
+  Future<String> signInWithEmailAndPassword(String email, String password);
 
   Future<User> createUserWithEmailAndPassword(String email, String password);
 
@@ -39,7 +39,8 @@ class Auth implements AuthBase {
   }
 
   @override
-  Future<User> signInWithEmailAndPassword(String email, String password) async {
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
     UserCredential userCredential;
 
     try {
@@ -68,10 +69,10 @@ class Auth implements AuthBase {
           break;
       }
 
-      return null;
+      return errorMessage;
     }
 
-    return userCredential.user;
+    return "Login Success";
   }
 
   @override
