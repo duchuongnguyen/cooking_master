@@ -34,6 +34,19 @@ class RecipeService {
     return _recipe;
   }
 
+  Future<List<RecipeModel>> getRecipesByOwner(String owner) async {
+    List<RecipeModel> _recipeList = [];
+
+    await _ref.get().then((value) {
+      value.docs.forEach((element) {
+        RecipeModel recipe = RecipeModel.fromMap(element.data());
+        _recipeList.add(recipe);
+      });
+    });
+
+    return _recipeList;
+  }
+
   void uploadRecipeAndImage(
       RecipeModel recipe, bool isUpdating, File localFile) async {
     if (localFile != null) {

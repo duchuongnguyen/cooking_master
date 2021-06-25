@@ -115,8 +115,10 @@ class UserProfileWatchScreenState extends State<UserProfileWatchScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => FollowScreen(
-                                              followers: snapshot.data.userFollower,
-                                              following: snapshot.data.userFollowing,
+                                                  followers: snapshot
+                                                      .data.userFollower,
+                                                  following: snapshot
+                                                      .data.userFollowing,
                                                   tab: "followers",
                                                 )));
                                   },
@@ -311,10 +313,7 @@ class UserProfileWatchScreenState extends State<UserProfileWatchScreen> {
                                 shrinkWrap: true,
                                 itemCount: cards.length,
                                 itemBuilder: (context, index) {
-                                  return RecipeDetailCard(
-                                    recipe: cards[index],
-                                    size: MediaQuery.of(context).size,
-                                  );
+                                  return RecipeDetailCard(recipe: cards[index]);
                                 },
                               ),
                             )),
