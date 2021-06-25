@@ -59,6 +59,7 @@ dependencies:
   sliver_header_delegate: ^0.0.1
   uuid: ^3.0.4
   sticky_headers: ^0.2.0
+  smart_select: ^4.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

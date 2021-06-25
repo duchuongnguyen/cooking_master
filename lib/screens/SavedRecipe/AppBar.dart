@@ -46,18 +46,10 @@ AppBar buildSavedRecipeAppBar(
   final savedRecipe = Provider.of<SavedRecipeProvider>(context, listen: false);
   return buildAppBar(
     context,
-    //Todo: Add username here
     title: FirebaseAuth.instance.currentUser.displayName,
     actions: !parent.isEditing
         ? [
-            IconButton(
-              icon: Icon(
-                Icons.insights_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            IconButton(
+            _tabController.index != 2 ? IconButton(
               icon: Icon(
                 Icons.library_add_outlined,
                 color: Colors.black,
@@ -66,14 +58,7 @@ AppBar buildSavedRecipeAppBar(
                 buildAddCategoryButton(
                     context, _tabController, _categoryController);
               },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
+            ) : Container(),
           ]
         : [
             IconButton(
@@ -138,6 +123,11 @@ AppBar buildSavedRecipeAppBar(
               color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         ))
       ],
+      onTap: (index) {
+          parent.setState(() {
+            
+          });
+        },
     ),
   );
 }
