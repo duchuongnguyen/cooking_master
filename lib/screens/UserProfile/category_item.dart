@@ -15,54 +15,23 @@ class _CategoryItemState extends State<CategoryItem> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> placesCategoris = [
-      "Của bạn",
-      "Yêu thích",
-    ];
-    return Padding(
-      padding: EdgeInsets.all(30),
-      child: SizedBox(
-        height: 40,
-        width: 200,
-        child: Center(
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: placesCategoris.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      this.selectedIndex = index;
-                    });
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        Text(
-                          placesCategoris[index],
-                          style: selectedIndex == index
-                              ? TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)
-                              : TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.normal),
-                        ),
-                        if (selectedIndex == index)
-                          Container(
-                              margin: EdgeInsets.symmetric(vertical: 5),
-                              height: 3,
-                              width: 22,
-                              decoration: BoxDecoration(
-                                color: blue2,
-                                borderRadius: BorderRadius.circular(10),
-                              ))
-                      ],
-                    ),
-                  ),
-                );
-              }),
+    return Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom:
+                BorderSide(width: 1.0, color: Colors.black.withOpacity(0.7)),
+          ),
         ),
-      ),
-    );
+        child: Column(
+          children: [
+            Icon(
+              Icons.restaurant_outlined,
+              size: 25.0,
+            )
+          ],
+        ));
   }
 }

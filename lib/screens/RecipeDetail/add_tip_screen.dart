@@ -98,7 +98,7 @@ class AddTipScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 5),
                 Text(
-                  "Add a recipe photo",
+                  "Add a tip photo",
                   style: TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold, color: blue2),
                 )

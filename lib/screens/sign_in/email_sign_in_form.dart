@@ -43,7 +43,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     if (isLoading)
       return [
         //here is  show circularProgress when ontap button submit, but i don't known how to show it looks OK :))
-        CircularProgressIndicator()
+        Container(
+          child: CircularProgressIndicator(),
+          padding: EdgeInsets.all(150),
+        )
       ];
     return [
       EmailField(),
@@ -153,7 +156,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       if (_formType == EmailSignInType.SignIn) {
         String result =
             await auth.signInWithEmailAndPassword(_email, _password);
-        if (result != "Login Success") {
+        if (result != "OK") {
           final didRequestSignOut = await showAlertDialog(
             context,
             title: 'Error',
@@ -168,10 +171,18 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         if (checkConfirmPassWord()) {
           final userProfile =
               Provider.of<UserProfileService>(context, listen: false);
-          var user =
+          String result =
               await auth.createUserWithEmailAndPassword(_email, _password);
-          await userProfile.addUser(user.uid);
-          Navigator.of(context).pop();
+          if (result == "OK") {
+            await userProfile.addUser(FirebaseAuth.instance.currentUser.uid);
+            Navigator.of(context).pop();
+          } else {
+            final didRequestSignOut = await showAlertDialog(context,
+                title: 'Error',
+                content: result,
+                //cancelActionText: 'Cancel',
+                defaultActionText: 'OK');
+          }
         }
       }
     } on FirebaseAuthException catch (e) {
