@@ -125,7 +125,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                                     title: Text("Delete"),
                                     onPressed: () {
                                       setState(() {
-                                        recipelist.deleterecipe(index);
+                                        recipelist.deleterecipe(itemIndex);
                                       });
                                     },
                                     trailingIcon: Icon(Icons.delete_outline)),
@@ -168,7 +168,8 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
                           }
                           return null;
                         },
-                        childCount: math.max(0, cards.length * 2 - 1),
+                        childCount: math.max(
+                            0, recipelist.curCategoryList.length * 2 - 1),
                       ),
                     ),
                   )
