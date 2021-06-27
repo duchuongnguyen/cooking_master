@@ -98,8 +98,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         children: <Widget>[
           Image.file(
             _imageFile,
-            fit: BoxFit.cover,
-            height: 250,
+            fit: BoxFit.fitWidth,
+            height: MediaQuery.of(context).size.width,
           ),
           Positioned(
             bottom: 10,
@@ -215,7 +215,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   void _showPicker(context) {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext bc) {
+      builder: (BuildContext context) {
         return SafeArea(
           child: Container(
             child: new Wrap(
@@ -604,7 +604,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => _showPicker(context),
                     child: Container(
                       width: 100,
                       height: 80,
