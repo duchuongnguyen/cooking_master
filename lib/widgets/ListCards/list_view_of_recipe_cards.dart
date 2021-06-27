@@ -3,6 +3,7 @@ import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
+import 'package:cooking_master/screens/recipe_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -14,7 +15,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
       {Key key,
       @required this.cards,
       @required this.action,
-      @required this.isEditing,
+      this.isEditing = false,
       @required this.parent,
       @required this.size})
       : super(key: key);
@@ -43,24 +44,22 @@ class ListViewOfRecipeCards extends StatelessWidget {
                 ? FocusedMenuHolder(
                     menuWidth: size.width * 0.5,
                     menuItems: [
-                      // FocusedMenuItem(
-                      //     title: Text("Select Item"),
-                      //     onPressed: () {
-                      //       parent.setState(() {
-                      //         parent.isEditing = true;
-                      //       });
-                      //       cards[index].isSelected = !cards[index].isSelected;
-                      //     },
-                      //     trailingIcon: Icon(Icons.done)),
-                      // FocusedMenuItem(
-                      //     title: Text("Select All"),
-                      //     onPressed: () {
-                      //       parent.setState(() {
-                      //         parent.isEditing = true;
-                      //       });
-                      //       setAllSelected(cards);
-                      //     },
-                      //     trailingIcon: Icon(Icons.done_all)),
+                      if (isEditing)
+                        FocusedMenuItem(
+                            title: Text("Edit"),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return RecipeFormScreen(
+                                      isUpdating: true,
+                                      currentRecipe: cards[index],
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            trailingIcon: Icon(Icons.edit_outlined)),
                       FocusedMenuItem(
                           title: Text("Delete"),
                           onPressed: () {
@@ -127,7 +126,9 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                         top: defaultPadding * 0.2,
                                         bottom: defaultPadding * 0.2),
                                     child: Text(
-                                      cards[index].category.capitalizeFirstofEach,
+                                      cards[index]
+                                          .category
+                                          .capitalizeFirstofEach,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,

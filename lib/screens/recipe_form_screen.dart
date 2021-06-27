@@ -69,9 +69,14 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width,
+          alignment: Alignment.center,
           child: Stack(
             children: [
-              Image.asset('assets/images/food-placeholder.png'),
+              Image.asset(
+                'assets/images/food-placeholder.png',
+                fit: BoxFit.contain,
+              ),
               Positioned.fill(
                 bottom: 15,
                 child: _imageFile == null && _imageUrl == null
@@ -94,120 +99,133 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       );
     } else if (_imageFile != null) {
       print('showing image from local file');
-      return Stack(
-        children: <Widget>[
-          Image.file(
-            _imageFile,
-            fit: BoxFit.cover,
-            height: 250,
-          ),
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white)),
-              width: 120,
-              height: 40,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => _showPicker(context),
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(Icons.camera_alt_outlined, color: Colors.white),
-                          Text(
-                            " Edit",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width,
+        alignment: Alignment.center,
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Image.file(
+              _imageFile,
+              fit: BoxFit.contain,
+            ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white)),
+                width: 120,
+                height: 40,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => _showPicker(context),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Icon(Icons.camera_alt_outlined,
+                                color: Colors.white),
+                            Text(
+                              " Edit",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  VerticalDivider(
-                    thickness: 1,
-                    color: Colors.white,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outlined),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        _imageFile = null;
-                        _imageUrl = null;
-                      });
-                    },
-                  ),
-                ],
+                    VerticalDivider(
+                      thickness: 1,
+                      color: Colors.white,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _imageFile = null;
+                            _imageUrl = null;
+                          });
+                        },
+                        child: Icon(
+                          Icons.delete_outlined,
+                          color: Colors.white,
+                        )),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     } else if (_imageUrl != null) {
       print('showing image from url');
-      return Stack(
-        alignment: AlignmentDirectional.bottomCenter,
-        children: <Widget>[
-          Image.network(
-            _imageUrl,
-            fit: BoxFit.cover,
-            height: 250,
-          ),
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white)),
-              width: 120,
-              height: 40,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => _showPicker(context),
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(Icons.camera_alt_outlined, color: Colors.white),
-                          Text(
-                            " Edit",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width,
+        alignment: Alignment.center,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: <Widget>[
+            Image.network(
+              _imageUrl,
+              fit: BoxFit.contain,
+            ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white)),
+                width: 120,
+                height: 40,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => _showPicker(context),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Icon(Icons.camera_alt_outlined,
+                                color: Colors.white),
+                            Text(
+                              " Edit",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  VerticalDivider(
-                    thickness: 1,
-                    color: Colors.white,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outlined),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        _imageFile = null;
-                        _imageUrl = null;
-                      });
-                    },
-                  ),
-                ],
+                    VerticalDivider(
+                      thickness: 1,
+                      color: Colors.white,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _imageFile = null;
+                            _imageUrl = null;
+                          });
+                        },
+                        child: Icon(
+                          Icons.delete_outlined,
+                          color: Colors.white,
+                        )),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
   }
@@ -278,8 +296,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       margin: EdgeInsets.all(12),
       child: TextFormField(
         decoration: InputDecoration(
-          hintText: 'Tiêu đề: Món trứng cút lộn xào me',
-          fillColor: Colors.orange[50],
+          hintText: 'Title: Macaroni Pasta',
+          fillColor: Colors.blue[100],
           filled: true,
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
@@ -309,10 +327,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     return Container(
       margin: EdgeInsets.all(12),
       child: TextFormField(
+        minLines: 1,
+        maxLines: 3,
         decoration: InputDecoration(
           hintText:
-              'Mô tả: An easy peasy pasta dish that’s simple, flavorful and incredibly hearty. And all you need is 20 min to whip this up!',
-          fillColor: Colors.orange[50],
+              'Description: An easy peasy pasta dish that’s simple, flavorful and incredibly hearty. And all you need is 20 min to whip this up!',
+          fillColor: Colors.blue[100],
           filled: true,
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
@@ -323,7 +343,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         ),
         initialValue: _currentRecipe.description,
         keyboardType: TextInputType.text,
-        style: TextStyle(fontSize: 15),
+        style: TextStyle(fontSize: 18),
         validator: (String value) {
           if (value.isEmpty) {
             return 'Description is required';
@@ -339,157 +359,240 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   }
 
   Widget _buildCategoryField() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Loại công thức: Điểm tâm,...',
-          fillColor: Colors.orange[50],
-          filled: true,
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              const Radius.circular(15.0),
+    return Row(
+      children: [
+        SizedBox(
+          width: 16,
+        ),
+        Expanded(
+            flex: 1,
+            child: Text(
+              "Category",
+              style: GoogleFonts.roboto(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.5,
+                  height: 1.5),
+            )),
+        Expanded(
+          flex: 1,
+          child: Container(
+            margin: EdgeInsets.all(12),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Breakfast',
+                fillColor: Colors.blue[100],
+                filled: true,
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              initialValue: _currentRecipe.category,
+              keyboardType: TextInputType.text,
+              style: TextStyle(fontSize: 18),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Category is required';
+                }
+
+                return null;
+              },
+              onSaved: (String value) {
+                _currentRecipe.category = value;
+              },
             ),
-            borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.category,
-        keyboardType: TextInputType.text,
-        style: TextStyle(fontSize: 15),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Category is required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _currentRecipe.category = value;
-        },
-      ),
+      ],
     );
   }
 
   Widget _buildYieldsField() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Khẩu phần: 3',
-          fillColor: Colors.orange[50],
-          filled: true,
-          suffix: Text('người'),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              const Radius.circular(15.0),
+    return Row(
+      children: [
+        SizedBox(
+          width: 16,
+        ),
+        Expanded(
+            flex: 1,
+            child: Text(
+              "Serves",
+              style: GoogleFonts.roboto(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.5,
+                  height: 1.5),
+            )),
+        Expanded(
+          flex: 1,
+          child: Container(
+            margin: EdgeInsets.all(12),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: '2 people',
+                fillColor: Colors.blue[100],
+                filled: true,
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              initialValue: _currentRecipe.yields == null
+                  ? ''
+                  : _currentRecipe.yields.toString(),
+              keyboardType: TextInputType.number,
+              style: TextStyle(fontSize: 18),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Yields is required';
+                }
+
+                try {
+                  int.parse(value);
+                } on FormatException {
+                  return 'Only number';
+                }
+
+                return null;
+              },
+              onSaved: (String value) {
+                _currentRecipe.yields = int.parse(value);
+              },
             ),
-            borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.yields == null
-            ? ''
-            : _currentRecipe.yields.toString(),
-        keyboardType: TextInputType.number,
-        style: TextStyle(fontSize: 15),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Yields is required';
-          }
-
-          try {
-            int.parse(value);
-          } on FormatException {
-            return 'Nhập số thui nha';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _currentRecipe.yields = int.parse(value);
-        },
-      ),
+      ],
     );
   }
 
   Widget _buildPrepTimeField() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Thời gian chuẩn bị: 3',
-          fillColor: Colors.orange[50],
-          filled: true,
-          suffix: Text('mins'),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              const Radius.circular(15.0),
+    return Row(
+      children: [
+        SizedBox(
+          width: 16,
+        ),
+        Expanded(
+            flex: 1,
+            child: Text(
+              "Prep time",
+              style: GoogleFonts.roboto(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.5,
+                  height: 1.5),
+            )),
+        Expanded(
+          flex: 1,
+          child: Container(
+            margin: EdgeInsets.all(12),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: '30 mins',
+                suffix: Text("mins"),
+                fillColor: Colors.blue[100],
+                filled: true,
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              initialValue: _currentRecipe.prepTime == null
+                  ? ''
+                  : _currentRecipe.prepTime.toString(),
+              keyboardType: TextInputType.number,
+              style: TextStyle(fontSize: 18),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Preptime is required';
+                }
+
+                try {
+                  int.parse(value);
+                } on FormatException {
+                  return 'Only number';
+                }
+
+                return null;
+              },
+              onSaved: (String value) {
+                _currentRecipe.prepTime = int.parse(value);
+              },
             ),
-            borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.prepTime == null
-            ? ''
-            : _currentRecipe.prepTime.toString(),
-        keyboardType: TextInputType.number,
-        style: TextStyle(fontSize: 15),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Preptime is required';
-          }
-
-          try {
-            int.parse(value);
-          } on FormatException {
-            return 'Nhập số thui nha';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _currentRecipe.prepTime = int.parse(value);
-        },
-      ),
+      ],
     );
   }
 
   Widget _buildCookTimeField() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Thời gian nấu: 3',
-          fillColor: Colors.orange[50],
-          filled: true,
-          suffix: Text('mins'),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              const Radius.circular(15.0),
+    return Row(
+      children: [
+        SizedBox(
+          width: 16,
+        ),
+        Expanded(
+            flex: 1,
+            child: Text(
+              "Cook time",
+              style: GoogleFonts.roboto(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.5,
+                  height: 1.5),
+            )),
+        Expanded(
+          flex: 1,
+          child: Container(
+            margin: EdgeInsets.all(12),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: '90 mins',
+                fillColor: Colors.blue[100],
+                suffix: Text("mins"),
+                filled: true,
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              initialValue: _currentRecipe.cookTime == null
+                  ? ''
+                  : _currentRecipe.cookTime.toString(),
+              keyboardType: TextInputType.number,
+              style: TextStyle(fontSize: 18),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Cooktime is required';
+                }
+
+                try {
+                  int.parse(value);
+                } on FormatException {
+                  return 'Only number';
+                }
+
+                return null;
+              },
+              onSaved: (String value) {
+                _currentRecipe.cookTime = int.parse(value);
+              },
             ),
-            borderSide: BorderSide.none,
           ),
         ),
-        initialValue: _currentRecipe.cookTime == null
-            ? ''
-            : _currentRecipe.cookTime.toString(),
-        keyboardType: TextInputType.number,
-        style: TextStyle(fontSize: 15),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Cooktime is required';
-          }
-
-          try {
-            int.parse(value);
-          } on FormatException {
-            return 'Nhập số thui nha';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _currentRecipe.cookTime = int.parse(value);
-        },
-      ),
+      ],
     );
   }
 
@@ -501,7 +604,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
         children: [
           IconButton(icon: Icon(Icons.menu), onPressed: () {}),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(context).size.width * 0.73,
             child: TextFormField(
               initialValue: _currentRecipe.ingredients
                       .asMap()
@@ -510,9 +613,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   : '',
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: '200g sữa chua',
+                hintText: '200ml milk',
                 filled: true,
-                fillColor: Colors.orange[50],
+                fillColor: Colors.blue[100],
                 border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     const Radius.circular(15.0),
@@ -520,7 +623,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              style: TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: 18),
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'ingre is required';
@@ -533,13 +636,73 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               },
             ),
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 5),
+          PopupMenuButton(
+            icon: Icon(Icons.more_horiz),
+            onSelected: (String result) {
+              switch (result) {
+                case "delete":
+                  setState(() {
+                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                  });
+                  break;
+                case "add":
+                  setState(() {
+                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                  });
+                  break;
+                default:
+              }
+              setState(() {});
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: "add",
+                child: Text('Add ingredient'),
+              ),
+              const PopupMenuItem<String>(
+                value: "delete",
+                child: Text('Delete this ingredient'),
+              ),
+            ],
+          )
         ],
       ),
     );
   }
 
   _buildDirectionField() {
+    File _imageStepFile;
+    _imgStepFromCamera() async {
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(
+        source: ImageSource.camera,
+        imageQuality: 50,
+        maxWidth: 400,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _imageStepFile = File(pickedFile.path);
+        });
+      }
+    }
+
+    Future _imgStepFromGallery() async {
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+        maxWidth: 400,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _imageStepFile = File(pickedFile.path);
+        });
+      }
+    }
+
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
@@ -554,7 +717,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
-                    color: Colors.black),
+                    color: Colors.blue[600]),
                 child: Text(
                   (_directionWidgets.length + 1).toString(),
                   style: TextStyle(color: Colors.white, fontSize: 13),
@@ -569,9 +732,11 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
+              Container(
+                width: MediaQuery.of(context).size.width * 0.73,
                 child: TextFormField(
+                  minLines: 2,
+                  maxLines: 3,
                   keyboardType: TextInputType.text,
                   initialValue: _currentRecipe.directions
                           .asMap()
@@ -579,21 +744,20 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       ? _currentRecipe.directions[_directionWidgets.length]
                       : '',
                   decoration: InputDecoration(
-                    hintText: 'Xắt lát hành phi cho vừa ăn',
+                    hintText: 'Mix the flour and water until they thicken',
                     filled: true,
-                    fillColor: Colors.orange[50],
+                    fillColor: Colors.blue[100],
                     border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           const Radius.circular(15.0),
                         ),
                         borderSide: BorderSide.none),
                   ),
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 16),
                   validator: (String value) {
                     if (value.isEmpty) {
-                      return 'Direct is required';
+                      return 'Step is required';
                     }
-
                     return null;
                   },
                   onSaved: (String value) {
@@ -601,28 +765,136 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   },
                 ),
               ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
+              SizedBox(height: 5),
+              //image placeholder show here
+              if (_imageStepFile == null)
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return SafeArea(
+                          child: Container(
+                            child: new Wrap(
+                              children: <Widget>[
+                                new ListTile(
+                                    leading: new Icon(Icons.photo_library),
+                                    title: new Text('Photo Library'),
+                                    onTap: () {
+                                      _imgStepFromGallery();
+                                      Navigator.of(context).pop();
+                                    }),
+                                new ListTile(
+                                  leading: new Icon(Icons.photo_camera),
+                                  title: new Text('Camera'),
+                                  onTap: () {
+                                    _imgStepFromCamera();
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: 100,
+                    height: 80,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(8)),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              //Load image done below
+              if (_imageStepFile != null)
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return SafeArea(
+                          child: Container(
+                            child: new Wrap(
+                              children: <Widget>[
+                                new ListTile(
+                                    leading: new Icon(Icons.photo_library),
+                                    title:
+                                        new Text('Change image from Library'),
+                                    onTap: () {
+                                      _imgStepFromGallery();
+                                      Navigator.of(context).pop();
+                                    }),
+                                new ListTile(
+                                  leading: new Icon(Icons.photo_camera),
+                                  title: new Text('Change image from Camera'),
+                                  onTap: () {
+                                    _imgStepFromCamera();
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                new ListTile(
+                                  leading: new Icon(Icons.delete_outline),
+                                  title: new Text('Delete image'),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
                       width: 100,
                       height: 80,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8)),
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(8)),
                       alignment: Alignment.center,
-                      child: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                      child: Image.network(
+                          "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                          fit: BoxFit.fitWidth)),
+                ),
             ],
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 5),
+          PopupMenuButton(
+            icon: Icon(Icons.more_horiz),
+            onSelected: (String result) {
+              switch (result) {
+                case "delete":
+                  setState(() {
+                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                  });
+                  break;
+                case "add":
+                  setState(() {
+                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                  });
+                  break;
+                default:
+              }
+              setState(() {});
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: "add",
+                child: Text('Add step'),
+              ),
+              const PopupMenuItem<String>(
+                value: "delete",
+                child: Text('Delete this step'),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -684,12 +956,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               _buildYieldsField(),
               _buildPrepTimeField(),
               _buildCookTimeField(),
-              Divider(thickness: 5, color: Colors.orange[80]),
+              Divider(thickness: 5, color: Colors.blue[80]),
               Container(
                 padding: EdgeInsets.only(left: 20),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Nguyên liệu",
+                  "Ingredients",
                   style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 20,
@@ -713,10 +985,10 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               ),
               TextButton(
                 child: Text(
-                  '+ Thêm nguyên liệu',
+                  '+ Ingredient',
                   style: GoogleFonts.roboto(
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.5,
                       height: 1.5),
@@ -724,12 +996,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 onPressed: () => setState(
                     () => _ingredientWidgets.add(_buildIngredientField())),
               ),
-              Divider(thickness: 5, color: Colors.orange[80]),
+              Divider(thickness: 5, color: Colors.blue[80]),
               Container(
                 padding: EdgeInsets.only(left: 20),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Cách làm",
+                  "Method",
                   style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 20,
@@ -753,10 +1025,10 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               ),
               TextButton(
                 child: Text(
-                  '+ Thêm bước',
+                  '+ Step',
                   style: GoogleFonts.roboto(
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.5,
                       height: 1.5),
@@ -764,7 +1036,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 onPressed: () => setState(
                     () => _directionWidgets.add(_buildDirectionField())),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 16),
             ],
           ),
         ),
