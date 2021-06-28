@@ -24,7 +24,7 @@ class SliverRecipeAppbar extends StatelessWidget {
       padding: EdgeInsets.only(left: 10, right: 10),
       sliver: SliverAppBar(
         pinned: true,
-        expandedHeight: MediaQuery.of(context).size.height * 0.14,
+        expandedHeight: MediaQuery.of(context).size.height * 0.18,
         backgroundColor: Colors.white,
         elevation: 0.0,
         onStretchTrigger: () {
