@@ -2,7 +2,7 @@ import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
-import 'package:cooking_master/screens/recipe_form_screen.dart';
+import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:focused_menu/focused_menu.dart';

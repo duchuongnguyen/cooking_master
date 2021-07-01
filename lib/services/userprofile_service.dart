@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cooking_master/models/notification_model.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserProfileService {
@@ -23,6 +25,14 @@ class UserProfileService {
     final _followerRef = _ref.doc(idFollower);
     final _followingRef = _ref.doc(idFollowing);
 
+    NotificationModel notification;
+
+    notification.content = "started following you.";
+    notification.owner = idFollowing;
+    notification.receiver = idFollower;
+
+    await NotificationService().deleteNotification(notification);
+
     await _followerRef.update({
       "following": FieldValue.arrayRemove([idFollowing])
     });
@@ -34,6 +44,16 @@ class UserProfileService {
   Future<void> followUser(String idFollower, String idFollowing) async {
     final _followerRef = _ref.doc(idFollower);
     final _followingRef = _ref.doc(idFollowing);
+
+    NotificationModel notification;
+
+    notification.content = "started following you.";
+    notification.createdAt = Timestamp.now();
+    notification.owner = idFollowing;
+    notification.receiver = idFollower;
+    notification.seen = false;
+
+    NotificationService().pushNotification(notification);
 
     await _followerRef.update({
       "following": FieldValue.arrayUnion([idFollowing])

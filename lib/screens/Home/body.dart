@@ -25,76 +25,130 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes.take(10).toList(),
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Pasta',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'pasta')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('pasta'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Pasta',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Beef',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'beef')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('beef'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Beef',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Rice',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'rice')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('rice'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Rice',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Cake',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'cake')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('cake'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Cake',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Soup',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'soup')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('soup'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Soup',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Bread',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'bread')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('bread'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Bread',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Sauce',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'sauce')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('sauce'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Sauce',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Chicken',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'chicken')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('chicken'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Chicken',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(height: 20),
-            ListViewOfRecipeCardsWithTitle(
-              title: 'Fish',
-              cards: recipe.listrecipes
-                  .where((element) => element.category == 'fish')
-                  .take(10)
-                  .toList(),
+            FutureBuilder<List<RecipeModel>>(
+              future: RecipeService().getRecipesByCategory('fish'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListViewOfRecipeCardsWithTitle(
+                    title: 'Fish',
+                    cards: snapshot.data,
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
           ],
         ),

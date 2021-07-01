@@ -14,8 +14,20 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
+    await _ref.limit(10).get().then((value) {
+      value.docs.forEach((element) {
+        RecipeModel recipe = RecipeModel.fromMap(element.data());
+        _recipeList.add(recipe);
+      });
+    });
 
-    await _ref.get().then((value) {
+    return _recipeList;
+  }
+
+  Future<List<RecipeModel>> getRecipesByCategory(String category) async {
+    List<RecipeModel> _recipeList = [];
+
+    await _ref.limit(10).where('category', isEqualTo: category).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);

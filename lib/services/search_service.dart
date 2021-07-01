@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_master/models/history_model.dart';
 import 'package:cooking_master/screens/Search/recipe_search.dart';
-import 'package:cooking_master/screens/Search/search_model.dart';
-import 'package:cooking_master/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
-
 class SearchService {
   final ref = FirebaseFirestore.instance.collection('recipes');
   Future<List<RecipeSearch>> searchBy(String cate, String name) async {

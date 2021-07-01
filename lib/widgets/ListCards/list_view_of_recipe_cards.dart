@@ -3,7 +3,7 @@ import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
-import 'package:cooking_master/screens/recipe_form_screen.dart';
+import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focused_menu/focused_menu.dart';

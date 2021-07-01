@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:cooking_master/models/recipe_model.dart';
+import 'package:cooking_master/screens/recipe_form/category_field.dart';
+import 'package:cooking_master/screens/recipe_form/description_field.dart';
+import 'package:cooking_master/screens/recipe_form/name_field.dart';
+import 'package:cooking_master/screens/recipe_form/recipe_image.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
@@ -21,15 +25,16 @@ class RecipeFormScreen extends StatefulWidget {
     this.currentRecipe,
   }) : super(key: key);
 
-  _RecipeFormScreenState createState() => _RecipeFormScreenState();
+  @override
+  RecipeFormScreenState createState() => RecipeFormScreenState();
 }
 
-class _RecipeFormScreenState extends State<RecipeFormScreen> {
+class RecipeFormScreenState extends State<RecipeFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  RecipeModel _currentRecipe;
-  String _imageUrl;
-  File _imageFile;
+  RecipeModel currentRecipe;
+  String imageUrl;
+  File imageFile;
   var _ingredientWidgets = <Widget>[];
   var _directionWidgets = <Widget>[];
   var _directionImageUrls = <String>[];
@@ -40,375 +45,25 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     super.initState();
 
     if (widget.currentRecipe != null) {
-      _currentRecipe = widget.currentRecipe;
+      currentRecipe = widget.currentRecipe;
     } else {
-      _currentRecipe = RecipeModel();
+      currentRecipe = RecipeModel();
     }
 
-    _directionImageUrls = _currentRecipe.directionImage;
-    _imageUrl = _currentRecipe.image;
+    _directionImageUrls = currentRecipe.directionImage;
+    imageUrl = currentRecipe.image;
 
     Future.delayed(Duration.zero, () {
-      _currentRecipe.ingredients.forEach((element) {
+      currentRecipe.ingredients.forEach((element) {
         _ingredientWidgets.add(_buildIngredientField());
       });
 
-      _currentRecipe.directions.forEach((element) {
-        _directionWidgets.add(_buildDirectionField());
-      });
+      for (int i = 0; i < currentRecipe.directions.length; i++) {
+        _directionWidgets.add(_buildDirectionField(i));
+      }
 
       setState(() {});
     });
-  }
-
-  _showImage() {
-    if (_imageFile == null && _imageUrl == null) {
-      return GestureDetector(
-        onTap: () {
-          _showPicker(context);
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width,
-          alignment: Alignment.center,
-          child: Stack(
-            children: [
-              Image.asset(
-                'assets/images/food-placeholder.png',
-                fit: BoxFit.contain,
-              ),
-              Positioned.fill(
-                bottom: 15,
-                child: _imageFile == null && _imageUrl == null
-                    ? Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.camera_alt_outlined),
-                            SizedBox(width: 5),
-                            Text("Upload recipe photo"),
-                          ],
-                        ),
-                      )
-                    : SizedBox(height: 0),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else if (_imageFile != null) {
-      print('showing image from local file');
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width,
-        alignment: Alignment.center,
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Image.file(
-              _imageFile,
-              fit: BoxFit.contain,
-            ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white)),
-                width: 120,
-                height: 40,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _showPicker(context),
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Icon(Icons.camera_alt_outlined,
-                                color: Colors.white),
-                            Text(
-                              " Edit",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    VerticalDivider(
-                      thickness: 1,
-                      color: Colors.white,
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _imageFile = null;
-                            _imageUrl = null;
-                          });
-                        },
-                        child: Icon(
-                          Icons.delete_outlined,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    } else if (_imageUrl != null) {
-      print('showing image from url');
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width,
-        alignment: Alignment.center,
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: <Widget>[
-            Image.network(
-              _imageUrl,
-              fit: BoxFit.contain,
-            ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white)),
-                width: 120,
-                height: 40,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _showPicker(context),
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Icon(Icons.camera_alt_outlined,
-                                color: Colors.white),
-                            Text(
-                              " Edit",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    VerticalDivider(
-                      thickness: 1,
-                      color: Colors.white,
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _imageFile = null;
-                            _imageUrl = null;
-                          });
-                        },
-                        child: Icon(
-                          Icons.delete_outlined,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  void _showPicker(context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            child: new Wrap(
-              children: <Widget>[
-                new ListTile(
-                    leading: new Icon(Icons.photo_library),
-                    title: new Text('Photo Library'),
-                    onTap: () {
-                      _imgFromGallery();
-                      Navigator.of(context).pop();
-                    }),
-                new ListTile(
-                  leading: new Icon(Icons.photo_camera),
-                  title: new Text('Camera'),
-                  onTap: () {
-                    _imgFromCamera();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  _imgFromCamera() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(
-      source: ImageSource.camera,
-      imageQuality: 50,
-      maxWidth: 400,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future _imgFromGallery() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-      maxWidth: 400,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
-  Widget _buildNameField() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Title: Macaroni Pasta',
-          fillColor: Colors.blue[100],
-          filled: true,
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              const Radius.circular(15.0),
-            ),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        initialValue: _currentRecipe.name,
-        keyboardType: TextInputType.text,
-        style: TextStyle(fontSize: 20),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Name is required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _currentRecipe.name = value;
-        },
-      ),
-    );
-  }
-
-  Widget _buildDescriptionField() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: TextFormField(
-        minLines: 1,
-        maxLines: 3,
-        decoration: InputDecoration(
-          hintText:
-              'Description: An easy peasy pasta dish that’s simple, flavorful and incredibly hearty. And all you need is 20 min to whip this up!',
-          fillColor: Colors.blue[100],
-          filled: true,
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              const Radius.circular(15.0),
-            ),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        initialValue: _currentRecipe.description,
-        keyboardType: TextInputType.text,
-        style: TextStyle(fontSize: 18),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Description is required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _currentRecipe.description = value;
-        },
-      ),
-    );
-  }
-
-  Widget _buildCategoryField() {
-    return Row(
-      children: [
-        SizedBox(
-          width: 16,
-        ),
-        Expanded(
-            flex: 1,
-            child: Text(
-              "Category",
-              style: GoogleFonts.roboto(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.5,
-                  height: 1.5),
-            )),
-        Expanded(
-          flex: 1,
-          child: Container(
-            margin: EdgeInsets.all(12),
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Breakfast',
-                fillColor: Colors.blue[100],
-                filled: true,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    const Radius.circular(15.0),
-                  ),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              initialValue: _currentRecipe.category,
-              keyboardType: TextInputType.text,
-              style: TextStyle(fontSize: 18),
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return 'Category is required';
-                }
-
-                return null;
-              },
-              onSaved: (String value) {
-                _currentRecipe.category = value;
-              },
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildYieldsField() {
@@ -444,9 +99,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              initialValue: _currentRecipe.yields == null
+              initialValue: currentRecipe.yields == null
                   ? ''
-                  : _currentRecipe.yields.toString(),
+                  : currentRecipe.yields.toString(),
               keyboardType: TextInputType.number,
               style: TextStyle(fontSize: 18),
               validator: (String value) {
@@ -463,7 +118,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 return null;
               },
               onSaved: (String value) {
-                _currentRecipe.yields = int.parse(value);
+                currentRecipe.yields = int.parse(value);
               },
             ),
           ),
@@ -506,9 +161,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              initialValue: _currentRecipe.prepTime == null
+              initialValue: currentRecipe.prepTime == null
                   ? ''
-                  : _currentRecipe.prepTime.toString(),
+                  : currentRecipe.prepTime.toString(),
               keyboardType: TextInputType.number,
               style: TextStyle(fontSize: 18),
               validator: (String value) {
@@ -525,7 +180,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 return null;
               },
               onSaved: (String value) {
-                _currentRecipe.prepTime = int.parse(value);
+                currentRecipe.prepTime = int.parse(value);
               },
             ),
           ),
@@ -568,9 +223,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              initialValue: _currentRecipe.cookTime == null
+              initialValue: currentRecipe.cookTime == null
                   ? ''
-                  : _currentRecipe.cookTime.toString(),
+                  : currentRecipe.cookTime.toString(),
               keyboardType: TextInputType.number,
               style: TextStyle(fontSize: 18),
               validator: (String value) {
@@ -587,7 +242,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 return null;
               },
               onSaved: (String value) {
-                _currentRecipe.cookTime = int.parse(value);
+                currentRecipe.cookTime = int.parse(value);
               },
             ),
           ),
@@ -606,10 +261,10 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.73,
             child: TextFormField(
-              initialValue: _currentRecipe.ingredients
+              initialValue: currentRecipe.ingredients
                       .asMap()
                       .containsKey(_ingredientWidgets.length)
-                  ? _currentRecipe.ingredients[_ingredientWidgets.length]
+                  ? currentRecipe.ingredients[_ingredientWidgets.length]
                   : '',
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
@@ -632,7 +287,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                 return null;
               },
               onSaved: (String value) {
-                _currentRecipe.ingredients.add(value);
+                currentRecipe.ingredients.add(value);
               },
             ),
           ),
@@ -643,12 +298,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               switch (result) {
                 case "delete":
                   setState(() {
-                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
                   });
                   break;
                 case "add":
                   setState(() {
-                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
                   });
                   break;
                 default:
@@ -671,9 +326,10 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     );
   }
 
-  _buildDirectionField() {
+  _buildDirectionField(int index) {
     File _imageStepFile;
-    _imgStepFromCamera() async {
+
+    Future _imgStepFromCamera() async {
       final picker = ImagePicker();
       final pickedFile = await picker.getImage(
         source: ImageSource.camera,
@@ -684,7 +340,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       if (pickedFile != null) {
         setState(() {
           _imageStepFile = File(pickedFile.path);
+          _directionImageFiles.add(_imageStepFile);
         });
+        setState(() {});
       }
     }
 
@@ -699,7 +357,15 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       if (pickedFile != null) {
         setState(() {
           _imageStepFile = File(pickedFile.path);
+          imageCache.clear();
+          _directionImageFiles.add(_imageStepFile);
         });
+        imageCache.clear();
+        setState(() {});
+        print(_directionImageFiles[0]);
+        print(_directionImageFiles.length);
+
+        print(index);
       }
     }
 
@@ -738,10 +404,10 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                   minLines: 2,
                   maxLines: 3,
                   keyboardType: TextInputType.text,
-                  initialValue: _currentRecipe.directions
+                  initialValue: currentRecipe.directions
                           .asMap()
                           .containsKey(_directionWidgets.length)
-                      ? _currentRecipe.directions[_directionWidgets.length]
+                      ? currentRecipe.directions[_directionWidgets.length]
                       : '',
                   decoration: InputDecoration(
                     hintText: 'Mix the flour and water until they thicken',
@@ -761,13 +427,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                     return null;
                   },
                   onSaved: (String value) {
-                    _currentRecipe.directions.add(value);
+                    currentRecipe.directions.add(value);
                   },
                 ),
               ),
               SizedBox(height: 5),
-              //image placeholder show here
-              if (_imageStepFile == null)
+              if (_directionImageFiles.length <= index)
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(
@@ -811,9 +476,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       color: Colors.white,
                     ),
                   ),
-                ),
-              //Load image done below
-              if (_imageStepFile != null)
+                )
+              else
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(
@@ -859,9 +523,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       decoration:
                           BoxDecoration(borderRadius: BorderRadius.circular(8)),
                       alignment: Alignment.center,
-                      child: Image.network(
-                          "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                          fit: BoxFit.fitWidth)),
+                      child: Image.file(_directionImageFiles[index],
+                          key: UniqueKey(), fit: BoxFit.fitWidth)),
                 ),
             ],
           ),
@@ -872,12 +535,12 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
               switch (result) {
                 case "delete":
                   setState(() {
-                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
                   });
                   break;
                 case "add":
                   setState(() {
-                    //_currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
                   });
                   break;
                 default:
@@ -908,18 +571,18 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
     _formKey.currentState.save();
 
     RecipeService()
-        .uploadRecipeAndImage(_currentRecipe, widget.isUpdating, _imageFile);
+        .uploadRecipeAndImage(currentRecipe, widget.isUpdating, imageFile);
 
-    print("name: ${_currentRecipe.name}");
-    print("description: ${_currentRecipe.description}");
-    print("category: ${_currentRecipe.category}");
-    print("yields: ${_currentRecipe.yields}");
-    print("prepTime: ${_currentRecipe.prepTime}");
-    print("cookTime: ${_currentRecipe.cookTime}");
-    print("ingredients: ${_currentRecipe.ingredients}");
-    print("directions: ${_currentRecipe.directions}");
-    print("imageFile: ${_imageFile.toString()}");
-    print("imageUrl: $_imageUrl");
+    print("name: ${currentRecipe.name}");
+    print("description: ${currentRecipe.description}");
+    print("category: ${currentRecipe.category}");
+    print("yields: ${currentRecipe.yields}");
+    print("prepTime: ${currentRecipe.prepTime}");
+    print("cookTime: ${currentRecipe.cookTime}");
+    print("ingredients: ${currentRecipe.ingredients}");
+    print("directions: ${currentRecipe.directions}");
+    print("imageFile: ${imageFile.toString()}");
+    print("imageUrl: $imageUrl");
   }
 
   @override
@@ -948,11 +611,11 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: <Widget>[
-              _showImage(),
+              RecipeImage(parent: this),
               SizedBox(height: 16),
-              _buildNameField(),
-              _buildDescriptionField(),
-              _buildCategoryField(),
+              NameField(parent: this),
+              DesciptionField(parent: this),
+              CategoryField(parent: this),
               _buildYieldsField(),
               _buildPrepTimeField(),
               _buildCookTimeField(),
@@ -1033,8 +696,8 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                onPressed: () => setState(
-                    () => _directionWidgets.add(_buildDirectionField())),
+                onPressed: () => setState(() => _directionWidgets
+                    .add(_buildDirectionField(_directionWidgets.length))),
               ),
               SizedBox(height: 16),
             ],
