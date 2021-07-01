@@ -99,7 +99,7 @@ class _SignInPageState extends State<SignInPage> {
             height: 50.0,
             child: _buildHeader(),
           ),
-          SizedBox(height: 48.0),
+          SizedBox(height: 40.0),
           SocialSignInButton(
             assetName: 'assets/images/google-logo.png',
             text: 'Sign in with Google',
@@ -108,7 +108,7 @@ class _SignInPageState extends State<SignInPage> {
             onPressed:() => _signInWithGoogle(context),
             //isLoading ? null : () => _signInWithGoogle(context),
           ),
-          SizedBox(height: 8.0),
+          SizedBox(height: 15.0),
           SocialSignInButton(
             assetName: 'assets/images/facebook-logo.png',
             text: 'Sign in with Facebook',
@@ -117,7 +117,13 @@ class _SignInPageState extends State<SignInPage> {
             onPressed: () => _signInWithFacebook(context),
             //onPressed: isLoading ? null : () => _signInWithFacebook(context),
           ),
-          SizedBox(height: 8.0),
+          SizedBox(height: 15.0),
+          Text(
+            'or',
+            style: TextStyle(fontSize: 14.0, color: Colors.black87),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 15.0),
           SignInButton(
             key: emailPasswordKey,
             text: 'Sign in with email',
@@ -126,20 +132,16 @@ class _SignInPageState extends State<SignInPage> {
             onPressed:() => _signInWithEmail(context),
             //onPressed: isLoading ? null : () => _signInWithEmail(context),
           ),
-          SizedBox(height: 8.0),
-          Text(
-            'or',
-            style: TextStyle(fontSize: 14.0, color: Colors.black87),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8.0),
-          SignInButton(
-            text: 'Go anonymous',
-            textColor: Colors.black,
-            color: Colors.lime[300],
-            onPressed: () => _signInAnonymously(context),
-            //onPressed: isLoading ? null : () => _signInAnonymously(context),
-          ),
+          SizedBox(height: 15.0),
+          
+          
+          // SignInButton(
+          //   text: 'Go anonymous',
+          //   textColor: Colors.black,
+          //   color: Colors.lime[300],
+          //   onPressed: () => _signInAnonymously(context),
+          //   //onPressed: isLoading ? null : () => _signInAnonymously(context),
+          // ),
         ],
       ),
     );

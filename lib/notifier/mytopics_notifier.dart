@@ -3,23 +3,43 @@ import 'package:flutter/cupertino.dart';
 
 class MyTopicsNotifier extends ChangeNotifier {
   MyTopicsService _ser = MyTopicsService();
-  List<String> _myTopics;
-  List<String> get MyTopics => _myTopics;
-
-  loadMyTopics(String id) async {
-    _myTopics = await _ser.getMyTopics(id);
+  List<String> _myTopicsid;
+  List<String> _myTopicsString = [];
+  List<Map<String, dynamic>> allCategory;
+  List<String> get myTopicsString => _myTopicsString;
+  List<String> get myTopics => _myTopicsid;
+  List<Map<String, dynamic>> get getAllCategory => allCategory;
+  loadMyTopics(String uid) async {
+    _myTopicsid = await _ser.getMyTopics(uid);
+    allCategory = await _ser.getAllCategories();
+    setMytopicString();
     notifyListeners();
   }
 
   deleteTopic(String topic) async {
-    _myTopics.remove(topic);
-    _ser.update(_myTopics);
+    _myTopicsid.remove(topic);
+    _ser.update(_myTopicsid);
     notifyListeners();
   }
 
   addTopic(String topic) async {
-    _myTopics.add(topic);
-    _ser.update(_myTopics);
+    _myTopicsid.add(topic);
+    _ser.update(_myTopicsid);
     notifyListeners();
+  }
+
+  update(List<String> topics) async {
+    _ser.update(topics);
+  }
+
+  setMytopicString() {
+    _myTopicsString.clear();
+    _myTopicsid.forEach((topicid) {
+      allCategory.forEach((element) {
+        if (topicid == element["cate_id"]) {
+          _myTopicsString.add(element["name"].toString());
+        }
+      });
+    });
   }
 }

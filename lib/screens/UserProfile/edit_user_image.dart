@@ -50,7 +50,7 @@ class _EditUserImageState extends State<EditUserImage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Ảnh đại diện",
+                  "Avatar",
                   style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 18,
@@ -59,7 +59,7 @@ class _EditUserImageState extends State<EditUserImage> {
                 GestureDetector(
                   onTap: getImage,
                   child: Text(
-                    "Thư viện",
+                    "Gallery",
                     style: GoogleFonts.roboto(
                         color: blue3,
                         fontSize: 18,

@@ -6,10 +6,12 @@ class UserProfileService {
   final _ref = FirebaseFirestore.instance.collection("userprofile");
 
   Stream<UserModel> loadProfile(String id) {
-    return _ref
-        .doc(id)
-        .snapshots(includeMetadataChanges: true)
-        .map((snapshot) => UserModel.fromMap(snapshot.data()));
+    return _ref.doc(id).snapshots(includeMetadataChanges: true).map((snapshot) {
+      // FirebaseAuth.instance.currentUser.updateProfile(
+      //     displayName: snapshot.data()["name"],
+      //     photoURL: snapshot.data()["imageurl"]);
+       return UserModel.fromMap(snapshot.data());
+    });
   }
 
   Stream<bool> isFollow(String idFollower, String idFollowing) {
@@ -78,9 +80,9 @@ class UserProfileService {
         .doc(uid)
         .set({
           'uid': uid,
-          'name': "Tên hiển thị",
-          'bio': "Thêm tiểu sử của bạn",
-          'address': "Thêm địa chỉ của bạn",
+          'name': "New friend",
+          'bio': " Add your Bio",
+          'address': "Add your Address",
           'followed': [],
           'following': [],
           'imageurl':

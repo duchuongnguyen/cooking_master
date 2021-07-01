@@ -11,13 +11,13 @@ class FavoriteTopic extends StatefulWidget {
 class _FavoriteTopicState extends State<FavoriteTopic> {
   GlobalKey<ScaffoldState> _key;
   List<String> _dynamicTopics;
-  List<String> _topics = ["1", "4", "5"];
+  //List<String> _topics = ["1", "4", "5"];
   @override
   void initState() {
     super.initState();
     _key = GlobalKey<ScaffoldState>();
     final mytopics = Provider.of<MyTopicsNotifier>(context, listen: false);
-    _dynamicTopics = mytopics.MyTopics;
+    _dynamicTopics = mytopics.myTopics;
   }
 
   @override
@@ -28,13 +28,14 @@ class _FavoriteTopicState extends State<FavoriteTopic> {
         SmartSelect<String>.multiple(
             title: 'Manage topic',
             placeholder: 'Choose one',
-            value: _topics,
+            value: _dynamicTopics,
             onChange: (selected) {
-              setState(() => _topics = selected.value);
+              setState(() => _dynamicTopics = selected.value);
+              mytopics.update(_dynamicTopics);
             },
             choiceItems: S2Choice.listFrom<String, Map>(
-              source: topics,
-              value: (index, item) => item['id'],
+              source: mytopics.getAllCategory,
+              value: (index, item) => item['cate_id'],
               title: (index, item) => item['name'],
               meta: (index, item) => item,
             ),
@@ -61,7 +62,9 @@ class _FavoriteTopicState extends State<FavoriteTopic> {
                   },
                   chipOnDelete: (i) {
                     setState(() {
-                      _topics.removeAt(i); //can make error when order of 2 lists different
+                      _dynamicTopics.removeAt(
+                          i); //can make error when order of 2 lists different
+                      mytopics.update(_dynamicTopics);
                     });
                   },
                 ),
