@@ -340,9 +340,15 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
       if (pickedFile != null) {
         setState(() {
           _imageStepFile = File(pickedFile.path);
-          _directionImageFiles.add(_imageStepFile);
+
+          while (_directionImageFiles.length <= index) {
+            _directionImageFiles.add(null);
+          }
+
+          _directionImageFiles[index] = _imageStepFile;
+
+          _directionWidgets[index] = _buildDirectionField(index);
         });
-        setState(() {});
       }
     }
 
@@ -357,15 +363,15 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
       if (pickedFile != null) {
         setState(() {
           _imageStepFile = File(pickedFile.path);
-          imageCache.clear();
-          _directionImageFiles.add(_imageStepFile);
-        });
-        imageCache.clear();
-        setState(() {});
-        print(_directionImageFiles[0]);
-        print(_directionImageFiles.length);
 
-        print(index);
+          while (_directionImageFiles.length <= index) {
+            _directionImageFiles.add(null);
+          }
+
+          _directionImageFiles[index] = _imageStepFile;
+
+          _directionWidgets[index] = _buildDirectionField(index);
+        });
       }
     }
 
@@ -385,7 +391,7 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                     borderRadius: BorderRadius.circular(13),
                     color: Colors.blue[600]),
                 child: Text(
-                  (_directionWidgets.length + 1).toString(),
+                  (index + 1).toString(),
                   style: TextStyle(color: Colors.white, fontSize: 13),
                 ),
               ),
@@ -570,8 +576,8 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
 
     _formKey.currentState.save();
 
-    RecipeService()
-        .uploadRecipeAndImage(currentRecipe, widget.isUpdating, imageFile);
+    RecipeService().uploadRecipeAndImage(
+        currentRecipe, widget.isUpdating, imageFile, _directionImageFiles);
 
     print("name: ${currentRecipe.name}");
     print("description: ${currentRecipe.description}");

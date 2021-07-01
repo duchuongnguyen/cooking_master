@@ -14,6 +14,13 @@ class UserProfileService {
         .map((snapshot) => UserModel.fromMap(snapshot.data()));
   }
 
+  Future<UserModel> loadProfileFuture(String id) async {
+    return await _ref
+        .doc(id)
+        .get()
+        .then((value) => UserModel.fromMap(value.data()));
+  }
+
   Stream<bool> isFollow(String idFollower, String idFollowing) {
     return _ref.doc(idFollower).snapshots(includeMetadataChanges: true).map(
         (value) => UserModel.fromMap(value.data())
@@ -25,11 +32,11 @@ class UserProfileService {
     final _followerRef = _ref.doc(idFollower);
     final _followingRef = _ref.doc(idFollowing);
 
-    NotificationModel notification;
+    NotificationModel notification = NotificationModel();
 
     notification.content = "started following you.";
-    notification.owner = idFollowing;
-    notification.receiver = idFollower;
+    notification.owner = idFollower;
+    notification.receiver = idFollowing;
 
     await NotificationService().deleteNotification(notification);
 
@@ -45,12 +52,12 @@ class UserProfileService {
     final _followerRef = _ref.doc(idFollower);
     final _followingRef = _ref.doc(idFollowing);
 
-    NotificationModel notification;
+    NotificationModel notification = NotificationModel();
 
     notification.content = "started following you.";
     notification.createdAt = Timestamp.now();
-    notification.owner = idFollowing;
-    notification.receiver = idFollower;
+    notification.owner = idFollower;
+    notification.receiver = idFollowing;
     notification.seen = false;
 
     NotificationService().pushNotification(notification);

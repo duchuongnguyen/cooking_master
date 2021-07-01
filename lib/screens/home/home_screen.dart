@@ -4,6 +4,7 @@ import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/Home/body.dart';
+import 'package:cooking_master/screens/notification_screen/notification_screen.dart';
 import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
 import 'package:cooking_master/screens/saved_recipe_screen.dart';
 import 'package:cooking_master/screens/search_screen.dart';
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return SearchScreen();
       case 2:
-        //return NotificationScreen();
+        return NotificationScreen();
       case 3:
         return SavedRecipeScreen();
       default:
