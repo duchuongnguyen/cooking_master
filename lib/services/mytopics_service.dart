@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class MyTopicsService {
   final ref = FirebaseFirestore.instance.collection("mytopics");
   Future<List<String>> getMyTopics(String uid) async {

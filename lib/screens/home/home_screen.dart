@@ -4,8 +4,8 @@ import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/screens/Home/body.dart';
-import 'package:cooking_master/screens/notification_screen.dart';
-import 'package:cooking_master/screens/recipe_form_screen.dart';
+import 'package:cooking_master/screens/notification_screen/notification_screen.dart';
+import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
 import 'package:cooking_master/screens/saved_recipe_screen.dart';
 import 'package:cooking_master/screens/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,13 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
     FontAwesomeIcons.search,
   ];
   fecthdata() async {
-    final savedRecipe =
-        Provider.of<SavedRecipeProvider>(context, listen: false);
+    final savedRecipe = Provider.of<SavedRecipeProvider>(context, listen: false);
     final recipe = Provider.of<RecipeNotifier>(context, listen: false);
     final mytopic = Provider.of<MyTopicsNotifier>(context, listen: false);
     await mytopic.loadMyTopics(FirebaseAuth.instance.currentUser.uid);
-    await savedRecipe.loadMapRecipe();
-    await recipe.loadListRecipes();
+    await savedRecipe.loadMapRecipe(); // saved recpie
+    await recipe.loadListRecipes(); 
     setState(() {
       isLoading = false;
     });

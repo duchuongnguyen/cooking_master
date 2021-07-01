@@ -11,7 +11,7 @@ class ListViewOfRecipeCardsWithTitle extends StatelessWidget {
       @required this.cards,
       @required this.title,
       this.action,
-      this.isEditing,
+      this.isEditing = false,
       this.parent})
       : super(key: key);
   final List<RecipeModel> cards;

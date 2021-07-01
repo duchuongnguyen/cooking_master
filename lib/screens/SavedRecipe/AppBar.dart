@@ -47,45 +47,31 @@ AppBar buildSavedRecipeAppBar(
   return buildAppBar(
     context,
     title: FirebaseAuth.instance.currentUser.displayName,
-    actions: !parent.isEditing
-        ? [
-            _tabController.index != 2 ? IconButton(
-              icon: Icon(
-                Icons.library_add_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                buildAddCategoryButton(
-                    context, _tabController, _categoryController);
-              },
-            ) : Container(),
-          ]
-        : [
-            IconButton(
-              icon: Icon(
-                Icons.delete_outline,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                parent.setState(() {
-                  parent.isEditing = false;
-                  //savedRecipe.removeRecipe();
-                });
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.done,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                parent.setState(() {
-                  parent.isEditing = false;
-                  //savedRecipe.setUnselected();
-                });
-              },
-            ),
-          ],
+    actions: [
+      IconButton(
+        icon: Icon(
+          Icons.insights_outlined,
+          color: Colors.black,
+        ),
+        onPressed: () {},
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.library_add_outlined,
+          color: Colors.black,
+        ),
+        onPressed: () {
+          buildAddCategoryButton(context, _tabController, _categoryController);
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.settings,
+          color: Colors.black,
+        ),
+        onPressed: () {},
+      ),
+    ],
     leading: GestureDetector(
       onTap: () {
         Navigator.push(context,
