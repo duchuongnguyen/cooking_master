@@ -1,5 +1,4 @@
-import 'package:cooking_master/screens/notification_screen.dart';
-import 'package:cooking_master/screens/UserProfileWatch/user_profile_watch_screen.dart';
+import 'package:cooking_master/screens/notification_screen/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +24,7 @@ class BottomNotificationDialog extends StatelessWidget {
                 ),
                 onTap: () => {
                       parent.setState(() {
-                        parent.users.removeAt(index);
+                        //parent.users.removeAt(index);
                       }),
                       Navigator.of(context).pop(),
                     }),

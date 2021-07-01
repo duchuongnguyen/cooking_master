@@ -14,8 +14,24 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
+    await _ref.limit(10).get().then((value) {
+      value.docs.forEach((element) {
+        RecipeModel recipe = RecipeModel.fromMap(element.data());
+        _recipeList.add(recipe);
+      });
+    });
 
-    await _ref.get().then((value) {
+    return _recipeList;
+  }
+
+  Future<List<RecipeModel>> getRecipesByCategory(String category) async {
+    List<RecipeModel> _recipeList = [];
+
+    await _ref
+        .limit(10)
+        .where('category', isEqualTo: category)
+        .get()
+        .then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);
@@ -47,10 +63,10 @@ class RecipeService {
     return _recipeList;
   }
 
-  void uploadRecipeAndImage(
-      RecipeModel recipe, bool isUpdating, File localFile) async {
-    if (localFile != null) {
-      var fileExtension = path.extension(localFile.path);
+  void uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
+      File recipeImage, List<File> directionImage) async {
+    if (recipeImage != null) {
+      var fileExtension = path.extension(recipeImage.path);
 
       var uuid = Uuid().v4();
 
@@ -58,22 +74,42 @@ class RecipeService {
           .ref()
           .child('recipes/images/$uuid$fileExtension');
 
-      await firebaseStorageRef.putFile(localFile);
+      await firebaseStorageRef.putFile(recipeImage);
 
       String url = await firebaseStorageRef.getDownloadURL();
 
-      _uploadRecipe(recipe, isUpdating, imageUrl: url);
-    } else {
-      _uploadRecipe(recipe, isUpdating);
+      recipe.image = url;
     }
+
+    if (directionImage != null) {
+      var fileExtension = path.extension(recipeImage.path);
+
+      var uuid = Uuid().v4();
+
+      List<String> listImage = [];
+
+      directionImage.forEach((element) async {
+        if (element != null) {
+          final Reference firebaseStorageRef = FirebaseStorage.instance
+              .ref()
+              .child('recipes/images/$uuid/directions/$fileExtension');
+
+          await firebaseStorageRef.putFile(element);
+
+          String url = await firebaseStorageRef.getDownloadURL();
+
+          listImage.add(url);
+        } else {
+          listImage.add(
+              "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");
+        }
+      });
+    }
+
+    _uploadRecipe(recipe, isUpdating);
   }
 
-  void _uploadRecipe(RecipeModel recipe, bool isUpdating,
-      {String imageUrl}) async {
-    if (imageUrl != null) {
-      recipe.image = imageUrl;
-    }
-
+  void _uploadRecipe(RecipeModel recipe, bool isUpdating) async {
     if (isUpdating) {
       recipe.updatedAt = Timestamp.now();
 

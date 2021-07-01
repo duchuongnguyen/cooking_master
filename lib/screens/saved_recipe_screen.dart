@@ -13,14 +13,12 @@ class SavedRecipeScreenState extends State<SavedRecipeScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   TextEditingController _categoryController;
-  bool isEditing;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 3);
     _categoryController = TextEditingController();
-    isEditing = false;
   }
 
 
@@ -31,7 +29,7 @@ class SavedRecipeScreenState extends State<SavedRecipeScreen>
           context, _tabController, _categoryController, this),
       body: TabBarView(
           controller: _tabController,
-          children: [SavedTab(parent: this), YourRecipeTab(), FavoriteTopic()]),
+          children: [SavedTab(), YourRecipeTab(), FavoriteTopic()]),
     );
   }
 }

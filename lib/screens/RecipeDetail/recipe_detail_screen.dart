@@ -1,4 +1,3 @@
-import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/SaveRecipeDrawer/add_category_drawer.dart';
 import 'package:cooking_master/screens/RecipeDetail/preparation_step_list.dart';
@@ -70,15 +69,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ),
             RecipeImageAndAuthor(recipe: widget.recipe),
             buildIngredientTabBar(),
-            SliverIngredientList(
-              ingredientList: widget.recipe.ingredients,
-            ),
+            SliverIngredientList(ingredientList: widget.recipe.ingredients),
             RecipeTip(recipe: widget.recipe),
             RelatedRecipes(),
             PreparationTitle(),
-            PreparationStepList(
-              recipe: widget.recipe,
-            )
+            PreparationStepList(recipe: widget.recipe)
           ],
         ),
       ),
