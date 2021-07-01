@@ -16,16 +16,17 @@ class HeaderWithSearchBox extends StatelessWidget {
     
     return Container(
       margin: EdgeInsets.only(bottom: defaultPadding),
-      height: size.height * 0.2,
+      height: size.height * 0.25,
       child: Stack(
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(
               left: defaultPadding,
               right: defaultPadding,
+              top: defaultPadding,
               bottom: defaultPadding * 2,
             ),
-            height: size.height * 0.2 - 27,
+            height: size.height * 0.25 - 27,
             decoration: BoxDecoration(
                 color: blue2,
                 borderRadius: BorderRadius.only(
@@ -38,7 +39,7 @@ class HeaderWithSearchBox extends StatelessWidget {
                   children: <Widget>[
                     //Todo: Add name user
                     Text(
-                      AppLocalizations.of(context).hello +
+                      "Hello" +
                           ", " +
                           FirebaseAuth.instance.currentUser.displayName,
                       style: Theme.of(context).textTheme.headline5.copyWith(
@@ -70,7 +71,7 @@ class HeaderWithSearchBox extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    AppLocalizations.of(context).askCook,
+                    "What do you want to cook today?",
                     style: Theme.of(context).textTheme.headline6.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.normal,

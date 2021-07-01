@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? null
             : AppBar(
                 elevation: 0,
-                toolbarHeight: 30,
+                toolbarHeight: 0,
                 backgroundColor: blue2,
               ),
         body: switchScreen(_currentTab),
