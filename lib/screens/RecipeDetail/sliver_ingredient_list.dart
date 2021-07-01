@@ -22,8 +22,9 @@ class SliverIngredientList extends StatelessWidget {
                 "${ingredientList[itemIndex]}",
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black.withOpacity(0.5),
+                  letterSpacing: 0.6
                 ),
               );
               // return Ingredient(
@@ -32,7 +33,7 @@ class SliverIngredientList extends StatelessWidget {
               //     unit: ingredient[itemIndex].ingredientUnit,
               //     proportion: servings / widget.recipe.recipeServingNumber);
             }
-            return Divider(thickness: 1, color: Colors.black.withOpacity(0.3));
+            return SizedBox(height: 15,);
           },
           semanticIndexCallback: (Widget widget, int localIndex) {
             if (localIndex.isEven) {

@@ -16,9 +16,12 @@ class DetailPreparationStep extends StatelessWidget {
         Image.asset("assets/images/recipe1.jpg", fit: BoxFit.fitWidth),
         Container(
             padding: EdgeInsets.all(15),
-            child: Text(
-              direction,
-              style: TextStyle(fontSize: 20, color: blue5),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Text(
+                direction,
+                style: TextStyle(fontSize: 20, color: blue5),
+              ),
             ))
       ]),
     );

@@ -21,44 +21,47 @@ class PreparationStepList extends StatelessWidget {
           (BuildContext context, int index) {
             final int itemIndex = (index) ~/ 2;
             if (index.isEven) {
-              return Ink(
-                decoration: BoxDecoration(
+              return Material(
+                color: Colors.transparent,
+                child: Ink(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: blue5),
+                  child: InkWell(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: blue5),
-                child: InkWell(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  splashColor: blue4,
-                  highlightColor: blue4,
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PreparationScreen(
-                                startIndex: itemIndex,
-                                recipe: recipe)));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            (itemIndex + 1).toString(),
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                    splashColor: blue4,
+                    highlightColor: blue4,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PreparationScreen(
+                                  startIndex: itemIndex,
+                                  recipe: recipe)));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              (itemIndex + 1).toString(),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 9,
-                          child: Text(
-                            recipe.directions[itemIndex],
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        )
-                      ],
+                          Expanded(
+                            flex: 9,
+                            child: Text(
+                              recipe.directions[itemIndex],
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

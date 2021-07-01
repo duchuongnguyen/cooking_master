@@ -88,12 +88,8 @@ class EditUserProfileInformation extends StatelessWidget {
                   child: Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // border: Border.all(),
-                      ),
+                      alignment: Alignment.center,
                       child: CircleAvatar(
-                        radius: CupertinoThumbPainter.radius,
                         backgroundImage: NetworkImage(user.userImage),
                       )
                   ),
