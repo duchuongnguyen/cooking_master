@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name = "app_name">Cooking master</string>
+    <string name = "app_name">Cooking Master</string>
     <string name="facebook_app_id">304019251065131</string>
     <string name="fb_login_protocol_scheme">fb304019251065131</string>
-
 </resources>

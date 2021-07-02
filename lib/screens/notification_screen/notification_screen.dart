@@ -1,6 +1,12 @@
+import 'package:cooking_master/models/notification_model.dart';
+import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/notification_screen/bottomDialog.dart';
+import 'package:cooking_master/services/notification_service.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key key}) : super(key: key);
@@ -10,7 +16,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class NotificationScreenState extends State<NotificationScreen> {
-  List<UserFollowModel> users = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,369 +35,201 @@ class NotificationScreenState extends State<NotificationScreen> {
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                 )),
             SizedBox(height: 15),
-
-            //Kind of noti (today, month, earlier)
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Today",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                )),
-            SizedBox(
-              height: 10,
+            _ListNotification(
+              header: 'News',
+              stream: NotificationService()
+                  .getNewNotifications(FirebaseAuth.instance.currentUser.uid),
+              notificationScreenState: this,
             ),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: users.length,
-                itemBuilder: (context, int index) => GestureDetector(
-                      onLongPress: () => {
-                        setState(() async {
-                          await showBarModalBottomSheet(
-                            expand: false,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => BottomNotificationDialog(
-                              parent: this,
-                              index: index,
-                            ),
-                          );
-                        })
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(users[index].image),
-                        ),
-                        title: RichText(
-                            text: TextSpan(
-                                style: TextStyle(color: Colors.black),
-                                children: [
-                              TextSpan(
-                                  text: users[index].name,
-                                  //Tap to navigate to see another user proflie
-                                  //recognizer: new TapGestureRecognizer()..onTap = () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileWatchScreen(/*user*/))),
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              TextSpan(text: " " + users[index].message),
-                              TextSpan(
-                                  text: " " + users[index].time + " ",
-                                  style: TextStyle(
-                                      color: Colors.black.withOpacity(0.6))),
-                            ])),
-                        trailing: users[index].showButton == false
-                            ? null
-                            : users[index].isFollowed
-                                ? InkWell(
-                                    onTap: () => {
-                                      setState(() {
-                                        users[index].isFollowed = false;
-                                      })
-                                    },
-                                    child: Container(
-                                      width: 100,
-                                      height: 30,
-                                      padding: EdgeInsets.only(
-                                          right: 5.0, left: 5.0),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                                  Colors.black.withOpacity(0.6),
-                                              width: 1.5),
-                                          borderRadius:
-                                              BorderRadius.circular(5.0)),
-                                      child: Text(
-                                        "Following",
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  )
-                                : Ink(
-                                    decoration: BoxDecoration(
-                                        color: Colors.lightBlue,
-                                        borderRadius:
-                                            BorderRadius.circular(5.0)),
-                                    child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            users[index].isFollowed = true;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 100,
-                                          height: 30,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0)),
-                                          child: Text(
-                                            "Follow",
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        )),
-                                  ),
-                      ),
-                    )),
-            SizedBox(height: 15),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "This month",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                )),
-            SizedBox(
-              height: 10,
+            _ListNotification(
+              header: 'Earlier',
+              stream: NotificationService().getEarlierNotifications(
+                  FirebaseAuth.instance.currentUser.uid),
+              notificationScreenState: this,
             ),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: users.length,
-                itemBuilder: (context, int index) => GestureDetector(
-                      onLongPress: () => {
-                        setState(() async {
-                          await showBarModalBottomSheet(
-                            expand: false,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => BottomNotificationDialog(
-                              parent: this,
-                              index: index,
-                            ),
-                          );
-                        })
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(users[index].image),
-                        ),
-                        title: RichText(
-                            text: TextSpan(
-                                style: TextStyle(color: Colors.black),
-                                children: [
-                              TextSpan(
-                                  text: users[index].name,
-                                  //Tap to navigate to see another user proflie
-                                  //recognizer: new TapGestureRecognizer()..onTap = () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileWatchScreen(/*user*/))),
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              TextSpan(text: " " + users[index].message),
-                              TextSpan(
-                                  text: " " + users[index].time + " ",
-                                  style: TextStyle(
-                                      color: Colors.black.withOpacity(0.6))),
-                            ])),
-                        trailing: users[index].showButton == false
-                            ? null
-                            : users[index].isFollowed
-                                ? InkWell(
-                                    onTap: () => {
-                                      setState(() {
-                                        users[index].isFollowed = false;
-                                      })
-                                    },
-                                    child: Container(
-                                      width: 100,
-                                      height: 30,
-                                      padding: EdgeInsets.only(
-                                          right: 5.0, left: 5.0),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                                  Colors.black.withOpacity(0.6),
-                                              width: 1.5),
-                                          borderRadius:
-                                              BorderRadius.circular(5.0)),
-                                      child: Text(
-                                        "Following",
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  )
-                                : Ink(
-                                    decoration: BoxDecoration(
-                                        color: Colors.lightBlue,
-                                        borderRadius:
-                                            BorderRadius.circular(5.0)),
-                                    child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            users[index].isFollowed = true;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 100,
-                                          height: 30,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0)),
-                                          child: Text(
-                                            "Follow",
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        )),
-                                  ),
-                      ),
-                    )),
-            SizedBox(height: 15),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Earlier",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: users.length,
-                itemBuilder: (context, int index) => GestureDetector(
-                      onLongPress: () => {
-                        setState(() async {
-                          await showBarModalBottomSheet(
-                            expand: false,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => BottomNotificationDialog(
-                              parent: this,
-                              index: index,
-                            ),
-                          );
-                        })
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(users[index].image),
-                        ),
-                        title: RichText(
-                            text: TextSpan(
-                                style: TextStyle(color: Colors.black),
-                                children: [
-                              TextSpan(
-                                  text: users[index].name,
-                                  //Tap to navigate to see another user proflie
-                                  //recognizer: new TapGestureRecognizer()..onTap = () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileWatchScreen(/*user*/))),
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              TextSpan(text: " " + users[index].message),
-                              TextSpan(
-                                  text: " " + users[index].time + " ",
-                                  style: TextStyle(
-                                      color: Colors.black.withOpacity(0.6))),
-                            ])),
-                        trailing: users[index].showButton == false
-                            ? null
-                            : users[index].isFollowed
-                                ? InkWell(
-                                    onTap: () => {
-                                      setState(() {
-                                        users[index].isFollowed = false;
-                                      })
-                                    },
-                                    child: Container(
-                                      width: 100,
-                                      height: 30,
-                                      padding: EdgeInsets.only(
-                                          right: 5.0, left: 5.0),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                                  Colors.black.withOpacity(0.6),
-                                              width: 1.5),
-                                          borderRadius:
-                                              BorderRadius.circular(5.0)),
-                                      child: Text(
-                                        "Following",
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  )
-                                : Ink(
-                                    decoration: BoxDecoration(
-                                        color: Colors.lightBlue,
-                                        borderRadius:
-                                            BorderRadius.circular(5.0)),
-                                    child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            users[index].isFollowed = true;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 100,
-                                          height: 30,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0)),
-                                          child: Text(
-                                            "Follow",
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        )),
-                                  ),
-                      ),
-                    ))
           ],
         ),
       ),
     );
   }
-
-  @override
-  initState() {
-    super.initState();
-    _getUsers();
-  }
-
-  void _getUsers() {
-    users.add(UserFollowModel(
-        image: "https://randomuser.me/api/portraits/med/women/36.jpg",
-        name: "Vilma Peura",
-        message: " started following you.",
-        time: "8s"));
-    users.add(UserFollowModel(
-        image: "https://randomuser.me/api/portraits/med/women/20.jpg",
-        name: "Paige Patel",
-        isFollowed: true,
-        showButton: false, // When user is followed, dont show follow button
-        message: " published her recipe.",
-        time: "4h"));
-  }
 }
 
-class UserFollowModel {
-  String name;
-  bool isFollowed;
-  String image;
-  String message;
-  String time;
-  bool showButton;
+class _ListNotification extends StatefulWidget {
+  final Stream stream;
+  final String header;
+  final NotificationScreenState notificationScreenState;
 
-  UserFollowModel(
-      {this.name,
-      this.isFollowed = false,
-      this.image,
-      this.message,
-      this.time,
-      this.showButton = true});
+  const _ListNotification({
+    Key key,
+    @required this.header,
+    @required this.stream,
+    @required this.notificationScreenState,
+  }) : super(key: key);
+
+  @override
+  _ListNotificationState createState() => _ListNotificationState();
+}
+
+class _ListNotificationState extends State<_ListNotification> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.header,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            )),
+        SizedBox(height: 10),
+        StreamBuilder<List<NotificationModel>>(
+            stream: widget.stream,
+            builder: (context, notification) {
+              if (notification.hasData) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: notification.data.length,
+                    itemBuilder: (context, int index) => GestureDetector(
+                          onLongPress: () => {
+                            setState(() {
+                              showBarModalBottomSheet(
+                                expand: false,
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => BottomNotificationDialog(
+                                  parent: widget.notificationScreenState,
+                                  notification: notification.data[index],
+                                ),
+                              );
+                            })
+                          },
+                          child: FutureBuilder<UserModel>(
+                              future: UserProfileService().loadProfileFuture(
+                                  notification.data[index].owner),
+                              builder: (context, user) {
+                                if (user.connectionState ==
+                                    ConnectionState.done) {
+                                  return ListTile(
+                                    leading: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(user.data.userImage)),
+                                    title: RichText(
+                                        text: TextSpan(
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                            children: [
+                                          TextSpan(
+                                              text: user.data.userName,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: " " +
+                                                  notification
+                                                      .data[index].content),
+                                          TextSpan(
+                                              text: " " +
+                                                  timeago.format(DateTime.now()
+                                                      .subtract(DateTime.now()
+                                                          .difference(
+                                                              notification
+                                                                  .data[index]
+                                                                  .createdAt
+                                                                  .toDate()))) +
+                                                  " ",
+                                              style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.6))),
+                                        ])),
+                                    trailing: notification
+                                                .data[index].content !=
+                                            'started following you.'
+                                        ? null
+                                        : user.data.userFollower.contains(
+                                                FirebaseAuth
+                                                    .instance.currentUser.uid)
+                                            ? InkWell(
+                                                onTap: () async {
+                                                  await UserProfileService()
+                                                      .unfollowUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser.uid,
+                                                          user.data.userId);
+                                                  setState(() {});
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 30,
+                                                  padding: EdgeInsets.only(
+                                                      right: 5.0, left: 5.0),
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors.black
+                                                              .withOpacity(0.6),
+                                                          width: 1.5),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5.0)),
+                                                  child: Text(
+                                                    "Following",
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
+                                              )
+                                            : Ink(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.lightBlue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0)),
+                                                child: InkWell(
+                                                    onTap: () async {
+                                                      await UserProfileService()
+                                                          .followUser(
+                                                              FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser
+                                                                  .uid,
+                                                              user.data.userId);
+                                                      setState(() {});
+                                                    },
+                                                    child: Container(
+                                                      width: 100,
+                                                      height: 30,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      5.0)),
+                                                      child: Text(
+                                                        "Follow",
+                                                        style: TextStyle(
+                                                            fontSize: 16.0,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    )),
+                                              ),
+                                  );
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              }),
+                        ));
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
+      ],
+    );
+  }
 }

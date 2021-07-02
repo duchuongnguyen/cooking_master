@@ -1,6 +1,8 @@
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/constants/padding_constant.dart';
+import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/Search/detail_search_screen.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,7 +15,7 @@ class HeaderWithSearchBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
+
     return Container(
       margin: EdgeInsets.only(bottom: defaultPadding),
       height: size.height * 0.2,
@@ -54,16 +56,23 @@ class HeaderWithSearchBox extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => UserProfileScreen()));
                       },
-                      child: Hero(
-                        tag: 'avatar',
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                FirebaseAuth.instance.currentUser.photoURL),
-                          ),
-                        ),
-                      ),
+                      child: StreamBuilder<UserModel>(
+                          stream: UserProfileService().loadProfile(
+                              FirebaseAuth.instance.currentUser.uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Hero(
+                                tag: 'avatar',
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(snapshot.data.userImage),
+                                  ),
+                                ),
+                              );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          }),
                     )
                   ],
                 ),

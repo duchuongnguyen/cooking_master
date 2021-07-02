@@ -12,7 +12,7 @@ class UserProfileService {
       // FirebaseAuth.instance.currentUser.updateProfile(
       //     displayName: snapshot.data()["name"],
       //     photoURL: snapshot.data()["imageurl"]);
-       return UserModel.fromMap(snapshot.data());
+      return UserModel.fromMap(snapshot.data());
     });
   }
 

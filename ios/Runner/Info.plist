@@ -47,5 +47,7 @@
 		<string>To take an avatar photo</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>To record an audio</string>
+		<key>UIStatusBarHidden</key>
+		<false/>
 	</dict>
 </plist>

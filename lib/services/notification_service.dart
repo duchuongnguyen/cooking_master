@@ -4,18 +4,30 @@ import 'package:cooking_master/models/notification_model.dart';
 class NotificationService {
   final _ref = FirebaseFirestore.instance.collection("notifications");
 
-  Future<List<NotificationModel>> getNotifications(String receiverId) async {
-    List<NotificationModel> _notificationList = [];
+  Stream<List<NotificationModel>> getNewNotifications(String receiverId) {
+    final _oneDayBefore = DateTime.now().subtract(Duration(days: 1));
 
-    await _ref.where('receiver', isEqualTo: receiverId).get().then((value) {
-      value.docs.forEach((element) {
-        NotificationModel notification =
-            NotificationModel.fromMap(element.data());
-        _notificationList.add(notification);
-      });
-    });
+    return _ref
+        .where('receiver', isEqualTo: receiverId)
+        .where('createdAt', isGreaterThan: _oneDayBefore)
+        .orderBy('createdAt', descending: true)
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => NotificationModel.fromMap(doc.data()))
+            .toList());
+  }
 
-    return _notificationList;
+  Stream<List<NotificationModel>> getEarlierNotifications(String receiverId) {
+    final _oneDayBefore = DateTime.now().subtract(Duration(days: 1));
+
+    return _ref
+        .where('receiver', isEqualTo: receiverId)
+        .where('createdAt', isLessThanOrEqualTo: _oneDayBefore)
+        .orderBy('createdAt', descending: true)
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => NotificationModel.fromMap(doc.data()))
+            .toList());
   }
 
   Future pushNotification(NotificationModel notification) async {

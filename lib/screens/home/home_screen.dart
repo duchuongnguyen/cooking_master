@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
@@ -26,17 +25,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentTab = 0;
   bool isLoading = true;
-  bool showNoti;
-  List<IconData> icons = [
-    FontAwesomeIcons.search,
-  ];
+  
   fecthdata() async {
-    final savedRecipe = Provider.of<SavedRecipeProvider>(context, listen: false);
+    final savedRecipe =
+        Provider.of<SavedRecipeProvider>(context, listen: false);
     final recipe = Provider.of<RecipeNotifier>(context, listen: false);
     final mytopic = Provider.of<MyTopicsNotifier>(context, listen: false);
     await mytopic.loadMyTopics(FirebaseAuth.instance.currentUser.uid);
     await savedRecipe.loadMapRecipe(); // saved recpie
-    await recipe.loadListRecipes(); 
+    await recipe.loadListRecipes();
     setState(() {
       isLoading = false;
     });
@@ -45,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    showNoti = true;
     fecthdata();
   }
 
@@ -138,29 +134,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     }),
                 SizedBox(),
-                Badge(
-                  position: BadgePosition.topEnd(top: 0, end: 3),
-                  animationDuration: Duration(milliseconds: 300),
-                  animationType: BadgeAnimationType.slide,
-                  badgeContent: Text(
-                    "8",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  showBadge: showNoti,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.notifications_outlined,
-                        color: _currentTab == 2
-                            ? Colors.black
-                            : Colors.black.withOpacity(0.3),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _currentTab = 2;
-                          showNoti = false;
-                        });
-                      }),
-                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.notifications_outlined,
+                      color: _currentTab == 2
+                          ? Colors.black
+                          : Colors.black.withOpacity(0.3),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _currentTab = 2;
+                      });
+                    }),
                 IconButton(
                     icon: FaIcon(
                       FontAwesomeIcons.heart,

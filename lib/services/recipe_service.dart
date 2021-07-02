@@ -79,6 +79,9 @@ class RecipeService {
       String url = await firebaseStorageRef.getDownloadURL();
 
       recipe.image = url;
+    } else {
+      recipe.image =
+          "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
     }
 
     if (directionImage != null) {

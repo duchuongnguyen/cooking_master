@@ -25,10 +25,9 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  badges: ^2.0.1
-  firebase_app_check: ^0.0.1+2
   cloud_firestore: ^1.0.4
   cupertino_icons: ^1.0.2
+  firebase_app_check: ^0.0.1+2
   firebase_auth: ^1.0.3
   firebase_core: ^1.0.3
   firebase_database: ^6.1.2
@@ -58,13 +57,13 @@ dependencies:
   rxdart: ^0.26.0
   sliding_sheet: ^0.3.7
   sliver_header_delegate: ^0.0.1
-  sticky_headers: ^0.2.0
   smart_select: ^4.3.2
+  sticky_headers: ^0.2.0
+  timeago: ^3.1.0
   uuid: ^3.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
@@ -76,7 +75,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/map.jpg
+    - assets/icons/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

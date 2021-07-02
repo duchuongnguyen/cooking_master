@@ -1,7 +1,5 @@
-import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
-import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/list_view_of_recipe_cards_with_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
