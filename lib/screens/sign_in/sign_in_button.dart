@@ -1,21 +1,28 @@
-import 'package:cooking_master/widgets/custom_raised_button.dart';
 import 'package:flutter/material.dart';
 
-class SignInButton extends CustomRaisedButton {
-  SignInButton({
-    Key key,
-    @required String text,
-    Color color,
-    Color textColor,
-    VoidCallback onPressed,
-  }) : assert(text != null),
-        super(
-          key: key,
-          child: Text(
-            text,
-            style: TextStyle(color: textColor, fontSize: 15.0),
-          ),
-          color: color,
-          onPressed: onPressed,
-        );
+class SignInButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final Color textColor;
+  final VoidCallback onPressed;
+
+  const SignInButton(
+      {Key key, this.text, this.color, this.textColor, this.onPressed})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(20)),
+        child: Text(
+          text,
+          style: TextStyle(
+              color: textColor, fontSize: 15.0, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
 }
