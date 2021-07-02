@@ -38,16 +38,27 @@ class HeaderWithSearchBox extends StatelessWidget {
               children: [
                 Row(
                   children: <Widget>[
-                    //Todo: Add name user
-                    Text(
-                      AppLocalizations.of(context).hello +
-                          ", " +
-                          FirebaseAuth.instance.currentUser.displayName,
-                      style: Theme.of(context).textTheme.headline5.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
+                    StreamBuilder<UserModel>(
+                        stream: UserProfileService()
+                            .loadProfile(FirebaseAuth.instance.currentUser.uid),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              AppLocalizations.of(context).hello +
+                                  ", " +
+                                  snapshot.data.userName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
                     Spacer(),
                     GestureDetector(
                       onTap: () {
@@ -66,7 +77,8 @@ class HeaderWithSearchBox extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: CircleAvatar(
-                                    backgroundImage: NetworkImage(snapshot.data.userImage),
+                                    backgroundImage:
+                                        NetworkImage(snapshot.data.userImage),
                                   ),
                                 ),
                               );

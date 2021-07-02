@@ -1,13 +1,16 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/UserProfile/FollowScreen.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
 import 'package:cooking_master/screens/edit_user_profile_screen.dart';
 import 'package:cooking_master/services/auth_service.dart';
+import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
@@ -258,16 +261,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     Center(
                         child: StickyHeader(
                       header: CategoryItem(),
-                      content: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: cards.length,
-                        itemBuilder: (context, index) {
-                          return RecipeDetailCard(
-                            recipe: cards[index],
-                          );
-                        },
-                      ),
+                      content: FutureBuilder<List<RecipeModel>>(
+                          future: RecipeService().getRecipesByOwner(
+                              FirebaseAuth.instance.currentUser.uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (context, index) {
+                                  return RecipeDetailCard(
+                                    recipe: snapshot.data[index],
+                                  );
+                                },
+                              );
+                            } else {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                          }),
                     ))
                   ],
                 ),

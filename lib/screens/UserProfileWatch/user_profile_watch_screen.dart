@@ -1,8 +1,10 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
 import 'package:cooking_master/screens/UserProfileWatch/FollowScreen.dart';
 import 'package:cooking_master/services/auth_service.dart';
+import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/recipe_detail_card.dart';
@@ -308,14 +310,31 @@ class UserProfileWatchScreenState extends State<UserProfileWatchScreen> {
                         child: StickyHeader(
                             header: CategoryItem(),
                             content: Container(
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: cards.length,
-                                itemBuilder: (context, index) {
-                                  return RecipeDetailCard(recipe: cards[index]);
-                                },
-                              ),
+                              child: FutureBuilder<List<RecipeModel>>(
+                                  future: RecipeService()
+                                      .getRecipesByOwner(widget.uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (snapshot.data.length != 0) {
+                                        return ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: snapshot.data.length,
+                                          itemBuilder: (context, index) {
+                                            return RecipeDetailCard(
+                                                recipe: snapshot.data[index]);
+                                          },
+                                        );
+                                      } else {
+                                        return Text('No post yet');
+                                      }
+                                    } else {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                  }),
                             )),
                       ),
                       //List recipes

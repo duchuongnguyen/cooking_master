@@ -1,9 +1,10 @@
-import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class RecipeDetailCard extends StatelessWidget {
-  final RecipeCardModel recipe;
+  final RecipeModel recipe;
 
   const RecipeDetailCard({Key key, this.recipe}) : super(key: key);
 
@@ -29,7 +30,7 @@ class RecipeDetailCard extends StatelessWidget {
                         child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              recipe.recipeName,
+                              recipe.name,
                               style: GoogleFonts.roboto(
                                   color: Colors.black,
                                   fontSize: 16,
@@ -48,7 +49,7 @@ class RecipeDetailCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.schedule),
-                                Text(recipe.recipeCookTime)
+                                Text(recipe.cookTime.toString())
                               ],
                             )),
                             Container(
@@ -57,7 +58,7 @@ class RecipeDetailCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.person_outline),
-                                Text(recipe.recipeServingNumber.toString())
+                                Text(recipe.yields.toString())
                               ],
                             ))
                           ],
@@ -74,8 +75,9 @@ class RecipeDetailCard extends StatelessWidget {
                           child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                //Todo: Publish time here
-                                "Đăng 12 phút trước",
+                                timeago.format(DateTime.now().subtract(
+                                    DateTime.now().difference(
+                                        recipe.createdAt.toDate()))),
                                 style: GoogleFonts.roboto(
                                     color: Colors.black.withOpacity(0.8),
                                     fontSize: 12,
@@ -89,8 +91,7 @@ class RecipeDetailCard extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    image:
-                        DecorationImage(image: AssetImage(recipe.recipeImage))),
+                    image: DecorationImage(image: NetworkImage(recipe.image))),
               ),
             ),
           ],

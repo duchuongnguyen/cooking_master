@@ -53,7 +53,7 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipesByOwner(String owner) async {
     List<RecipeModel> _recipeList = [];
 
-    await _ref.get().then((value) {
+    await _ref.where('owner', isEqualTo: owner).limit(20).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);

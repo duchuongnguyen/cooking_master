@@ -107,9 +107,9 @@ class UserProfileService {
         .doc(uid)
         .set({
           'uid': uid,
-          'name': "New friend",
-          'bio': " Add your Bio",
-          'address': "Add your Address",
+          'name': "Cutie Chef",
+          'bio': " Your bio",
+          'address': "Your address",
           'followed': [],
           'following': [],
           'imageurl':
@@ -117,10 +117,6 @@ class UserProfileService {
         })
         .then((value) => resultCreate = true)
         .catchError((error) => resultCreate = false);
-    await FirebaseAuth.instance.currentUser.updateProfile(
-        displayName: "New friend",
-        photoURL:
-            'https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/user%2Fno_avatar.jpg?alt=media&token=98aeb858-f003-47ca-8bf7-a9bb82cc59c8');
     return resultCreate;
   }
 }
