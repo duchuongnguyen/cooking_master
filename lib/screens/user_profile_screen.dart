@@ -52,9 +52,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBody: true,
-      appBar: buildAppBar(
-        context,
-        title: '',
+      appBar: AppBar(
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             icon: Icon(
@@ -65,9 +64,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EditUserProfileScreen(
-                            user: user,
-                          )));
+                      builder: (context) => EditUserProfileScreen(user: user)));
             },
           ),
           IconButton(

@@ -1,13 +1,10 @@
-//import 'package:cooking_master/models/model-recipe-cuahuy.dart';
-import 'package:cooking_master/notifier/user_saved_recipe.dart';
+import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/SavedRecipe/RecipeCategoryScreen.dart';
-import 'package:cooking_master/widgets/appbar.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../user_profile_screen.dart';
-import 'package:cooking_master/screens/saved_recipe_screen.dart';
 
 buildAddCategoryButton(BuildContext context, TabController _tabController,
     TextEditingController _categoryController) {
@@ -38,15 +35,23 @@ buildAddCategoryButton(BuildContext context, TabController _tabController,
   }
 }
 
-AppBar buildSavedRecipeAppBar(
-    BuildContext context,
-    TabController _tabController,
-    TextEditingController _categoryController,
-    SavedRecipeScreenState parent) {
-  final savedRecipe = Provider.of<SavedRecipeProvider>(context, listen: false);
-  return buildAppBar(
-    context,
-    title: FirebaseAuth.instance.currentUser.displayName,
+AppBar buildSavedRecipeAppBar(BuildContext context,
+    TabController _tabController, TextEditingController _categoryController) {
+  return AppBar(
+    backgroundColor: Colors.white,
+    title: StreamBuilder<UserModel>(
+      stream: UserProfileService()
+          .loadProfile(FirebaseAuth.instance.currentUser.uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(
+            snapshot.data.userName,
+            style: TextStyle(color: Colors.black),
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    ),
     actions: [
       IconButton(
         icon: Icon(
@@ -81,10 +86,17 @@ AppBar buildSavedRecipeAppBar(
           tag: 'avatar',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
-            ),
+            child: StreamBuilder<UserModel>(
+                stream: UserProfileService()
+                    .loadProfile(FirebaseAuth.instance.currentUser.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    return CircleAvatar(
+                      backgroundImage: NetworkImage(snapshot.data.userImage),
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }),
           )),
     ),
     bottom: TabBar(
@@ -109,11 +121,6 @@ AppBar buildSavedRecipeAppBar(
               color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         ))
       ],
-      onTap: (index) {
-          parent.setState(() {
-            
-          });
-        },
     ),
   );
 }

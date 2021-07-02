@@ -1,13 +1,10 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
-import 'package:cooking_master/screens/RecipeDetail/preparation_screen.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/SavedRecipe/AddCategoryScreen.dart';
 import 'package:cooking_master/screens/SavedRecipe/RecipesChoicesBuilder.dart';
 import 'package:cooking_master/screens/Search/detail_search_screen.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
-import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -63,7 +60,6 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final recipelist = Provider.of<SavedRecipeProvider>(context, listen: false);
     final theme = Theme.of(context);
     final expandedStyle =
         theme.textTheme.headline4.copyWith(color: Colors.white);

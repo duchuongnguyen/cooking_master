@@ -26,7 +26,7 @@ class SavedRecipeScreenState extends State<SavedRecipeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildSavedRecipeAppBar(
-          context, _tabController, _categoryController, this),
+          context, _tabController, _categoryController),
       body: TabBarView(
           controller: _tabController,
           children: [SavedTab(), YourRecipeTab(), FavoriteTopic()]),

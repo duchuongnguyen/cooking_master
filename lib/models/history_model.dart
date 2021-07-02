@@ -1,5 +1,4 @@
 import 'package:cooking_master/screens/Search/recipe_search.dart';
-import 'package:cooking_master/screens/Search/search_model.dart';
 
 class HistoryModel {
   String idRecipe;
