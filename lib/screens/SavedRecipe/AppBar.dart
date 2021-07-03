@@ -80,11 +80,11 @@ AppBar buildSavedRecipeAppBar(
           tag: 'avatar',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder<UserModel>(
-                stream: UserProfileService()
-                    .loadProfile(FirebaseAuth.instance.currentUser.uid),
+            child: FutureBuilder<UserModel>(
+                future: UserProfileService()
+                    .loadProfileFuture(FirebaseAuth.instance.currentUser.uid),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.connectionState == ConnectionState.done) {
                     return CircleAvatar(
                       backgroundImage: NetworkImage(snapshot.data.userImage),
                     );

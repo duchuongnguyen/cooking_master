@@ -10,9 +10,6 @@ class UserProfileService {
 
   Stream<UserModel> loadProfile(String id) {
     return _ref.doc(id).snapshots(includeMetadataChanges: true).map((snapshot) {
-      // FirebaseAuth.instance.currentUser.updateProfile(
-      //     displayName: snapshot.data()["name"],
-      //     photoURL: snapshot.data()["imageurl"]);
       return UserModel.fromMap(snapshot.data());
     });
   }

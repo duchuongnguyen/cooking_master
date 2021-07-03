@@ -106,7 +106,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return StreamBuilder<UserModel>(
       stream: UserProfileService().loadProfile(auth.currentUser.uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
+        if (snapshot.hasData) {
           user = snapshot.data;
           return Container(
               padding: EdgeInsets.all(10),

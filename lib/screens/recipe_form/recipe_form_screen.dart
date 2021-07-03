@@ -8,6 +8,7 @@ import 'package:cooking_master/screens/recipe_form/recipe_image.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
+import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -697,12 +698,12 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
               switch (result) {
                 case "delete":
                   setState(() {
-                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    _directionWidgets.removeAt(index);
                   });
                   break;
                 case "add":
                   setState(() {
-                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    _directionWidgets.add(_buildDirectionField(index + 1));
                   });
                   break;
                 default:
@@ -725,14 +726,14 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
     );
   }
 
-  _saveRecipe(context) {
+  _saveRecipe(context) async {
     if (!_formKey.currentState.validate()) {
       return;
     }
 
     _formKey.currentState.save();
 
-    RecipeService().uploadRecipeAndImage(
+    await RecipeService().uploadRecipeAndImage(
         currentRecipe, widget.isUpdating, imageFile, _directionImageFiles);
 
     print("name: ${currentRecipe.name}");
@@ -762,8 +763,20 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                 Icons.save_alt_outlined,
                 color: Colors.black,
               ),
-              onPressed: () {
-                _saveRecipe(context);
+              onPressed: () async {
+                await _saveRecipe(context);
+                await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text('All Done'),
+                          content: Text('Upload recipe successfully'),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('OK'))
+                          ],
+                        ));
+                Navigator.pop(context);
               })
         ],
       ),

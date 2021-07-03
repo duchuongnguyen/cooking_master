@@ -73,23 +73,11 @@ class RecipeService {
         .onError((error, stackTrace) => "Error removing document: $error");
   }
 
-  void uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
+  Future<void> uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
       File recipeImage, List<File> directionImage) async {
     if (recipeImage != null) {
-      // var fileExtension = path.extension(recipeImage.path);
-
-      // var uuid = Uuid().v4();
-
-      // final Reference firebaseStorageRef = FirebaseStorage.instance
-      //     .ref()
-      //     .child('recipes/images/$uuid$fileExtension');
-
-      //  await firebaseStorageRef.putFile(recipeImage);
-
-      //  String url = await firebaseStorageRef.getDownloadURL();
-
       final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
-      //var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
+
       try {
         CloudinaryResponse response = await cloudinary.uploadFile(
           CloudinaryFile.fromFile(recipeImage.path,
@@ -107,22 +95,12 @@ class RecipeService {
     }
 
     if (directionImage != null) {
-      var fileExtension = path.extension(recipeImage.path);
-
-      var uuid = Uuid().v4();
-
       List<String> listImage = [];
 
       directionImage.forEach((element) async {
         if (element != null) {
-          // final Reference firebaseStorageRef = FirebaseStorage.instance
-          //     .ref()
-          //     .child('recipes/images/$uuid/directions/$fileExtension');
-
-          // await firebaseStorageRef.putFile(element);
-
-          // String url = await firebaseStorageRef.getDownloadURL();
           final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+
           try {
             CloudinaryResponse response = await cloudinary.uploadFile(
               CloudinaryFile.fromFile(recipeImage.path,
@@ -144,7 +122,7 @@ class RecipeService {
     _uploadRecipe(recipe, isUpdating);
   }
 
-  void _uploadRecipe(RecipeModel recipe, bool isUpdating) async {
+  Future<void> _uploadRecipe(RecipeModel recipe, bool isUpdating) async {
     if (isUpdating) {
       recipe.updatedAt = Timestamp.now();
 
@@ -188,8 +166,8 @@ class RecipeService {
 
   uploadTipAndImage(String idRecipe, TipModel tip, File localFile) async {
     if (localFile != null) {
-     // var fileExtension = path.extension(localFile.path);
       final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+
       try {
         CloudinaryResponse response = await cloudinary.uploadFile(
           CloudinaryFile.fromFile(localFile.path,
