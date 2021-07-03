@@ -5,6 +5,7 @@ import 'package:cooking_master/widgets/form_submit_button.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:cooking_master/widgets/show_exception_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,62 +35,104 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   bool isLoading = false;
   List<Widget> buildChildren() {
     final buttonSubmitText =
-        _formType == EmailSignInType.SignIn ? 'Sign In' : 'SignUp';
+        _formType == EmailSignInType.SignIn ? 'Sign in' : 'Sign up';
     final changeText = _formType == EmailSignInType.SignIn
-        ? 'Need an account?  Sign Up'
-        : 'Have an account?  Sign In';
+        ? 'Need an account? '
+        : 'Have an account? ';
+    final changeTextButton =
+        _formType == EmailSignInType.SignIn ? 'Sign up' : 'Sign in';
     submitted = widget.emailValidator.isValid(_email) &&
         widget.emailValidator.isValid(_password);
     if (isLoading)
       return [
         Container(
+          alignment: Alignment.center,
           child: CircularProgressIndicator(),
-          padding: EdgeInsets.all(150),
         )
       ];
     return [
-      EmailField(),
-      SizedBox(height: 8.0),
-      _passField(),
+      Container(
+          decoration: BoxDecoration(
+              color: Colors.grey[500].withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16)),
+          child: EmailField()),
+      SizedBox(height: 12.0),
+      Container(
+          decoration: BoxDecoration(
+              color: Colors.grey[500].withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16)),
+          child: _passField()),
       Visibility(
           visible: _formType == EmailSignInType.SignIn ? false : true,
-          child: Column(children: [
-            SizedBox(height: 8.0),
-            TextField(
-              focusNode: _confirmPasswordFocusNode,
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(
-                labelText: ' Confirm PassWord',
-                errorText: !checkConfirmPassWord() && submitted
-                    ? widget.invalidConfirmPasswordErrorText
-                    : null,
+          child: Column(
+            children: [
+              SizedBox(height: 12.0),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey[500].withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(16)),
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  focusNode: _confirmPasswordFocusNode,
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(color: Colors.white54, fontSize: 20),
+                    border: InputBorder.none,
+                    prefixIcon:
+                        Icon(Icons.check_circle_outline, color: Colors.white),
+                    labelText: ' Confirm Password',
+                    errorText: !checkConfirmPassWord() && submitted
+                        ? widget.invalidConfirmPasswordErrorText
+                        : null,
+                  ),
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onEditingComplete: isLoading ? null : _submit,
+                ),
               ),
-              obscureText: true,
-              textInputAction: TextInputAction.done,
-              onEditingComplete: isLoading ? null : _submit,
-            )
-          ])),
-      SizedBox(height: 8.0),
+            ],
+          )),
+      SizedBox(height: 12.0),
       FormSubmitButton(
           text: buttonSubmitText, onPressed: isLoading ? null : _submit),
       SizedBox(
-        height: 8.0,
+        height: 16.0,
       ),
       // ignore: deprecated_member_use
-      FlatButton(
-          onPressed: !isLoading ? toggleFormType : null,
-          child: Text(changeText))
+      Center(
+        child: RichText(
+            text: TextSpan(
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                children: [
+              TextSpan(
+                  text: changeText,
+                  //Tap to navigate to see another user proflie
+                  //recognizer: new TapGestureRecognizer()..onTap = () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileWatchScreen(/*user*/))),
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
+              TextSpan(
+                  recognizer: new TapGestureRecognizer()
+                    ..onTap = (!isLoading ? toggleFormType : () {}),
+                  text: changeTextButton,
+                  style: TextStyle(color: Colors.blue)),
+            ])),
+      ),
     ];
   }
 
-  TextField _passField() {
+  TextFormField _passField() {
     bool passWordValid =
         submitted && !widget.passwordValidator.isValid(_password);
-    return TextField(
+    return TextFormField(
+      style: TextStyle(color: Colors.white, fontSize: 18),
       focusNode: _passwordFocusNode,
       controller: _passwordController,
       decoration: InputDecoration(
-          labelText: 'PassWord',
+          labelStyle: TextStyle(color: Colors.white54, fontSize: 20),
+          border: InputBorder.none,
+          prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
+          labelText: 'Password',
           errorText: passWordValid ? widget.invalidPasswordErrorText : null,
           enabled: isLoading == false),
       obscureText: true,
@@ -102,20 +145,31 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   // ignore: non_constant_identifier_names
-  TextField EmailField() {
+  TextFormField EmailField() {
     bool emailValid = submitted && !widget.emailValidator.isValid(_email);
-    return TextField(
+    return TextFormField(
       focusNode: _emailFocusNode,
+      style: TextStyle(color: Colors.white, fontSize: 20),
       controller: _emailController,
       decoration: InputDecoration(
+          labelStyle: TextStyle(color: Colors.white54, fontSize: 20),
+          hintStyle: TextStyle(color: Colors.white54, fontSize: 20),
+          border: InputBorder.none,
           labelText: 'Email',
-          hintText: 'yourgmail@gmail.com',
+          prefixIcon: Icon(Icons.email_outlined, color: Colors.white),
+          hintText: 'example@gmail.com',
           errorText: emailValid ? widget.invalidEmailErrorText : null,
           enabled: isLoading == false),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onEditingComplete: emailEditComplete,
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Email is required';
+        }
+        return null;
+      },
     );
   }
 

@@ -283,7 +283,6 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                 if (value.isEmpty) {
                   return 'ingre is required';
                 }
-
                 return null;
               },
               onSaved: (String value) {
