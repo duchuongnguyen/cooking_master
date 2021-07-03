@@ -33,7 +33,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            margin: EdgeInsets.only(top: 10, left: 12),
+            margin: EdgeInsets.only(top:20, left: 10),
             child: Text(
               "Cancel",
               style: TextStyle(
@@ -43,7 +43,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
         ),
         actions: [
           Container(
-            margin: EdgeInsets.only(top: 10, right: 12),
+            margin: EdgeInsets.only(right: 5),
             child: TextButton(
               child: Text(
                 "Submit",
