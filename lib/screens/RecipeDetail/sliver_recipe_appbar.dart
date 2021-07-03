@@ -4,8 +4,6 @@ import 'package:cooking_master/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 
-import 'recipe_detail_screen.dart';
-
 class SliverRecipeAppbar extends StatelessWidget {
   final RecipeModel recipe;
   final GlobalKey<InnerDrawerState> innerDrawerKey;
