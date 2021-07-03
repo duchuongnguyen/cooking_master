@@ -63,8 +63,8 @@ class ListViewOfRecipeCards extends StatelessWidget {
                       FocusedMenuItem(
                           title: Text("Delete"),
                           onPressed: () {
-                            cards.removeAt(index);
                             parent.setState(() {
+                              cards.removeAt(index);
                               //cards.removeAt(index);
                               //db.mapSavedRecipe
                             });

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,19 +67,31 @@ class RecipeService {
   void uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
       File recipeImage, List<File> directionImage) async {
     if (recipeImage != null) {
-      var fileExtension = path.extension(recipeImage.path);
+      // var fileExtension = path.extension(recipeImage.path);
 
-      var uuid = Uuid().v4();
+      // var uuid = Uuid().v4();
 
-      final Reference firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('recipes/images/$uuid$fileExtension');
+      // final Reference firebaseStorageRef = FirebaseStorage.instance
+      //     .ref()
+      //     .child('recipes/images/$uuid$fileExtension');
 
-      await firebaseStorageRef.putFile(recipeImage);
+      //  await firebaseStorageRef.putFile(recipeImage);
 
-      String url = await firebaseStorageRef.getDownloadURL();
+      //  String url = await firebaseStorageRef.getDownloadURL();
 
-      recipe.image = url;
+      final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+      //var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
+      try {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(recipeImage.path,
+              resourceType: CloudinaryResourceType.Image),
+        );
+        print(response.secureUrl);
+        recipe.image = response.secureUrl;
+      } catch (e) {
+        recipe.image =
+            "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
+      }
     } else {
       recipe.image =
           "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
@@ -93,15 +106,25 @@ class RecipeService {
 
       directionImage.forEach((element) async {
         if (element != null) {
-          final Reference firebaseStorageRef = FirebaseStorage.instance
-              .ref()
-              .child('recipes/images/$uuid/directions/$fileExtension');
+          // final Reference firebaseStorageRef = FirebaseStorage.instance
+          //     .ref()
+          //     .child('recipes/images/$uuid/directions/$fileExtension');
 
-          await firebaseStorageRef.putFile(element);
+          // await firebaseStorageRef.putFile(element);
 
-          String url = await firebaseStorageRef.getDownloadURL();
-
-          listImage.add(url);
+          // String url = await firebaseStorageRef.getDownloadURL();
+          final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+          try {
+            CloudinaryResponse response = await cloudinary.uploadFile(
+              CloudinaryFile.fromFile(recipeImage.path,
+                  resourceType: CloudinaryResourceType.Image),
+            );
+            print(response.secureUrl);
+            listImage.add(response.secureUrl);
+          } catch (e) {
+            listImage.add(
+                "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");
+          }
         } else {
           listImage.add(
               "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");

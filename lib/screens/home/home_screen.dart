@@ -2,6 +2,7 @@ import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/notifier/mytopics_notifier.dart';
 import 'package:cooking_master/notifier/recipes_notifier.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
+import 'package:cooking_master/notifier/your_recipes_notifier.dart';
 import 'package:cooking_master/screens/Home/body.dart';
 import 'package:cooking_master/screens/notification_screen/notification_screen.dart';
 import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
@@ -25,12 +26,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentTab = 0;
   bool isLoading = true;
-  
+
   fecthdata() async {
     final savedRecipe =
         Provider.of<SavedRecipeProvider>(context, listen: false);
     final recipe = Provider.of<RecipeNotifier>(context, listen: false);
     final mytopic = Provider.of<MyTopicsNotifier>(context, listen: false);
+    final yourRecipe = Provider.of<YourRecipeNotifier>(context, listen: false);
+    await yourRecipe.loadYourRecipes();
     await mytopic.loadMyTopics(FirebaseAuth.instance.currentUser.uid);
     await savedRecipe.loadMapRecipe(); // saved recpie
     await recipe.loadListRecipes();

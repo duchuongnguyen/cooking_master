@@ -1,5 +1,6 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
+import 'package:cooking_master/notifier/your_recipes_notifier.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/Search/recipe_search_item.dart';
 import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
@@ -25,37 +26,12 @@ class YourRecipeTabState extends State<YourRecipeTab> {
     }
 
     return Container(child:
-        Consumer<SavedRecipeProvider>(builder: (context, recipelist, child) {
+        Consumer<YourRecipeNotifier>(builder: (context, recipelist, child) {
+      if (recipelist.youRecipes.isEmpty)
+        return Container(
+          child: Text("You don't have a recipe"),
+        );
       return RefreshIndicator(
-          // child: ListView.separated(
-          //     separatorBuilder: (context, index) => Divider(),
-          //     itemCount: recipelist.mapSavedRecipe.length,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       return Column(
-          //         crossAxisAlignment: CrossAxisAlignment.center,
-          //         children: [
-          //           index == 0 ? SizedBox(height: 20) : SizedBox(height: 0),
-          //           ListViewOfRecipeCardsWithTitle(
-          //             title: recipelist.mapSavedRecipe.keys.elementAt(index),
-          //             size: MediaQuery.of(context).size,
-          //             cards: recipelist.mapSavedRecipe.values.elementAt(index),
-          //             action: Row(
-          //               children: [
-          //                 // CategoryPopupMenu(
-          //                 //   keyitem: recipelist.mapSavedRecipe.keys.elementAt(index),
-          //                 //   onDelete: () => onRefresh(),
-          //                 // ),
-          //                 SizedBox(
-          //                   width: 10,
-          //                 ),
-          //               ],
-          //             ),
-          //             isEditing: true,
-          //           ),
-          //           SizedBox(height: 10),
-          //         ],
-          //       );
-          //     }),
           child: StaggeredGridView.countBuilder(
               staggeredTileBuilder: (index) => StaggeredTile.fit(1),
               padding:
@@ -63,7 +39,7 @@ class YourRecipeTabState extends State<YourRecipeTab> {
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
               crossAxisCount: 2,
-              itemCount: recipelist.mapSavedRecipe.values.elementAt(0).length,
+              itemCount: recipelist.youRecipes.length,
               itemBuilder: (context, index) {
                 return FocusedMenuHolder(
                   menuWidth: MediaQuery.of(context).size.width * 0.5,
@@ -76,9 +52,7 @@ class YourRecipeTabState extends State<YourRecipeTab> {
                               builder: (BuildContext context) {
                                 return RecipeFormScreen(
                                   isUpdating: true,
-                                  currentRecipe: recipelist
-                                      .mapSavedRecipe.values
-                                      .elementAt(0)[index],
+                                  currentRecipe: recipelist.youRecipes[index],
                                 );
                               },
                             ),
@@ -88,9 +62,7 @@ class YourRecipeTabState extends State<YourRecipeTab> {
                     FocusedMenuItem(
                         title: Text("Delete"),
                         onPressed: () {
-                          recipelist.mapSavedRecipe.values
-                              .elementAt(0)
-                              .removeAt(index);
+                          recipelist.deleteRecipe(index);
                           setState(() {
                             //cards.removeAt(index);
                             //db.mapSavedRecipe
@@ -110,17 +82,12 @@ class YourRecipeTabState extends State<YourRecipeTab> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => RecipeDetailScreen(
-                                    recipe: recipelist.mapSavedRecipe.values
-                                        .elementAt(0)[index],
+                                    recipe: recipelist.youRecipes[index],
                                   )));
                     },
                     child: RecipeSearchItem(
-                        image: recipelist.mapSavedRecipe.values
-                            .elementAt(0)[index]
-                            .image,
-                        name: recipelist.mapSavedRecipe.values
-                            .elementAt(0)[index]
-                            .name),
+                        image: recipelist.youRecipes[index].image,
+                        name: recipelist.youRecipes[index].name),
                   ),
                 );
               }),

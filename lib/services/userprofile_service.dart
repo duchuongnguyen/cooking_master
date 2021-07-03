@@ -3,6 +3,7 @@ import 'package:cooking_master/models/notification_model.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class UserProfileService {
   final _ref = FirebaseFirestore.instance.collection("userprofile");
@@ -103,6 +104,7 @@ class UserProfileService {
 
   Future<bool> addUser(String uid) async {
     var resultCreate = false;
+    List<String> array = [];
     await _ref
         .doc(uid)
         .set({
@@ -117,6 +119,14 @@ class UserProfileService {
         })
         .then((value) => resultCreate = true)
         .catchError((error) => resultCreate = false);
+    await FirebaseFirestore.instance
+        .collection('mycategory')
+        .doc(Uuid().v4())
+        .set({
+      'uid': uid,
+      'category': 'All',
+      'idrecipe': array,
+    });
     return resultCreate;
   }
 }

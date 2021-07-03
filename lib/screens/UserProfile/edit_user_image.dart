@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/constants/color_constant.dart';
 import 'package:cooking_master/services/firebase_storage.dart';
@@ -120,11 +121,23 @@ class _EditUserImageState extends State<EditUserImage> {
     );
 
     if (didRequestSignOut == true) {
-      var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
-      if (imageurl != null)
-        await userProfile.updateUser(
-            user.currentUser.uid, 'imageurl', imageurl);
-      Navigator.pop(context, true);
+      final cloudinary =
+          CloudinaryPublic('huong', 'wedding', cache: true);
+      //var imageurl = await userStorage.uploadFile(_image, user.currentUser.uid);
+      try {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(_image.path,
+                resourceType: CloudinaryResourceType.Image),
+            );
+        print(response.secureUrl);
+        if (response.secureUrl != null)
+          await userProfile.updateUser(
+              user.currentUser.uid, 'imageurl', response.secureUrl);
+        Navigator.pop(context, true);
+      } on CloudinaryException catch (e) {
+        print(e.message);
+        print(e.request);
+      }
     }
   }
 }

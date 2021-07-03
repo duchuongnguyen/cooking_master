@@ -56,7 +56,7 @@ class _RecipesChoicesBuilderState extends State<RecipesChoicesBuilder> {
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             crossAxisCount: 2,
-            itemCount: cards.length,
+            itemCount: savedRecipeNotifier.mapSavedRecipe['All'].length,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {

@@ -153,4 +153,35 @@ class FirebaseUserSaveRecipe {
       });
     });
   }
+
+  // Using for yourRecipeNotifier
+  Future<List<RecipeModel>> getYourRecipes(String uid) async {
+    List<RecipeModel> list_recipe = [];
+    await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('owner', isEqualTo: uid)
+        .limit(12)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        list_recipe.add(RecipeModel.fromMap(element.data()));
+      });
+    });
+    return list_recipe;
+  }
+
+  deleteRecipe(String id) async {
+    await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('id', isEqualTo: id)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) async {
+        await FirebaseFirestore.instance
+            .collection('recipes')
+            .doc(element.id)
+            .delete();
+      });
+    });
+  }
 }

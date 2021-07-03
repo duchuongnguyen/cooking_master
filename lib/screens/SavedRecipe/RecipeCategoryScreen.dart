@@ -257,58 +257,65 @@ class PopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recipelist = Provider.of<SavedRecipeProvider>(context, listen: false);
-    return PopupMenuButton(
-      onSelected: (MenuKind result) async {
-        switch (result) {
-          case MenuKind.delete:
-            if (name != "All") {
-              //Delete this category
-              final didRequest = await showAlertDialog(
-                context,
-                title: 'Delete',
-                content: 'Are you sure that you want to delete this?',
-                cancelActionText: 'Cancel',
-                defaultActionText: 'Delete',
-              );
-              if (didRequest == true) {
-                recipelist.deleteCatergory(name);
-                Navigator.pop(context);
-              }
-            } else {
-              final didRequest = await showAlertDialog(
-                context,
-                title: 'Delete',
-                content:
-                    'If you delete All, All your collections will be delete?',
-                cancelActionText: 'Cancel',
-                defaultActionText: 'Delete',
-              );
-              if (didRequest == true) {
-                recipelist.deleteCatergory(name);
-                Navigator.pop(context);
-              }
+    return PopupMenuButton(onSelected: (MenuKind result) async {
+      switch (result) {
+        case MenuKind.delete:
+          if (name != "All") {
+            //Delete this category
+            final didRequest = await showAlertDialog(
+              context,
+              title: 'Delete',
+              content: 'Are you sure that you want to delete this?',
+              cancelActionText: 'Cancel',
+              defaultActionText: 'Delete',
+            );
+            if (didRequest == true) {
+              recipelist.deleteCatergory(name);
+              Navigator.pop(context);
             }
-            break;
-          case MenuKind.add:
-            //Add recipe
+          } else {
+            final didRequest = await showAlertDialog(
+              context,
+              title: 'Delete',
+              content:
+                  'If you delete All, All your collections will be delete?',
+              cancelActionText: 'Cancel',
+              defaultActionText: 'Delete',
+            );
+            if (didRequest == true) {
+              recipelist.deleteCatergory(name);
+              Navigator.pop(context);
+            }
+          }
+          break;
+        case MenuKind.add:
+          //Add recipe
+          if (name != "All")
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => RecipesChoicesBuilder()));
-            break;
-          default:
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuKind>>[
-        const PopupMenuItem<MenuKind>(
-          value: MenuKind.add,
-          child: Text('Add recipe from saved list'),
-        ),
+          break;
+        default:
+      }
+    }, itemBuilder: (BuildContext context) {
+      if (name != "All")
+        return <PopupMenuEntry<MenuKind>>[
+          const PopupMenuItem<MenuKind>(
+            value: MenuKind.add,
+            child: Text('Add recipe from saved list'),
+          ),
+          const PopupMenuItem<MenuKind>(
+            value: MenuKind.delete,
+            child: Text('Delete this category'),
+          ),
+        ];
+      return <PopupMenuEntry<MenuKind>>[
         const PopupMenuItem<MenuKind>(
           value: MenuKind.delete,
           child: Text('Delete this category'),
         ),
-      ],
-    );
+      ];
+    });
   }
 }

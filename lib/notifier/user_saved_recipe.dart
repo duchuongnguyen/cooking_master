@@ -75,17 +75,9 @@ class SavedRecipeProvider with ChangeNotifier {
         }
       });
       notifyListeners();
-      // this._mapSavedRecipe['All'].forEach((element) {
-      //   if(element.id == idRecipe) {
-      //     this._saveRecipeService.removeInArray(nameMyCategory, idRecipe);
-      //     loadMapRecipe();
-      //   }
-      // });
     }
   }
 
-  // ignore: non_constant_identifier_names
-  // Set Listcategory
   SetCurCategory(String name) async {
     this._curCategoryName = name;
     if (this._mapSavedRecipe.containsKey(name)) {
@@ -100,9 +92,14 @@ class SavedRecipeProvider with ChangeNotifier {
 
   /// using delete item in mycategory list
   deleterecipe(int index) {
-    this._saveRecipeService.removeInArray(
-        this._curCategoryName, this._curCategoryList.elementAt(index).id);
-    this._mapSavedRecipe[this._curCategoryName].removeAt(index);
+    if (this._curCategoryName == 'All') {}
+    this.removeRecipeToMycategory(
+        this._curCategoryList.elementAt(index).id, this._curCategoryName);
+    // this._saveRecipeService.removeInArray(
+    //     this._curCategoryName, this._curCategoryList.elementAt(index).id);
+    // this._mapSavedRecipe[this._curCategoryName].removeAt(index);
+    // this._curCategoryList.removeAt(index);
+    notifyListeners();
   }
 
   deleteCatergory(String name) async {
@@ -135,10 +132,19 @@ class SavedRecipeProvider with ChangeNotifier {
   updateListRecipe() {
     if (this._mapSavedRecipe.containsKey(this._curCategoryName)) {
       this._mapSavedRecipe['All'].forEach((element) {
+        bool add = true;
         if (element.isSelected == true) {
-          this._mapSavedRecipe[this._curCategoryName].add(element);
-          this.curCategoryList.add(element);
-          this._saveRecipeService.putInArray(this._curCategoryName, element.id);
+          this._curCategoryList.forEach((e) {
+            if (e.id == element.id) add = false;
+          });
+          if (add) {
+            this._mapSavedRecipe[this._curCategoryName].add(element);
+            this.curCategoryList.add(element);
+            this
+                ._saveRecipeService
+                .putInArray(this._curCategoryName, element.id);
+          }
+          add = true;
         }
       });
       unSelected();
