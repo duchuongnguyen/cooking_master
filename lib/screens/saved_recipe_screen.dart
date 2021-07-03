@@ -21,12 +21,11 @@ class SavedRecipeScreenState extends State<SavedRecipeScreen>
     _categoryController = TextEditingController();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildSavedRecipeAppBar(
-          context, _tabController, _categoryController),
+          context, _tabController, _categoryController, this,),
       body: TabBarView(
           controller: _tabController,
           children: [SavedTab(), YourRecipeTab(), FavoriteTopic()]),

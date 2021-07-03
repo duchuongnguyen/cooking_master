@@ -1,5 +1,6 @@
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/SavedRecipe/RecipeCategoryScreen.dart';
+import 'package:cooking_master/screens/saved_recipe_screen.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +36,11 @@ buildAddCategoryButton(BuildContext context, TabController _tabController,
   }
 }
 
-AppBar buildSavedRecipeAppBar(BuildContext context,
-    TabController _tabController, TextEditingController _categoryController) {
+AppBar buildSavedRecipeAppBar(
+    BuildContext context,
+    TabController _tabController,
+    TextEditingController _categoryController,
+    SavedRecipeScreenState parent) {
   return AppBar(
     backgroundColor: Colors.white,
     title: StreamBuilder<UserModel>(
@@ -53,28 +57,18 @@ AppBar buildSavedRecipeAppBar(BuildContext context,
       },
     ),
     actions: [
-      IconButton(
-        icon: Icon(
-          Icons.insights_outlined,
-          color: Colors.black,
+      Visibility(
+        visible: _tabController.index == 0,
+        child: IconButton(
+          icon: Icon(
+            Icons.library_add_outlined,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            buildAddCategoryButton(
+                context, _tabController, _categoryController);
+          },
         ),
-        onPressed: () {},
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.library_add_outlined,
-          color: Colors.black,
-        ),
-        onPressed: () {
-          buildAddCategoryButton(context, _tabController, _categoryController);
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.settings,
-          color: Colors.black,
-        ),
-        onPressed: () {},
       ),
     ],
     leading: GestureDetector(
@@ -121,6 +115,7 @@ AppBar buildSavedRecipeAppBar(BuildContext context,
               color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         ))
       ],
+      onTap: (index) => {parent.setState(() {})},
     ),
   );
 }
