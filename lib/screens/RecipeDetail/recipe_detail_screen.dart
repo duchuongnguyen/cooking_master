@@ -84,10 +84,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
               RecipeTip(recipe: widget.recipe),
               RelatedRecipes(),
-              PreparationTitle(recipe: widget.recipe,),
-              PreparationStepList(
-                recipe: widget.recipe,
-              )
+              PreparationTitle(recipe: widget.recipe),
+              PreparationStepList(recipe: widget.recipe)
             ],
           ),
         ),
@@ -265,7 +263,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       color: Colors.black.withOpacity(0.7),
                     ),
                     Text(
-                      " " + widget.recipe.yields.toString() + (widget.recipe.yields > 1 ? " servings" : " serving"),
+                      " " +
+                          widget.recipe.yields.toString() +
+                          (widget.recipe.yields > 1 ? " servings" : " serving"),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.normal,

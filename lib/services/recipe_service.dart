@@ -63,6 +63,15 @@ class RecipeService {
     return _recipeList;
   }
 
+  Future deleteRecipe(RecipeModel recipe) async {
+    await _ref.doc(recipe.id).collection('tips').doc().delete();
+    await _ref
+        .doc(recipe.id)
+        .delete()
+        .then((value) => print('Document successfully deleted!'))
+        .onError((error, stackTrace) => "Error removing document: $error");
+  }
+
   void uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
       File recipeImage, List<File> directionImage) async {
     if (recipeImage != null) {

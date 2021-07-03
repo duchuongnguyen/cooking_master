@@ -59,13 +59,10 @@ class _PreparationScreenState extends State<PreparationScreen> {
                 child: ListView.separated(
                     itemBuilder: (BuildContext context, int index) {
                       return Text(widget.recipe.ingredients[index],
-                          style:
-                              TextStyle(fontSize: 18, color: Colors.white));
+                          style: TextStyle(fontSize: 18, color: Colors.white));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
-                        Divider(
-                          thickness: 1.5,
-                        ),
+                        Divider(thickness: 1.5),
                     itemCount: widget.recipe.ingredients.length),
               )
             ],
@@ -101,7 +98,12 @@ class _PreparationScreenState extends State<PreparationScreen> {
                       });
                     },
                     itemBuilder: (context, position) {
+                      if (widget.recipe.directionImage.length <= position)
+                        return DetailPreparationStep(
+                            image: null,
+                            direction: widget.recipe.directions[position]);
                       return DetailPreparationStep(
+                          image: widget.recipe.directionImage[position],
                           direction: widget.recipe.directions[position]);
                     },
                     itemCount: totalPages,

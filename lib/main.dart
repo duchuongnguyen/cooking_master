@@ -7,7 +7,6 @@ import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/notifier/user_saved_recipe.dart';
 import 'package:cooking_master/services/user_save_recipe.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';

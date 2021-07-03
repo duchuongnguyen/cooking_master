@@ -437,100 +437,257 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                 ),
               ),
               SizedBox(height: 5),
-              if (_directionImageFiles.length <= index)
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext bc) {
-                        return SafeArea(
-                          child: Container(
-                            child: new Wrap(
-                              children: <Widget>[
-                                new ListTile(
-                                    leading: new Icon(Icons.photo_library),
-                                    title: new Text('Photo Library'),
-                                    onTap: () {
-                                      _imgStepFromGallery();
-                                      Navigator.of(context).pop();
-                                    }),
-                                new ListTile(
-                                  leading: new Icon(Icons.photo_camera),
-                                  title: new Text('Camera'),
-                                  onTap: () {
-                                    _imgStepFromCamera();
-                                    Navigator.of(context).pop();
+              widget.isUpdating
+                  ? (_directionImageFiles.length <= index)
+                      ? (_directionImageUrls.length <= index)
+                          ? GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext bc) {
+                                    return SafeArea(
+                                      child: Container(
+                                        child: new Wrap(
+                                          children: <Widget>[
+                                            new ListTile(
+                                                leading: new Icon(
+                                                    Icons.photo_library),
+                                                title:
+                                                    new Text('Photo Library'),
+                                                onTap: () {
+                                                  _imgStepFromGallery();
+                                                  Navigator.of(context).pop();
+                                                }),
+                                            new ListTile(
+                                              leading:
+                                                  new Icon(Icons.photo_camera),
+                                              title: new Text('Camera'),
+                                              onTap: () {
+                                                _imgStepFromCamera();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
                                   },
+                                );
+                              },
+                              child: Container(
+                                width: 100,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(8)),
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: Colors.white,
                                 ),
-                              ],
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext bc) {
+                                    return SafeArea(
+                                      child: Container(
+                                        child: new Wrap(
+                                          children: <Widget>[
+                                            new ListTile(
+                                                leading: new Icon(
+                                                    Icons.photo_library),
+                                                title: new Text(
+                                                    'Change image from Library'),
+                                                onTap: () {
+                                                  _imgStepFromGallery();
+                                                  Navigator.of(context).pop();
+                                                }),
+                                            new ListTile(
+                                              leading:
+                                                  new Icon(Icons.photo_camera),
+                                              title: new Text(
+                                                  'Change image from Camera'),
+                                              onTap: () {
+                                                _imgStepFromCamera();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            new ListTile(
+                                              leading: new Icon(
+                                                  Icons.delete_outline),
+                                              title: new Text('Delete image'),
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                  width: 100,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  alignment: Alignment.center,
+                                  child: Image.network(
+                                      _directionImageUrls[index],
+                                      fit: BoxFit.fitWidth)),
+                            )
+                      : GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext bc) {
+                                return SafeArea(
+                                  child: Container(
+                                    child: new Wrap(
+                                      children: <Widget>[
+                                        new ListTile(
+                                            leading:
+                                                new Icon(Icons.photo_library),
+                                            title: new Text(
+                                                'Change image from Library'),
+                                            onTap: () {
+                                              _imgStepFromGallery();
+                                              Navigator.of(context).pop();
+                                            }),
+                                        new ListTile(
+                                          leading: new Icon(Icons.photo_camera),
+                                          title: new Text(
+                                              'Change image from Camera'),
+                                          onTap: () {
+                                            _imgStepFromCamera();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        new ListTile(
+                                          leading:
+                                              new Icon(Icons.delete_outline),
+                                          title: new Text('Delete image'),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                              width: 100,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8)),
+                              alignment: Alignment.center,
+                              child: Image.file(_directionImageFiles[index],
+                                  key: UniqueKey(), fit: BoxFit.fitWidth)),
+                        )
+                  : (_directionImageFiles.length <= index)
+                      ? GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext bc) {
+                                return SafeArea(
+                                  child: Container(
+                                    child: new Wrap(
+                                      children: <Widget>[
+                                        new ListTile(
+                                            leading:
+                                                new Icon(Icons.photo_library),
+                                            title: new Text('Photo Library'),
+                                            onTap: () {
+                                              _imgStepFromGallery();
+                                              Navigator.of(context).pop();
+                                            }),
+                                        new ListTile(
+                                          leading: new Icon(Icons.photo_camera),
+                                          title: new Text('Camera'),
+                                          onTap: () {
+                                            _imgStepFromCamera();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 80,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(8)),
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Colors.white,
                             ),
                           ),
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    width: 100,
-                    height: 80,
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(8)),
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.camera_alt_outlined,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              else
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext bc) {
-                        return SafeArea(
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext bc) {
+                                return SafeArea(
+                                  child: Container(
+                                    child: new Wrap(
+                                      children: <Widget>[
+                                        new ListTile(
+                                            leading:
+                                                new Icon(Icons.photo_library),
+                                            title: new Text(
+                                                'Change image from Library'),
+                                            onTap: () {
+                                              _imgStepFromGallery();
+                                              Navigator.of(context).pop();
+                                            }),
+                                        new ListTile(
+                                          leading: new Icon(Icons.photo_camera),
+                                          title: new Text(
+                                              'Change image from Camera'),
+                                          onTap: () {
+                                            _imgStepFromCamera();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        new ListTile(
+                                          leading:
+                                              new Icon(Icons.delete_outline),
+                                          title: new Text('Delete image'),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                           child: Container(
-                            child: new Wrap(
-                              children: <Widget>[
-                                new ListTile(
-                                    leading: new Icon(Icons.photo_library),
-                                    title:
-                                        new Text('Change image from Library'),
-                                    onTap: () {
-                                      _imgStepFromGallery();
-                                      Navigator.of(context).pop();
-                                    }),
-                                new ListTile(
-                                  leading: new Icon(Icons.photo_camera),
-                                  title: new Text('Change image from Camera'),
-                                  onTap: () {
-                                    _imgStepFromCamera();
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                new ListTile(
-                                  leading: new Icon(Icons.delete_outline),
-                                  title: new Text('Delete image'),
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                      width: 100,
-                      height: 80,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                      alignment: Alignment.center,
-                      child: Image.file(_directionImageFiles[index],
-                          key: UniqueKey(), fit: BoxFit.fitWidth)),
-                ),
+                              width: 100,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8)),
+                              alignment: Alignment.center,
+                              child: Image.file(_directionImageFiles[index],
+                                  key: UniqueKey(), fit: BoxFit.fitWidth)),
+                        ),
             ],
           ),
           SizedBox(width: 5),
