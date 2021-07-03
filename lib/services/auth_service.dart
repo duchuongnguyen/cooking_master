@@ -144,5 +144,6 @@ class Auth implements AuthBase {
     final facebookLogin = FacebookLogin();
     await facebookLogin.logOut();
     await _firebaseAuth.signOut();
+
   }
 }

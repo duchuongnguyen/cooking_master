@@ -188,19 +188,18 @@ class RecipeService {
 
   uploadTipAndImage(String idRecipe, TipModel tip, File localFile) async {
     if (localFile != null) {
-      var fileExtension = path.extension(localFile.path);
-
-      var uuid = Uuid().v4();
-
-      final Reference firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('recipes/$idRecipe/tips/$uuid$fileExtension');
-
-      await firebaseStorageRef.putFile(localFile);
-
-      String url = await firebaseStorageRef.getDownloadURL();
-
-      _uploadTip(idRecipe, tip, imageUrl: url);
+     // var fileExtension = path.extension(localFile.path);
+      final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+      try {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(localFile.path,
+              resourceType: CloudinaryResourceType.Image),
+        );
+        print(response.secureUrl);
+        _uploadTip(idRecipe, tip, imageUrl: response.secureUrl);
+      } catch (er) {
+        _uploadTip(idRecipe, tip);
+      }
     } else {
       _uploadTip(idRecipe, tip);
     }

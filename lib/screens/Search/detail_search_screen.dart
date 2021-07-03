@@ -11,8 +11,6 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class DetailSearchScreen extends StatelessWidget {
   final String keyword;
