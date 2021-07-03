@@ -216,7 +216,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
             defaultActionText: 'OK',
           );
         } else {
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
         }
       } else {
         if (checkConfirmPassWord()) {
@@ -233,7 +233,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
             );
           } else {
             await userProfile.addUser(FirebaseAuth.instance.currentUser.uid);
-            Navigator.of(context).pop();
+            // Navigator.of(context).pop();
           }
         }
       }

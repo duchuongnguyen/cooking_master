@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'email_sign_in_page.dart';
 
 class SignInPage extends StatefulWidget {
   //const
@@ -33,15 +32,15 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Future<void> _signInAnonymously(BuildContext context) async {
-    try {
-      // await manager.signInAnonymously();
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInAnonymously();
-    } on Exception catch (e) {
-      _showSignInError(context, e);
-    }
-  }
+  // Future<void> _signInAnonymously(BuildContext context) async {
+  //   try {
+  //     // await manager.signInAnonymously();
+  //     final auth = Provider.of<AuthBase>(context, listen: false);
+  //     await auth.signInAnonymously();
+  //   } on Exception catch (e) {
+  //     _showSignInError(context, e);
+  //   }
+  // }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
@@ -66,13 +65,6 @@ class _SignInPageState extends State<SignInPage> {
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
-  }
-
-  void _signInWithEmail(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      fullscreenDialog: true,
-      builder: (context) => EmailSignInPage(),
-    ));
   }
 
   @override
