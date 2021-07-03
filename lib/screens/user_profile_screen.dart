@@ -3,6 +3,7 @@ import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/UserProfile/FollowScreen.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
+import 'package:cooking_master/screens/UserProfile/change_password_screen.dart';
 import 'package:cooking_master/screens/edit_user_profile_screen.dart';
 import 'package:cooking_master/services/auth_service.dart';
 import 'package:cooking_master/services/recipe_service.dart';
@@ -58,6 +59,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangePasswordScreen()));
+            },
+            icon: Icon(
+              Icons.vpn_key_outlined,
+              color: Colors.black,
+            ),
+          ),
           IconButton(
             icon: Icon(
               Icons.edit_outlined,
