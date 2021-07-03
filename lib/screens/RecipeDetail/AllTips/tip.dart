@@ -1,4 +1,3 @@
-import 'package:cooking_master/extension.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
 import 'package:cooking_master/models/user_model.dart';
@@ -6,6 +5,7 @@ import 'package:cooking_master/screens/RecipeDetail/AllTips/tip_like.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Tip extends StatefulWidget {
   final RecipeModel recipe;
@@ -22,15 +22,6 @@ class Tip extends StatefulWidget {
 }
 
 class _TipState extends State<Tip> {
-  String differenceString;
-
-  @override
-  void initState() {
-    super.initState();
-
-    differenceString = getDurationString(widget.tip.createdAt.toDate());
-  }
-
   @override
   Widget build(BuildContext context) {
     final userProfileService = Provider.of<UserProfileService>(context);
@@ -79,7 +70,9 @@ class _TipState extends State<Tip> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '$differenceString ago',
+                                timeago.format(DateTime.now().subtract(
+                                    DateTime.now().difference(
+                                        widget.tip.createdAt.toDate()))),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300, fontSize: 14),
                               ),

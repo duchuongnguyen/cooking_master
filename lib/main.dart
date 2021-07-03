@@ -17,8 +17,6 @@ import 'notifier/your_recipes_notifier.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-//  await FirebaseAppCheck.instance
-//       .activate(webRecaptchaSiteKey: )
   runApp(CookingMasterApp());
 }
 

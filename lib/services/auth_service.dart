@@ -41,10 +41,8 @@ class Auth implements AuthBase {
   @override
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
-    UserCredential userCredential;
-
     try {
-      userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -63,10 +61,10 @@ class Auth implements AuthBase {
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
       return e.message;
-      }
-      return "OK";
     }
-     
+    return "OK";
+  }
+
   @override
   Future<User> signInWithGoogle() async {
     final googleSignIn = new GoogleSignIn();

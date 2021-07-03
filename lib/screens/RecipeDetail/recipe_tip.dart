@@ -43,7 +43,7 @@ class _RecipeTipState extends State<RecipeTip> {
                         child: RichText(
                           text: TextSpan(
                               style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
+                                  TextStyle(fontSize: 22, color: Colors.black),
                               children: <TextSpan>[
                                 TextSpan(
                                     text: 'Tips',
@@ -162,7 +162,7 @@ class _RecipeTipState extends State<RecipeTip> {
                                   TextStyle(fontSize: 20, color: Colors.black),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Tips',
+                                    text: 'Tips ',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 TextSpan(text: '(0)'),

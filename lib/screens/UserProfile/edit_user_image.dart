@@ -76,15 +76,10 @@ class _EditUserImageState extends State<EditUserImage> {
                 child: Container(
                     width: 160,
                     height: 160,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      // border: Border.all(),
-                    ),
                     child: CircleAvatar(
-                      radius: 50,
-                      child: _image == null
-                          ? Image.network(widget.imageurl)
-                          : Image.file(_image),
+                      backgroundImage: _image == null
+                          ? NetworkImage(widget.imageurl)
+                          : FileImage(_image),
                     )),
               ),
             ),

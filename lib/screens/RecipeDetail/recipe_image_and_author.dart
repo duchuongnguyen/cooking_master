@@ -70,9 +70,9 @@ class _RecipeImageAndAuthorState extends State<RecipeImageAndAuthor> {
                         title: Text(
                           'Recipe by',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
                             fontWeight: FontWeight.normal,
-                            color: Colors.grey,
+                            color: Colors.white.withOpacity(0.8),
                           ),
                         ),
                         subtitle: Text(
@@ -80,7 +80,7 @@ class _RecipeImageAndAuthorState extends State<RecipeImageAndAuthor> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 255, 144, 71),
+                            color: Colors.blue,
                           ),
                         ),
                       );
@@ -139,7 +139,7 @@ class _RecipeImageAndAuthorState extends State<RecipeImageAndAuthor> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 255, 144, 71),
+                            color: Colors.blue[400],
                           ),
                         ),
                       );
@@ -154,19 +154,22 @@ class _RecipeImageAndAuthorState extends State<RecipeImageAndAuthor> {
                       title: Text(
                         'Recipe by',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.normal,
-                          color: Colors.grey,
+                          color: Colors.white.withOpacity(0.6),
                         ),
                       ),
                       subtitle: LinearProgressIndicator(),
                     );
                   }
                 }),
-            SizedBox(
-              height: 10,
+            Text(
+              widget.recipe.description,
+              style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.black.withOpacity(0.7),
+                  fontWeight: FontWeight.w400),
             ),
-            Text(widget.recipe.description),
           ],
         ),
       ),

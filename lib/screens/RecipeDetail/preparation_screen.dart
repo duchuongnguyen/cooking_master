@@ -49,6 +49,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              SizedBox(height: 40),
               Text('Ingredients for',
                   style: TextStyle(fontSize: 22, color: Colors.white)),
               SizedBox(height: 10),
@@ -57,25 +58,11 @@ class _PreparationScreenState extends State<PreparationScreen> {
               Expanded(
                 child: ListView.separated(
                     itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(widget.recipe.ingredients[index],
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white)),
-                          // Text(
-                          //     ingredient[index].ingredientAmount.toString() +
-                          //         " " +
-                          //         ingredient[index].ingredientUnit.toString(),
-                          //     style:
-                          //         TextStyle(fontSize: 18, color: Colors.white))
-                        ],
-                      );
+                      return Text(widget.recipe.ingredients[index],
+                          style: TextStyle(fontSize: 18, color: Colors.white));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
-                        Divider(
-                          thickness: 1.5,
-                        ),
+                        Divider(thickness: 1.5),
                     itemCount: widget.recipe.ingredients.length),
               )
             ],
@@ -111,7 +98,12 @@ class _PreparationScreenState extends State<PreparationScreen> {
                       });
                     },
                     itemBuilder: (context, position) {
+                      if (widget.recipe.directionImage.length <= position)
+                        return DetailPreparationStep(
+                            image: null,
+                            direction: widget.recipe.directions[position]);
                       return DetailPreparationStep(
+                          image: widget.recipe.directionImage[position],
                           direction: widget.recipe.directions[position]);
                     },
                     itemCount: totalPages,

@@ -18,14 +18,22 @@ class SliverIngredientList extends StatelessWidget {
           (BuildContext context, int index) {
             final int itemIndex = index ~/ 2;
             if (index.isEven) {
-              return Text("${ingredientList[itemIndex]}");
+              return Text(
+                "${ingredientList[itemIndex]}",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black.withOpacity(0.5),
+                  letterSpacing: 0.6
+                ),
+              );
               // return Ingredient(
               //     name: ingredient[itemIndex].ingredientName,
               //     amount: ingredient[itemIndex].ingredientAmount,
               //     unit: ingredient[itemIndex].ingredientUnit,
               //     proportion: servings / widget.recipe.recipeServingNumber);
             }
-            return SizedBox(height: 5);
+            return SizedBox(height: 15,);
           },
           semanticIndexCallback: (Widget widget, int localIndex) {
             if (localIndex.isEven) {

@@ -5,7 +5,6 @@ import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:cooking_master/extension.dart';
@@ -125,6 +124,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                         right: defaultPadding * 0.5,
                                         top: defaultPadding * 0.2,
                                         bottom: defaultPadding * 0.2),
+                                      decoration: BoxDecoration(color: Colors.black.withOpacity(0.1)),
                                     child: Text(
                                       cards[index]
                                           .category
@@ -159,10 +159,10 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
-                                        width: size.width * 0.45 * 0.6,
+                                        width: size.width * 0.8 * 0.6,
                                         height: size.height * 0.35 * 0.3 * 0.7,
                                         child: Text(
-                                          cards[index].name,
+                                          cards[index].name.length > 40 ? cards[index].name.replaceRange(cards[index].name.substring(0, 40).lastIndexOf(" "), cards[index].name.length, "...") : cards[index].name,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
@@ -170,31 +170,18 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    //Recipe Save
-                                    Positioned(
-                                        top: -defaultPadding + 5,
-                                        right: -defaultPadding + 5,
-                                        child: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                              Icons.bookmark_border_rounded,
-                                              color: Colors.white,
-                                              size: 18),
-                                        )),
-
                                     //Time & Serving
                                     Align(
                                       alignment: Alignment.bottomLeft,
                                       child: Text(
-                                        cards[index].cookTime.toString() +
+                                        cards[index].cookTime.toString() + " mins" +
                                             ' | ' +
                                             cards[index].yields.toString() +
                                             " " +
-                                            AppLocalizations.of(context)
-                                                .serving,
+                                            (cards[index].yields > 1 ? "servings" : "serving"),
                                         style: TextStyle(
-                                            color: Colors.blueGrey,
-                                            fontSize: 12),
+                                            color: Colors.white.withOpacity(0.7),
+                                            fontSize: 13),
                                       ),
                                     ),
                                   ],
@@ -266,6 +253,7 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                       right: defaultPadding * 0.5,
                                       top: defaultPadding * 0.2,
                                       bottom: defaultPadding * 0.2),
+                                  decoration: BoxDecoration(color: Colors.black.withOpacity(0.1)),
                                   child: Text(
                                     cards[index].category.capitalizeFirstofEach,
                                     style: TextStyle(
@@ -298,10 +286,10 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Container(
-                                      width: size.width * 0.45 * 0.6,
+                                      width: size.width * 0.8 * 0.6,
                                       height: size.height * 0.35 * 0.3 * 0.7,
                                       child: Text(
-                                        cards[index].name,
+                                        cards[index].name.length > 40 ? cards[index].name.replaceRange(cards[index].name.substring(0, 40).lastIndexOf(" "), cards[index].name.length, "...") : cards[index].name,
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 15,
@@ -309,29 +297,17 @@ class ListViewOfRecipeCards extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  //Recipe Save
-                                  Positioned(
-                                      top: -defaultPadding + 5,
-                                      right: -defaultPadding + 5,
-                                      child: IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                            Icons.bookmark_border_rounded,
-                                            color: Colors.white,
-                                            size: 18),
-                                      )),
-
                                   //Time & Serving
                                   Align(
                                     alignment: Alignment.bottomLeft,
                                     child: Text(
                                       cards[index].cookTime.toString() +
-                                          ' min | ' +
+                                          ' mins | ' +
                                           cards[index].yields.toString() +
-                                          " serving", // +
+                                          (cards[index].yields > 1 ? " servings" : " serving"), // +
                                       //  AppLocalizations.of(context).serving?? '',
                                       style: TextStyle(
-                                          color: Colors.blueGrey, fontSize: 12),
+                                          color: Colors.white.withOpacity(0.7), fontSize: 12),
                                     ),
                                   ),
                                 ],
