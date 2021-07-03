@@ -1,4 +1,5 @@
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -7,10 +8,19 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final TextEditingController oldPassword = TextEditingController();
+  final TextEditingController newPassword = TextEditingController();
+  final TextEditingController cfPassword = TextEditingController();
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    // final savedRecipeNotifier =
-    //     Provider.of<SavedRecipeProvider>(context, listen: false);
+    if (isLoading)
+      return Scaffold(
+          backgroundColor: Colors.black.withOpacity(0.9),
+          body: Container(
+            child: CircularProgressIndicator(),
+            padding: EdgeInsets.all(100),
+          ));
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.9),
       body: Stack(
@@ -22,6 +32,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
+                    controller: oldPassword,
                     obscureText: true,
                     autofocus: true,
                     textAlign: TextAlign.center,
@@ -42,6 +53,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     height: 15,
                   ),
                   TextField(
+                    controller: newPassword,
                     textInputAction: TextInputAction.next,
                     obscureText: true,
                     textAlign: TextAlign.center,
@@ -61,19 +73,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     height: 15,
                   ),
                   TextField(
+                    controller: cfPassword,
                     obscureText: true,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (String value) {
-                      // if (savedRecipeNotifier.checkNameCategoryExist(value)) {
-                      //   final didRequest = showAlertDialog(
-                      //     context,
-                      //     title: 'Category Name Exist',
-                      //     content: 'Please fill another name!',
-                      //     defaultActionText: 'OK',
-                      //   );
-                      // } else {
-                      Navigator.pop(context, value);
-                      //}
+                      //  Navigator.pop(context, value);
+                      _submit();
                     },
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -115,5 +120,77 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ],
       ),
     );
+  }
+
+  _submit() async {
+    setState(() {
+      isLoading = true;
+    });
+    if (newPassword.text.length < 6) {
+      await showAlertDialog(
+        context,
+        title: 'Error',
+        content: 'Password must contain more than six characters',
+        defaultActionText: 'OK',
+      );
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      if (cfPassword.text != newPassword.text) {
+        await showAlertDialog(
+          context,
+          title: 'Error',
+          content: 'Confirm Again',
+          defaultActionText: 'OK',
+        );
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        String error = "ok";
+        AuthCredential credential = EmailAuthProvider.credential(
+            email: FirebaseAuth.instance.currentUser.email,
+            password: oldPassword.text);
+        FirebaseAuth.instance.currentUser
+            .reauthenticateWithCredential(credential)
+            .then((value) {
+          FirebaseAuth.instance.currentUser
+              .updatePassword(newPassword.text)
+              .then((value) async {
+            await showAlertDialog(
+              context,
+              title: 'Success',
+              content: 'Changed Success',
+              defaultActionText: 'OK',
+            );
+            Navigator.pop(context);
+          }).catchError((onE) async {
+            await showAlertDialog(
+              context,
+              title: 'Error',
+              content: onE.toString(),
+              defaultActionText: 'OK',
+            );
+            setState(() {
+              isLoading = false;
+            });
+          });
+        }).catchError((onError) async {
+          await showAlertDialog(
+            context,
+            title: 'Error',
+            content: onError.toString(),
+            defaultActionText: 'OK',
+          );
+          setState(() {
+            isLoading = false;
+          });
+        });
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 }
