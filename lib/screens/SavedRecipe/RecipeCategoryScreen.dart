@@ -48,7 +48,7 @@ class _RecipeCategoryScreenState extends State<RecipeCategoryScreen> {
 
         if (result != null) {
           setState(() {
-            savedRecipeNotifier.SetCurCategory(result);
+            savedRecipeNotifier.setCurCategory(result);
             name = result;
           });
         } else {

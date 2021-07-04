@@ -147,10 +147,10 @@ class _AddCategoryDrawerState extends State<AddCategoryDrawer> {
                             name: saveRecipeProvider.listMyCategory
                                 .elementAt(index)
                                 .category,
-                            isSelected: 
-                                saveRecipeProvider.listMyCategory
-                                    .elementAt(index).idRecipe.contains(widget.idRecipe)
-                                ,
+                            isSelected: saveRecipeProvider.listMyCategory
+                                .elementAt(index)
+                                .idRecipe
+                                .contains(widget.idRecipe),
                             color:
                                 index % 2 == 0 ? blue3.withOpacity(0.5) : null,
                           ),

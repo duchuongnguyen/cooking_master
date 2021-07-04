@@ -46,7 +46,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final controller = FloatingSearchBarController();
-  var cards = [];
+  List<RecipeSearch> cards = [];
   bool isFirstRender = true;
   bool isLoading = true;
   @override
@@ -165,8 +165,21 @@ class _HomeState extends State<Home> {
                 crossAxisCount: 2,
                 itemCount: cards.length,
                 itemBuilder: (context, index) {
-                  return RecipeSearchItem(
-                      image: cards[index].image, name: cards[index].name);
+                  return GestureDetector(
+                      onTap: () async {
+                        final _recipedetail =
+                            Provider.of<RecipeService>(context, listen: false);
+                        RecipeModel recipe =
+                            await _recipedetail.getRecipe(cards[index].id);
+                        if (recipe != null)
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RecipeDetailScreen(recipe: recipe)));
+                      },
+                      child: RecipeSearchItem(
+                          image: cards[index].image, name: cards[index].name));
                 });
   }
 

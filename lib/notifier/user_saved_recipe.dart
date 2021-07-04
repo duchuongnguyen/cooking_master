@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 
 class SavedRecipeProvider with ChangeNotifier {
   FirebaseUserSaveRecipe _saveRecipeService = FirebaseUserSaveRecipe();
-  Map<String, List<RecipeModel>> _mapSavedRecipe;
-  List<NtoNUserSavedRecipe> _listMyCategory;
+  Map<String, List<RecipeModel>> _mapSavedRecipe = Map();
+  List<NtoNUserSavedRecipe> _listMyCategory = [];
   String _curCategoryName;
-  List<RecipeModel> _curCategoryList;
+  List<RecipeModel> _curCategoryList = [];
   List<NtoNUserSavedRecipe> get listMyCategory => this._listMyCategory;
   // ignore: non_constant_identifier_names
   set CurCategoryList(List<RecipeModel> list) {
@@ -34,6 +34,7 @@ class SavedRecipeProvider with ChangeNotifier {
   }
 
   loadListMyCategory() async {
+    this._listMyCategory.clear();
     this._listMyCategory = await this._saveRecipeService.getListMyCategory();
   }
 
@@ -78,7 +79,7 @@ class SavedRecipeProvider with ChangeNotifier {
     }
   }
 
-  SetCurCategory(String name) async {
+  setCurCategory(String name) async {
     this._curCategoryName = name;
     if (this._mapSavedRecipe.containsKey(name)) {
       this._curCategoryList = List.from(this.mapSavedRecipe[name]);
@@ -91,27 +92,38 @@ class SavedRecipeProvider with ChangeNotifier {
   }
 
   /// using delete item in mycategory list
-  deleterecipe(int index) {
-    if (this._curCategoryName == 'All') {}
-    this.removeRecipeToMycategory(
-        this._curCategoryList.elementAt(index).id, this._curCategoryName);
-    // this._saveRecipeService.removeInArray(
-    //     this._curCategoryName, this._curCategoryList.elementAt(index).id);
-    // this._mapSavedRecipe[this._curCategoryName].removeAt(index);
-    // this._curCategoryList.removeAt(index);
+  deleterecipe(int index) async {
+    if (this._curCategoryName == 'All') {
+      RecipeModel recipe =
+          this._mapSavedRecipe[this._curCategoryName].removeAt(index);
+      notifyListeners();
+      await this._saveRecipeService.removeInAll(recipe.id);
+      this._curCategoryList.removeAt(index);
+      for (MapEntry<String, List<RecipeModel>> me
+          in this._mapSavedRecipe.entries) {
+        if (me.key != 'All')         
+            me.value.removeWhere((element) => element.id == recipe.id);
+      }
+    } else {
+      await this._saveRecipeService.removeInArray(
+          this._curCategoryName, this._curCategoryList.elementAt(index).id);
+      this._mapSavedRecipe[this._curCategoryName].removeAt(index);
+      this._curCategoryList.removeAt(index);
+    }
+    await loadListMyCategory();
     notifyListeners();
   }
 
   deleteCatergory(String name) async {
     if (name != "All") {
-      this._saveRecipeService.removeCategory(name);
+      await this._saveRecipeService.removeCategory(name);
       this._mapSavedRecipe.remove(name);
     } else {
       await this._saveRecipeService.clearAll();
       await this._saveRecipeService.createNewCategory('All', []);
       this._curCategoryName = "All";
-      await this.loadMapRecipe();
     }
+    await this.loadMapRecipe();
     notifyListeners();
   }
 
@@ -129,7 +141,7 @@ class SavedRecipeProvider with ChangeNotifier {
     });
   }
 
-  updateListRecipe() {
+  updateListRecipe() async {
     if (this._mapSavedRecipe.containsKey(this._curCategoryName)) {
       this._mapSavedRecipe['All'].forEach((element) {
         bool add = true;
@@ -148,6 +160,7 @@ class SavedRecipeProvider with ChangeNotifier {
         }
       });
       unSelected();
+      await loadListMyCategory();
       notifyListeners();
     }
   }
