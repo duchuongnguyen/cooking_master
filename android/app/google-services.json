@@ -1,24 +1,25 @@
 {
   "project_info": {
     "project_number": "120021942616",
+    "firebase_url": "https://cooking-master-5dc52-default-rtdb.firebaseio.com",
     "project_id": "cooking-master-5dc52",
     "storage_bucket": "cooking-master-5dc52.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:120021942616:android:b39caed85174e51780652d",
+        "mobilesdk_app_id": "1:120021942616:android:36429ed3414b793f80652d",
         "android_client_info": {
           "package_name": "com.example.cooking_master"
         }
       },
       "oauth_client": [
         {
-          "client_id": "120021942616-9mcf4v1npu9aoc7mrm1kvvtns9jdi5oh.apps.googleusercontent.com",
+          "client_id": "120021942616-7bmi7fatb331ij6010m6tonn43k180ji.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.cooking_master",
-            "certificate_hash": "aadb633a659ff04f8d03d40541d66bdde917bf5c"
+            "certificate_hash": "c59eae4d6bafe44b915f6cf7f5f9fb6b2ef6b6c3"
           }
         },
         {

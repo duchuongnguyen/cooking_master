@@ -1,17 +1,23 @@
 import 'package:cooking_master/models/recipe_card_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/screens/UserProfile/FollowScreen.dart';
 import 'package:cooking_master/screens/UserProfile/category_item.dart';
+import 'package:cooking_master/screens/UserProfile/change_password_screen.dart';
 import 'package:cooking_master/screens/edit_user_profile_screen.dart';
 import 'package:cooking_master/services/auth_service.dart';
+import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/appbar.dart';
 import 'package:cooking_master/widgets/recipe_detail_card.dart';
 import 'package:cooking_master/widgets/show_alert_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 class UserProfileScreen extends StatefulWidget {
   UserProfileScreen();
@@ -45,12 +51,26 @@ Future<void> _confirmSignOut(BuildContext context) async {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   UserModel user;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBody: true,
-        appBar: buildAppBar(context, title: '', actions: [
+      backgroundColor: Colors.white,
+      extendBody: true,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangePasswordScreen()));
+            },
+            icon: Icon(
+              Icons.vpn_key_outlined,
+              color: Colors.black,
+            ),
+          ),
           IconButton(
             icon: Icon(
               Icons.edit_outlined,
@@ -60,17 +80,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EditUserProfileScreen(
-                            user: user,
-                          )));
+                      builder: (context) => EditUserProfileScreen(user: user)));
             },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.insights_outlined,
-              color: Colors.black,
-            ),
-            onPressed: () {},
           ),
           IconButton(
             icon: Icon(
@@ -79,19 +90,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             onPressed: () => _confirmSignOut(context),
           ),
-        ], leading: CustomBackButton(
+        ],
+        leading: CustomBackButton(
           tapEvent: () {
             Navigator.pop(context);
           },
-        )),
-        body: _buildBody(context));
+        ),
+      ),
+      body: _buildBody(context),
+    );
   }
 
   Widget _buildBody(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    final userProfile = Provider.of<UserProfileService>(context, listen: false);
-    return FutureBuilder<UserModel>(
-      future: userProfile.loadProfile(auth.currentUser.uid),
+    return StreamBuilder<UserModel>(
+      stream: UserProfileService().loadProfile(auth.currentUser.uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           user = snapshot.data;
@@ -125,7 +138,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Hero(
                           tag: "username",
                           child: Text(
-                            user.userName,
+                            user.userName ?? "",
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 21,
@@ -140,7 +153,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: Hero(
                           tag: "useraddress",
                           child: Text(
-                            user.userAddress,
+                            user.userAddress ?? "",
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -156,56 +169,82 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    "Người theo dõi",
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: 0.5,
-                                        height: 1.5),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    user.userFollowed.toString(),
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FollowScreen(
+                                                tab: "followers",
+                                                followers: user.userFollower,
+                                                following: user.userFollowing,
+                                              )));
+                                },
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Followers",
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: 0.5,
+                                          height: 1.5),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      user.userFollower.length.toString() ??
+                                          "0",
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
                               VerticalDivider(
-                                color: Colors.black,
+                                color: Colors.black.withOpacity(0.7),
                                 thickness: 0.5,
                                 width: 20,
                               ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "Đang theo dõi",
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: 0.5,
-                                        height: 1.5),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    user.userFollowing.toString(),
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FollowScreen(
+                                                tab: "following",
+                                                followers: user.userFollower,
+                                                following: user.userFollowing,
+                                              )));
+                                },
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Following",
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: 0.5,
+                                          height: 1.5),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      user.userFollowing.length.toString() ??
+                                          "0",
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -215,12 +254,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     //Bio Text
                     Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 25),
+                        margin: EdgeInsets.only(top: 25, bottom: 15),
                         padding: EdgeInsets.only(left: 25, right: 25),
                         child: Hero(
                           tag: "userbio",
                           child: Text(
-                            user.userBio,
+                            user.userBio ?? "",
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -233,22 +272,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                     Center(
-                      child: CategoryItem(),
-                    ),
-                    //List recipes
-                    Container(
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: cards.length,
-                        itemBuilder: (context, index) {
-                          return RecipeDetailCard(
-                            recipe: cards[index],
-                            size: MediaQuery.of(context).size,
-                          );
-                        },
-                      ),
-                    )
+                        child: StickyHeader(
+                      header: CategoryItem(),
+                      content: FutureBuilder<List<RecipeModel>>(
+                          future: RecipeService().getRecipesByOwner(
+                              FirebaseAuth.instance.currentUser.uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (context, index) {
+                                  return RecipeDetailCard(
+                                    recipe: snapshot.data[index],
+                                  );
+                                },
+                              );
+                            } else {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                          }),
+                    ))
                   ],
                 ),
               ));

@@ -11,9 +11,9 @@ abstract class AuthBase {
 
   Future<User> signInAnonymously();
 
-  Future<User> signInWithEmailAndPassword(String email, String password);
+  Future<String> signInWithEmailAndPassword(String email, String password);
 
-  Future<User> createUserWithEmailAndPassword(String email, String password);
+  Future<String> createUserWithEmailAndPassword(String email, String password);
 
   Future<User> signInWithGoogle();
 
@@ -39,43 +39,20 @@ class Auth implements AuthBase {
   }
 
   @override
-  Future<User> signInWithEmailAndPassword(String email, String password) async {
-    UserCredential userCredential;
-
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      print('Failed with error code: ${e.code}');
-      print('Failed with error message: ${e.message}');
-
-      switch (e.code) {
-        case "wrong-password":
-        case "user-not-found":
-          errorMessage = "Tài khoản hoặc mật khẩu không đúng";
-          break;
-        case "invalid-email":
-          errorMessage = "Tài khoản email không hợp lệ";
-          break;
-        case "unknown":
-          errorMessage = "Lỗi không xác định";
-          break;
-        case "too-many-requests":
-          errorMessage = "Thao tác thất bại nhiều lần.\nVui lòng thử lại sau.";
-          break;
-        default:
-          errorMessage = "";
-          break;
-      }
-
-      return null;
+      return e.message;
     }
 
-    return userCredential.user;
+    return "OK";
   }
 
   @override
-  Future<User> createUserWithEmailAndPassword(
+  Future<String> createUserWithEmailAndPassword(
       String email, String password) async {
     UserCredential userCredential;
 
@@ -83,34 +60,9 @@ class Auth implements AuthBase {
       userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      print('Failed with error code: ${e.code}');
-      print('Failed with error message: ${e.message}');
-
-      switch (e.code) {
-        case "invalid-email":
-          errorMessage = "Tài khoản email không hợp lệ";
-          break;
-        case "unknown":
-          errorMessage = "Lỗi không xác định";
-          break;
-        case "too-many-requests":
-          errorMessage = "Thao tác thất bại nhiều lần.\nVui lòng thử lại sau.";
-          break;
-        case "weak-password":
-          errorMessage = "Mật khẩu phải có ít nhất 6 ký tự.";
-          break;
-        case "email-already-in-use":
-          errorMessage = "Tài khoản đã tồn tại";
-          break;
-        default:
-          errorMessage = "";
-          break;
-      }
-
-      return null;
+      return e.message;
     }
-
-    return userCredential.user;
+    return "OK";
   }
 
   @override
@@ -192,5 +144,6 @@ class Auth implements AuthBase {
     final facebookLogin = FacebookLogin();
     await facebookLogin.logOut();
     await _firebaseAuth.signOut();
+
   }
 }

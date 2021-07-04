@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cooking_master/models/tip_model.dart';
 
 class RecipeModel {
   String id;
@@ -16,7 +15,7 @@ class RecipeModel {
   String image;
   Timestamp createdAt;
   Timestamp updatedAt;
-
+  bool isSelected = false;
   RecipeModel();
 
   RecipeModel.fromMap(Map data) {
@@ -28,12 +27,18 @@ class RecipeModel {
     yields = data['yields'] as int;
     prepTime = data['prepTime'] as int;
     cookTime = data['cookTime'] as int;
-    ingredients = data['ingredients'].cast<String>();
-    directions = data['directions'].cast<String>();
-    directionImage = data['directionImage'].cast<String>();
+
+    if (data['ingredients'] != null)
+      ingredients = data['ingredients'].cast<String>();
+
+    if (data['directions'] != null)
+      directions = data['directions'].cast<String>();
+
+    if (data['directionImage'] != null)
+      directionImage = data['directionImage'].cast<String>();
     image = data['image'] as String;
-    createdAt = data['createdAt'] as Timestamp;
-    updatedAt = data['updatedAt'] as Timestamp;
+    createdAt = data['createdAt'] as Timestamp ?? Timestamp.now();
+    updatedAt = data['updatedAt'] as Timestamp ?? Timestamp.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -54,4 +59,20 @@ class RecipeModel {
       'updatedAt': updatedAt,
     };
   }
+}
+
+setNoSelected(List<RecipeModel> cards) {
+  cards.forEach((element) {
+    element.isSelected = false;
+  });
+}
+
+setAllSelected(List<RecipeModel> cards) {
+  cards.forEach((element) {
+    element.isSelected = true;
+  });
+}
+
+removeSelectedCards(List<RecipeModel> cards) {
+  cards.removeWhere((element) => element.isSelected == true);
 }

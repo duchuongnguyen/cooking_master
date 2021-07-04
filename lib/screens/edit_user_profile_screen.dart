@@ -37,8 +37,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
   Widget _buildBody(BuildContext context) {
     final userProfile = Provider.of<UserProfileService>(context, listen: false);
     var uid = widget.user.userId;
-    return FutureBuilder<UserModel>(
-      future: userProfile.loadProfile(uid),
+    return StreamBuilder<UserModel>(
+      stream: userProfile.loadProfile(uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           widget.user = snapshot.data;
@@ -51,7 +51,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Ảnh đại diện",
+                      "Avatar",
                       style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontSize: 18,
@@ -67,7 +67,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                                     )));
                       },
                       child: Text(
-                        "Chỉnh sửa",
+                        "Edit",
                         style: GoogleFonts.roboto(
                             color: blue3,
                             fontSize: 18,
@@ -99,7 +99,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Tên hiển thị",
+                      "Display name",
                       style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontSize: 18,
@@ -117,7 +117,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                                     )));
                       },
                       child: Text(
-                        "Chỉnh sửa",
+                        "Edit",
                         style: GoogleFonts.roboto(
                             color: blue3,
                             fontSize: 18,
@@ -147,7 +147,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Địa chỉ",
+                      "Address",
                       style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontSize: 18,
@@ -165,7 +165,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                                     )));
                       },
                       child: Text(
-                        "Chỉnh sửa",
+                        "Edit",
                         style: GoogleFonts.roboto(
                             color: blue3,
                             fontSize: 18,
@@ -195,7 +195,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Tiểu sử",
+                      "Bio",
                       style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontSize: 18,
@@ -213,7 +213,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                                     )));
                       },
                       child: Text(
-                        "Chỉnh sửa",
+                        "Edit",
                         style: GoogleFonts.roboto(
                             color: blue3,
                             fontSize: 18,

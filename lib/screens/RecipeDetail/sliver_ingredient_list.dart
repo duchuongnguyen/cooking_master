@@ -1,10 +1,13 @@
-import 'package:cooking_master/models/ingredient_model.dart';
-import 'package:cooking_master/screens/recipe_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class SliverIngredientList extends StatelessWidget {
-  const SliverIngredientList({Key key}) : super(key: key);
+  final List<String> ingredientList;
+
+  const SliverIngredientList({
+    Key key,
+    @required this.ingredientList,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +18,22 @@ class SliverIngredientList extends StatelessWidget {
           (BuildContext context, int index) {
             final int itemIndex = index ~/ 2;
             if (index.isEven) {
+              return Text(
+                "${ingredientList[itemIndex]}",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black.withOpacity(0.5),
+                  letterSpacing: 0.6
+                ),
+              );
               // return Ingredient(
               //     name: ingredient[itemIndex].ingredientName,
               //     amount: ingredient[itemIndex].ingredientAmount,
               //     unit: ingredient[itemIndex].ingredientUnit,
               //     proportion: servings / widget.recipe.recipeServingNumber);
             }
-            return SizedBox(height: 5);
+            return SizedBox(height: 15,);
           },
           semanticIndexCallback: (Widget widget, int localIndex) {
             if (localIndex.isEven) {
@@ -29,7 +41,7 @@ class SliverIngredientList extends StatelessWidget {
             }
             return null;
           },
-          childCount: math.max(0, ingredient.length * 2 - 1),
+          childCount: math.max(0, ingredientList.length * 2 - 1),
         ),
       ),
     );

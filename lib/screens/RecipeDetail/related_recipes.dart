@@ -16,15 +16,18 @@ class RelatedRecipes extends StatelessWidget {
     return FutureBuilder<List<RecipeModel>>(
       future: recipe.getRecipes(),
       builder: (context, snapshot) {
-        return SliverPadding(
-            padding: EdgeInsets.only(left: 10.0, right: 20.0, bottom: 30),
-            sliver: SliverList(
-                delegate: SliverChildListDelegate(<Widget>[
-              ListViewOfRecipeCardsWithTitle(
-                  cards: snapshot.data,
-                  title: "Related Recipes"),
-            ])));
-      }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return SliverPadding(
+              padding: EdgeInsets.only(left: 10.0, right: 20.0, bottom: 30),
+              sliver: SliverList(
+                  delegate: SliverChildListDelegate(<Widget>[
+                ListViewOfRecipeCardsWithTitle(
+                    cards: snapshot.data, title: "Related Recipes"),
+              ])));
+        } else {
+          return SliverPadding(padding: EdgeInsets.only(left: 10.0, right: 20.0, bottom: 30));
+        }
+      },
     );
   }
 }

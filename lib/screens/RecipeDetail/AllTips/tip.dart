@@ -1,65 +1,92 @@
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
+import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/AllTips/tip_like.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
-class Tip extends StatelessWidget {
+class Tip extends StatefulWidget {
+  final RecipeModel recipe;
   final TipModel tip;
 
-  const Tip({Key key, @required this.tip}) : super(key: key);
+  const Tip({
+    Key key,
+    @required this.recipe,
+    @required this.tip,
+  }) : super(key: key);
 
   @override
+  _TipState createState() => _TipState();
+}
+
+class _TipState extends State<Tip> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 15, bottom: 15, right: 15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2,
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(tip.image),
+    final userProfileService = Provider.of<UserProfileService>(context);
+
+    return StreamBuilder<UserModel>(
+      stream: userProfileService.loadProfile(widget.tip.owner),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return Container(
+            padding: EdgeInsets.only(top: 15, bottom: 15, right: 15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                      backgroundImage: NetworkImage(snapshot.data.userImage)),
+                ),
+                Expanded(
+                    flex: 8,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            snapshot.data.userName,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          SizedBox(height: 5),
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: widget.tip.image != null
+                                  ? Image.network(
+                                      widget.tip.image,
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                  : SizedBox()),
+                          SizedBox(height: 5),
+                          Text(
+                            widget.tip.content,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal, fontSize: 18),
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                timeago.format(DateTime.now().subtract(
+                                    DateTime.now().difference(
+                                        widget.tip.createdAt.toDate()))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w300, fontSize: 14),
+                              ),
+                              TipLike(recipe: widget.recipe, tip: widget.tip),
+                            ],
+                          )
+                        ]))
+              ],
             ),
-          ),
-          Expanded(
-              flex: 8,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      tip.owner,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    SizedBox(height: 5),
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          tip.image,
-                          fit: BoxFit.fitWidth,
-                        )),
-                    SizedBox(height: 5),
-                    Text(
-                      tip.content,
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal, fontSize: 18),
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateTime.now()
-                              .difference(tip.createdAt.toDate())
-                              .toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300, fontSize: 14),
-                        ),
-                        TipLike(tip: tip),
-                      ],
-                    )
-                  ]))
-        ],
-      ),
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

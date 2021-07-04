@@ -1,4 +1,3 @@
-
 import 'package:cooking_master/models/user_model.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
@@ -12,23 +11,18 @@ import 'package:provider/provider.dart';
 var editor;
 
 var editTypes = [
-  {
-    "type": "image",
-    "lowerCase": "ảnh đại diện",
-    "firstUpperCase": "Ảnh đại diện"
-  },
+  {"type": "image", "lowerCase": "avatar", "firstUpperCase": "Avatar"},
   {
     "type": "name",
-    "lowerCase": "tên hiển thị",
-    "firstUpperCase": "Tên hiển thị",
+    "lowerCase": "display name",
+    "firstUpperCase": "Display Name",
   },
-  {"type": "address", "lowerCase": "địa chỉ", "firstUpperCase": "Địa chỉ"},
-  {"type": "bio", "lowerCase": "tiểu sử", "firstUpperCase": "Tiểu sử"},
+  {"type": "address", "lowerCase": "address", "firstUpperCase": "Address"},
+  {"type": "bio", "lowerCase": "bio", "firstUpperCase": "Bio"},
 ];
 
 class EditUserProfileInformation extends StatelessWidget {
-   EditUserProfileInformation({Key key, this.type, this.user})
-      : super(key: key);
+  EditUserProfileInformation({Key key, this.type, this.user}) : super(key: key);
   final type;
   final UserModel user;
   final usernameController = TextEditingController();
@@ -42,10 +36,11 @@ class EditUserProfileInformation extends StatelessWidget {
       defaultActionText: 'Save',
     );
     if (didRequestSignOut == true) {
-     await userProfile.updateUser(user.userId, type, usernameController.text );
-     Navigator.pop(context,true);
+      await userProfile.updateUser(user.userId, type, usernameController.text);
+      Navigator.pop(context, true);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     // ignore: non_constant_identifier_names
@@ -58,22 +53,20 @@ class EditUserProfileInformation extends StatelessWidget {
     }
     return Scaffold(
       extendBody: true,
-      appBar: buildAppBar(context,
-          title: 'Chỉnh sửa ' + editor["lowerCase"],
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.done,
-                color: Colors.black,
-              ),
-              onPressed: () => _confirmUpdate(context),
-            ),
-          ], leading: CustomBackButton(
+      appBar:
+          buildAppBar(context, title: 'Edit ' + editor["lowerCase"], actions: [
+        IconButton(
+          icon: Icon(
+            Icons.done,
+            color: Colors.black,
+          ),
+          onPressed: () => _confirmUpdate(context),
+        ),
+      ], leading: CustomBackButton(
         tapEvent: () {
           Navigator.pop(context);
         },
-      )
-      ),
+      )),
       body: Container(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -88,21 +81,16 @@ class EditUserProfileInformation extends StatelessWidget {
                   child: Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // border: Border.all(),
-                      ),
+                      alignment: Alignment.center,
                       child: CircleAvatar(
-                        radius: CupertinoThumbPainter.radius,
                         backgroundImage: NetworkImage(user.userImage),
-                      )
-                  ),
+                      )),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 GestureDetector(
-                  onTap: ()  {},
+                  onTap: () {},
                   child: Hero(
                     tag: "username",
                     child: Text(
@@ -120,7 +108,7 @@ class EditUserProfileInformation extends StatelessWidget {
             TextField(
               controller: usernameController,
               decoration: InputDecoration(
-                hintText: editor["firstUpperCase"] + ' của bạn',
+                hintText: editor["firstUpperCase"],
                 counterText: "0/101",
               ),
             )

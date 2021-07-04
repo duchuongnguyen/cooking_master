@@ -1,19 +1,27 @@
 import 'package:cooking_master/constants/color_constant.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
+import 'package:cooking_master/services/recipe_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 
 class TipLike extends StatelessWidget {
+  final RecipeModel recipe;
   final TipModel tip;
 
   const TipLike({
     Key key,
+    @required this.recipe,
     @required this.tip,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _userUid = FirebaseAuth.instance.currentUser.uid;
+
     return LikeButton(
+      isLiked: tip.uidLiked.contains(_userUid),
       onTap: onLikeButtonTapped, //Update like count
       size: 20.0,
       circleColor:
@@ -31,24 +39,23 @@ class TipLike extends StatelessWidget {
       },
       likeCount: tip.uidLiked.length,
       countBuilder: (int count, bool isLiked, String text) {
-        var color = isLiked ? blue3 : Colors.grey;
-        Widget result;
-        if (count == 0) {
-          result = Text(
-            "love",
-            style: TextStyle(color: color),
-          );
-        } else
-          result = Text(
-            text,
-            style: TextStyle(color: color),
-          );
-        return result;
+        var color = isLiked ? blue4 : Colors.grey;
+        return Text(text, style: TextStyle(color: color));
       },
     );
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
+    final _userUid = FirebaseAuth.instance.currentUser.uid;
+
+    if (tip.uidLiked.contains(_userUid)) {
+      tip.uidLiked.remove(_userUid);
+    } else {
+      tip.uidLiked.add(_userUid);
+    }
+
+    RecipeService().uploadTipAndImage(recipe.id, tip, null);
+
     /// send your request here
     // final bool success= await sendRequest();
 

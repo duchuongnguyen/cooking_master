@@ -1,6 +1,5 @@
 import 'package:cooking_master/constants/color_constant.dart';
-import 'package:cooking_master/models/ingredient_model.dart';
-import 'package:cooking_master/models/preparation_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/detail_preparation_step.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/preparation_header.dart';
 import 'package:cooking_master/screens/RecipeDetail/Preparation/preparation_step_progress.dart';
@@ -9,9 +8,14 @@ import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 
 class PreparationScreen extends StatefulWidget {
   final int startIndex;
+  final RecipeModel recipe;
 
-  const PreparationScreen({Key key, @required this.startIndex})
-      : super(key: key);
+  const PreparationScreen({
+    Key key,
+    @required this.startIndex,
+    @required this.recipe,
+  }) : super(key: key);
+
   @override
   _PreparationScreenState createState() => _PreparationScreenState();
 }
@@ -19,16 +23,15 @@ class PreparationScreen extends StatefulWidget {
 class _PreparationScreenState extends State<PreparationScreen> {
   ScrollController scrollController;
 
-  ///The controller of sliding up panel
   SlidingUpPanelController panelController = SlidingUpPanelController();
   @override
   void initState() {
-    // TODO: implement initState
     _pageController = PageController(
       initialPage: widget.startIndex,
     );
+
     currentIndex = widget.startIndex;
-    totalPages = preparation.length;
+    totalPages = widget.recipe.directions.length;
     super.initState();
   }
 
@@ -46,34 +49,21 @@ class _PreparationScreenState extends State<PreparationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              SizedBox(height: 40),
               Text('Ingredients for',
                   style: TextStyle(fontSize: 22, color: Colors.white)),
               SizedBox(height: 10),
-              Text('4 servings',
+              Text('${widget.recipe.yields} servings',
                   style: TextStyle(fontSize: 20, color: Colors.white)),
               Expanded(
                 child: ListView.separated(
                     itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(ingredient[index].ingredientName,
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white)),
-                          Text(
-                              ingredient[index].ingredientAmount.toString() +
-                                  " " +
-                                  ingredient[index].ingredientUnit.toString(),
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white))
-                        ],
-                      );
+                      return Text(widget.recipe.ingredients[index],
+                          style: TextStyle(fontSize: 18, color: Colors.white));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
-                        Divider(
-                          thickness: 1.5,
-                        ),
-                    itemCount: ingredient.length),
+                        Divider(thickness: 1.5),
+                    itemCount: widget.recipe.ingredients.length),
               )
             ],
           ),
@@ -108,8 +98,13 @@ class _PreparationScreenState extends State<PreparationScreen> {
                       });
                     },
                     itemBuilder: (context, position) {
+                      if (widget.recipe.directionImage.length <= position)
+                        return DetailPreparationStep(
+                            image: null,
+                            direction: widget.recipe.directions[position]);
                       return DetailPreparationStep(
-                          preparationStep: preparation[position]);
+                          image: widget.recipe.directionImage[position],
+                          direction: widget.recipe.directions[position]);
                     },
                     itemCount: totalPages,
                     scrollDirection: Axis.horizontal,

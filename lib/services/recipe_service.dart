@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
@@ -13,7 +15,7 @@ class RecipeService {
   Future<List<RecipeModel>> getRecipes() async {
     List<RecipeModel> _recipeList = [];
 
-    await _ref.get().then((value) {
+    await _ref.limit(100).get().then((value) {
       value.docs.forEach((element) {
         RecipeModel recipe = RecipeModel.fromMap(element.data());
         _recipeList.add(recipe);
@@ -23,39 +25,113 @@ class RecipeService {
     return _recipeList;
   }
 
-  void uploadRecipeAndImage(
-      RecipeModel recipe, bool isUpdating, File localFile) async {
-    if (localFile != null) {
-      var fileExtension = path.extension(localFile.path);
+  Future<List<RecipeModel>> getRecipesByCategory(String category) async {
+    List<RecipeModel> _recipeList = [];
 
-      var uuid = Uuid().v4();
+    await _ref
+        .limit(10)
+        .where('category', isEqualTo: category)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        RecipeModel recipe = RecipeModel.fromMap(element.data());
+        _recipeList.add(recipe);
+      });
+    });
 
-      final Reference firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('recipes/images/$uuid$fileExtension');
-
-      await firebaseStorageRef.putFile(localFile);
-
-      String url = await firebaseStorageRef.getDownloadURL();
-
-      _uploadRecipe(recipe, isUpdating, imageUrl: url);
-    } else {
-      _uploadRecipe(recipe, isUpdating);
-    }
+    return _recipeList;
   }
 
-  void _uploadRecipe(RecipeModel recipe, bool isUpdating,
-      {String imageUrl}) async {
-    if (imageUrl != null) {
-      recipe.image = imageUrl;
+  Future<RecipeModel> getRecipe(String id) async {
+    RecipeModel _recipe;
+    await _ref.where('id', isEqualTo: id).get().then((value) {
+      if (value.docs.length > 0)
+        _recipe = RecipeModel.fromMap(value.docs.first.data());
+    });
+    return _recipe;
+  }
+
+  Future<List<RecipeModel>> getRecipesByOwner(String owner) async {
+    List<RecipeModel> _recipeList = [];
+
+    await _ref.where('owner', isEqualTo: owner).limit(20).get().then((value) {
+      value.docs.forEach((element) {
+        RecipeModel recipe = RecipeModel.fromMap(element.data());
+        _recipeList.add(recipe);
+      });
+    });
+
+    return _recipeList;
+  }
+
+  Future deleteRecipe(RecipeModel recipe) async {
+    await _ref.doc(recipe.id).collection('tips').doc().delete();
+    await _ref
+        .doc(recipe.id)
+        .delete()
+        .then((value) => print('Document successfully deleted!'))
+        .onError((error, stackTrace) => "Error removing document: $error");
+  }
+
+  Future<void> uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
+      File recipeImage, List<File> directionImage) async {
+    if (recipeImage != null) {
+      final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+
+      try {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(recipeImage.path,
+              resourceType: CloudinaryResourceType.Image),
+        );
+        print(response.secureUrl);
+        recipe.image = response.secureUrl;
+      } catch (e) {
+        recipe.image =
+            "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
+      }
+    } else {
+      recipe.image =
+          "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
     }
 
+    if (directionImage != null) {
+      List<String> listImage = [];
+
+      directionImage.forEach((element) async {
+        if (element != null) {
+          final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+
+          try {
+            CloudinaryResponse response = await cloudinary.uploadFile(
+              CloudinaryFile.fromFile(recipeImage.path,
+                  resourceType: CloudinaryResourceType.Image),
+            );
+            print(response.secureUrl);
+            listImage.add(response.secureUrl);
+          } catch (e) {
+            listImage.add(
+                "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");
+          }
+        } else {
+          listImage.add(
+              "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");
+        }
+      });
+    }
+
+    _uploadRecipe(recipe, isUpdating);
+  }
+
+  Future<void> _uploadRecipe(RecipeModel recipe, bool isUpdating) async {
     if (isUpdating) {
       recipe.updatedAt = Timestamp.now();
 
       await _ref.doc(recipe.id).update(recipe.toMap());
     } else {
+      final _userUid = FirebaseAuth.instance.currentUser.uid;
+
       recipe.createdAt = Timestamp.now();
+      recipe.owner = _userUid;
 
       DocumentReference documentRef = await _ref.add(recipe.toMap());
 
@@ -76,42 +152,58 @@ class RecipeService {
       });
     });
 
-    _listTip.sort((a, b) => b.uidLiked.length.compareTo(a.uidLiked.length));
+    _listTip.sort((a, b) {
+      int cmp = b.uidLiked.length.compareTo(a.uidLiked.length);
+      if (cmp != 0)
+        return cmp;
+      else {
+        return b.createdAt.compareTo(a.createdAt);
+      }
+    });
 
     return _listTip;
   }
 
-  uploadTipAndImage(RecipeModel recipe, TipModel tip, File localFile) async {
+  uploadTipAndImage(String idRecipe, TipModel tip, File localFile) async {
     if (localFile != null) {
-      var fileExtension = path.extension(localFile.path);
+      final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
 
-      var uuid = Uuid().v4();
-
-      final Reference firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('recipes/${recipe.id}/tips/$uuid$fileExtension');
-
-      await firebaseStorageRef.putFile(localFile);
-
-      String url = await firebaseStorageRef.getDownloadURL();
-
-      _uploadTip(tip, imageUrl: url);
+      try {
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(localFile.path,
+              resourceType: CloudinaryResourceType.Image),
+        );
+        print(response.secureUrl);
+        _uploadTip(idRecipe, tip, imageUrl: response.secureUrl);
+      } catch (er) {
+        _uploadTip(idRecipe, tip);
+      }
     } else {
-      _uploadTip(tip);
+      _uploadTip(idRecipe, tip);
     }
   }
 
-  void _uploadTip(TipModel tip, {String imageUrl}) async {
+  void _uploadTip(String idRecipe, TipModel tip, {String imageUrl}) async {
+    final _tipRef = _ref.doc(idRecipe).collection("tips");
+
     if (imageUrl != null) {
       tip.image = imageUrl;
     }
 
-    tip.createdAt = Timestamp.now();
+    final _userUid = FirebaseAuth.instance.currentUser.uid;
 
-    DocumentReference documentRef = await _ref.add(tip.toMap());
+    if (tip.id == null) {
+      tip.owner = _userUid;
+      tip.createdAt = Timestamp.now();
 
-    tip.id = documentRef.id;
+      DocumentReference documentRef = await _tipRef.add(tip.toMap());
 
-    documentRef.set(tip.toMap());
+      tip.id = documentRef.id;
+
+      documentRef.set(tip.toMap());
+    } else {
+      DocumentReference documentRef = _tipRef.doc(tip.id);
+      documentRef.update(tip.toMap());
+    }
   }
 }
