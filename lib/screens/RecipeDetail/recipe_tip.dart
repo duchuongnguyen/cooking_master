@@ -23,8 +23,8 @@ class RecipeTip extends StatefulWidget {
 class _RecipeTipState extends State<RecipeTip> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<TipModel>>(
-      future: RecipeService().getTips(widget.recipe.id),
+    return StreamBuilder<List<TipModel>>(
+      stream: Stream.fromFuture(RecipeService().getTips(widget.recipe.id)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.isNotEmpty) {
@@ -95,10 +95,8 @@ class _RecipeTipState extends State<RecipeTip> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AllTipsScreen(
-                                      recipe: widget.recipe,
-                                      listTip: snapshot.data,
-                                    )));
+                                builder: (context) =>
+                                    AllTipsScreen(recipe: widget.recipe)));
                       },
                       child: Text(
                         "See all tips and photos >",
@@ -171,10 +169,8 @@ class _RecipeTipState extends State<RecipeTip> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AllTipsScreen(
-                                      recipe: widget.recipe,
-                                      listTip: snapshot.data,
-                                    )));
+                                builder: (context) =>
+                                    AllTipsScreen(recipe: widget.recipe)));
                       },
                       child: Text(
                         "See all tips and photos >",
