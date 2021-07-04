@@ -7,10 +7,11 @@ class NotificationModel {
   String content;
   Timestamp createdAt;
   bool seen;
-
+  String idRecipe;
   NotificationModel();
 
   NotificationModel.fromMap(Map data) {
+    idRecipe = data['idrecipe'] ?? '';
     id = data['id'];
     owner = data['owner'];
     receiver = data['receiver'];
@@ -27,6 +28,7 @@ class NotificationModel {
       'content': content,
       'createdAt': createdAt,
       'seen': seen,
+      'idrecipe': idRecipe,
     };
   }
 }

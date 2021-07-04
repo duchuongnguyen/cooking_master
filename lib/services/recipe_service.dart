@@ -149,7 +149,11 @@ class RecipeService {
 
       recipe.createdAt = Timestamp.now();
       recipe.owner = _userUid;
+      DocumentReference documentRef = await _ref.add(recipe.toMap());
 
+      recipe.id = documentRef.id;
+
+      documentRef.set(recipe.toMap());
       UserModel user =
           await UserProfileService().loadProfileFuture(recipe.owner);
 
@@ -160,15 +164,9 @@ class RecipeService {
         notification.owner = recipe.owner;
         notification.receiver = element;
         notification.seen = false;
-
+        notification.idRecipe = recipe.id;
         await NotificationService().pushNotification(notification);
       });
-
-      DocumentReference documentRef = await _ref.add(recipe.toMap());
-
-      recipe.id = documentRef.id;
-
-      documentRef.set(recipe.toMap());
     }
   }
 

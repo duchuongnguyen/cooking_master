@@ -1,8 +1,11 @@
 import 'package:cooking_master/models/notification_model.dart';
+import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/screens/RecipeDetail/recipe_detail_screen.dart';
 import 'package:cooking_master/screens/UserProfileWatch/user_profile_watch_screen.dart';
 import 'package:cooking_master/screens/notification_screen/bottomDialog.dart';
 import 'package:cooking_master/services/notification_service.dart';
+import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -127,33 +130,54 @@ class _ListNotificationState extends State<_ListNotification> {
                                                             uid: user
                                                                 .data.userId)));
                                         }),
-                                    title: RichText(
-                                        text: TextSpan(
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                            children: [
-                                          TextSpan(
-                                              text: user.data.userName,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: " " +
-                                                  notification
-                                                      .data[index].content),
-                                          TextSpan(
-                                              text: " " +
-                                                  timeago.format(DateTime.now()
-                                                      .subtract(DateTime.now()
-                                                          .difference(
-                                                              notification
-                                                                  .data[index]
-                                                                  .createdAt
-                                                                  .toDate()))) +
-                                                  " ",
-                                              style: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.6))),
-                                        ])),
+                                    title: GestureDetector(
+                                        onTap: () async {
+                                          if (notification
+                                                  .data[index].idRecipe !=
+                                              '') {
+                                            RecipeModel recipe =
+                                                await RecipeService().getRecipe(
+                                                    notification
+                                                        .data[index].idRecipe);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RecipeDetailScreen(
+                                                            recipe: recipe)));
+                                          }
+                                        },
+                                        child: RichText(
+                                            text: TextSpan(
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                                children: [
+                                              TextSpan(
+                                                  text: user.data.userName,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              TextSpan(
+                                                  text: " " +
+                                                      notification
+                                                          .data[index].content),
+                                              TextSpan(
+                                                  text: " " +
+                                                      timeago.format(DateTime
+                                                              .now()
+                                                          .subtract(DateTime
+                                                                  .now()
+                                                              .difference(
+                                                                  notification
+                                                                      .data[
+                                                                          index]
+                                                                      .createdAt
+                                                                      .toDate()))) +
+                                                      " ",
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.6))),
+                                            ]))),
                                     trailing: notification
                                                 .data[index].content !=
                                             'started following you.'

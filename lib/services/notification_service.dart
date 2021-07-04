@@ -44,8 +44,9 @@ class NotificationService {
     var query = _ref
         .where('owner', isEqualTo: notification.owner)
         .where('receiver', isEqualTo: notification.receiver)
-        .where('content', isEqualTo: notification.content);
-
+        .where('content', isEqualTo: notification.content)
+        .where('id', isEqualTo: notification.id);
+    {}
     query.get().then((value) {
       value.docs.forEach((element) {
         element.reference.delete();
