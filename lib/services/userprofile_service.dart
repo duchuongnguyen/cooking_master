@@ -34,7 +34,7 @@ class UserProfileService {
 
     NotificationModel notification = NotificationModel();
 
-    notification.content = "started following you.";
+    notification.content = "started following you.\n";
     notification.owner = idFollower;
     notification.receiver = idFollowing;
 
@@ -54,8 +54,7 @@ class UserProfileService {
 
     NotificationModel notification = NotificationModel();
 
-    notification.content = "started following you.";
-    notification.createdAt = Timestamp.now();
+    notification.content = "started following you.\n";
     notification.owner = idFollower;
     notification.receiver = idFollowing;
     notification.seen = false;

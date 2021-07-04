@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:cooking_master/models/notification_model.dart';
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/models/tip_model.dart';
+import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/services/notification_service.dart';
+import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as path;
-import 'package:uuid/uuid.dart';
 
 class RecipeService {
   final _ref = FirebaseFirestore.instance.collection("recipes");
@@ -43,12 +44,10 @@ class RecipeService {
   }
 
   Future<RecipeModel> getRecipe(String id) async {
-    RecipeModel _recipe;
-    await _ref.where('id', isEqualTo: id).get().then((value) {
-      if (value.docs.length > 0)
-        _recipe = RecipeModel.fromMap(value.docs.first.data());
-    });
-    return _recipe;
+    return await _ref
+        .doc(id)
+        .get()
+        .then((value) => RecipeModel.fromMap(value.data()));
   }
 
   Future<List<RecipeModel>> getRecipesByOwner(String owner) async {
@@ -75,48 +74,105 @@ class RecipeService {
 
   Future<void> uploadRecipeAndImage(RecipeModel recipe, bool isUpdating,
       File recipeImage, List<File> directionImage) async {
-    if (recipeImage != null) {
-      final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+    if (isUpdating) {
+      if (recipeImage != null) {
+        final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
 
-      try {
-        CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(recipeImage.path,
-              resourceType: CloudinaryResourceType.Image),
-        );
-        print(response.secureUrl);
-        recipe.image = response.secureUrl;
-      } catch (e) {
+        try {
+          CloudinaryResponse response = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(recipeImage.path,
+                resourceType: CloudinaryResourceType.Image),
+          );
+          recipe.image = response.secureUrl;
+        } catch (e) {
+          recipe.image =
+              "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
+        }
+      }
+    } else {
+      if (recipeImage != null) {
+        final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
+
+        try {
+          CloudinaryResponse response = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(recipeImage.path,
+                resourceType: CloudinaryResourceType.Image),
+          );
+          recipe.image = response.secureUrl;
+        } catch (e) {
+          recipe.image =
+              "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
+        }
+      } else {
         recipe.image =
             "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
       }
-    } else {
-      recipe.image =
-          "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_recipe.jpg?alt=media&token=02ab9c07-a86f-48a2-be90-e8edf2b799b8";
     }
+    if (isUpdating) {
+      if (recipe.directionImage.isEmpty) {
+        if (directionImage != null) {
+          List<String> listImage = [];
+          for (var file in directionImage) {
+            if (file != null) {
+              final cloudinary =
+                  CloudinaryPublic('huong', 'wedding', cache: true);
 
-    if (directionImage != null) {
-      List<String> listImage = [];
-
-      directionImage.forEach((element) async {
-        if (element != null) {
-          final cloudinary = CloudinaryPublic('huong', 'wedding', cache: true);
-
-          try {
-            CloudinaryResponse response = await cloudinary.uploadFile(
-              CloudinaryFile.fromFile(recipeImage.path,
-                  resourceType: CloudinaryResourceType.Image),
-            );
-            print(response.secureUrl);
-            listImage.add(response.secureUrl);
-          } catch (e) {
-            listImage.add(
-                "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");
+              await cloudinary
+                  .uploadFile(CloudinaryFile.fromFile(file.path,
+                      resourceType: CloudinaryResourceType.Image))
+                  .then((value) {
+                listImage.add(value.secureUrl);
+              });
+            } else {
+              listImage.add(null);
+            }
           }
-        } else {
-          listImage.add(
-              "https://firebasestorage.googleapis.com/v0/b/cooking-master-5dc52.appspot.com/o/default_direction.jpg?alt=media&token=34ae8d25-9d46-477c-bc64-06076494980e");
+          recipe.directionImage = listImage;
         }
-      });
+      } else {
+        if (directionImage != null) {
+          List<String> listImage = [];
+          for (int i = 0; i < directionImage.length; i++) {
+            if (directionImage[i] != null) {
+              final cloudinary =
+                  CloudinaryPublic('huong', 'wedding', cache: true);
+
+              await cloudinary
+                  .uploadFile(CloudinaryFile.fromFile(directionImage[i].path,
+                      resourceType: CloudinaryResourceType.Image))
+                  .then((value) {
+                listImage.add(value.secureUrl);
+              });
+            } else if (recipe.directionImage[i] != null &&
+                directionImage[i] == null) {
+              listImage.add(recipe.directionImage[i]);
+            } else {
+              listImage.add(null);
+            }
+          }
+          recipe.directionImage = listImage;
+        }
+      }
+    } else {
+      if (directionImage != null) {
+        List<String> listImage = [];
+        for (var file in directionImage) {
+          if (file != null) {
+            final cloudinary =
+                CloudinaryPublic('huong', 'wedding', cache: true);
+
+            await cloudinary
+                .uploadFile(CloudinaryFile.fromFile(file.path,
+                    resourceType: CloudinaryResourceType.Image))
+                .then((value) {
+              listImage.add(value.secureUrl);
+            });
+          } else {
+            listImage.add(null);
+          }
+        }
+        recipe.directionImage = listImage;
+      }
     }
 
     _uploadRecipe(recipe, isUpdating);
@@ -132,12 +188,24 @@ class RecipeService {
 
       recipe.createdAt = Timestamp.now();
       recipe.owner = _userUid;
-
       DocumentReference documentRef = await _ref.add(recipe.toMap());
 
       recipe.id = documentRef.id;
 
       documentRef.set(recipe.toMap());
+      UserModel user =
+          await UserProfileService().loadProfileFuture(recipe.owner);
+
+      user.userFollower.forEach((element) async {
+        NotificationModel notification = NotificationModel();
+
+        notification.content = "just uploaded a new recipe.\n";
+        notification.owner = recipe.owner;
+        notification.receiver = element;
+        notification.seen = false;
+        notification.idRecipe = recipe.id;
+        await NotificationService().pushNotification(notification);
+      });
     }
   }
 

@@ -7,7 +7,6 @@ import 'package:cooking_master/screens/RecipeDetail/all_tips_screen.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RecipeTip extends StatefulWidget {
   final RecipeModel recipe;
@@ -24,12 +23,8 @@ class RecipeTip extends StatefulWidget {
 class _RecipeTipState extends State<RecipeTip> {
   @override
   Widget build(BuildContext context) {
-    final recipeService = Provider.of<RecipeService>(context, listen: false);
-    final userprofileService =
-        Provider.of<UserProfileService>(context, listen: false);
-
-    return FutureBuilder<List<TipModel>>(
-      future: recipeService.getTips(widget.recipe.id),
+    return StreamBuilder<List<TipModel>>(
+      stream: Stream.fromFuture(RecipeService().getTips(widget.recipe.id)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data.isNotEmpty) {
@@ -55,7 +50,7 @@ class _RecipeTipState extends State<RecipeTip> {
                               ]),
                         )),
                     StreamBuilder<UserModel>(
-                        stream: userprofileService
+                        stream: UserProfileService()
                             .loadProfile(snapshot.data[0].owner),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -100,10 +95,8 @@ class _RecipeTipState extends State<RecipeTip> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AllTipsScreen(
-                                      recipe: widget.recipe,
-                                      listTip: snapshot.data,
-                                    )));
+                                builder: (context) =>
+                                    AllTipsScreen(recipe: widget.recipe)));
                       },
                       child: Text(
                         "See all tips and photos >",
@@ -176,10 +169,8 @@ class _RecipeTipState extends State<RecipeTip> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AllTipsScreen(
-                                      recipe: widget.recipe,
-                                      listTip: snapshot.data,
-                                    )));
+                                builder: (context) =>
+                                    AllTipsScreen(recipe: widget.recipe)));
                       },
                       child: Text(
                         "See all tips and photos >",

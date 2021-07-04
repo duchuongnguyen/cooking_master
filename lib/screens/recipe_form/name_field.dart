@@ -1,7 +1,6 @@
 import 'package:cooking_master/screens/recipe_form/recipe_form_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class NameField extends StatelessWidget {
   final RecipeFormScreenState parent;

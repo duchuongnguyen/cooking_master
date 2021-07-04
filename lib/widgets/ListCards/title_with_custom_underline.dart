@@ -18,7 +18,7 @@ class TitleWithCustomUnderline extends StatelessWidget {
       onTap: action != null
           ? () {
               Provider.of<SavedRecipeProvider>(context, listen: false)
-                  .SetCurCategory(text);
+                  .setCurCategory(text);
               Navigator.push(
                   context,
                   MaterialPageRoute(

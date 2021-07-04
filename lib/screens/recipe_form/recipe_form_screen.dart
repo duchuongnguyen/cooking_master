@@ -1,14 +1,13 @@
 import 'dart:io';
-
 import 'package:cooking_master/models/recipe_model.dart';
 import 'package:cooking_master/screens/recipe_form/category_field.dart';
 import 'package:cooking_master/screens/recipe_form/description_field.dart';
 import 'package:cooking_master/screens/recipe_form/name_field.dart';
 import 'package:cooking_master/screens/recipe_form/recipe_image.dart';
+import 'package:cooking_master/screens/recipe_form/yields_field.dart';
 import 'package:cooking_master/services/recipe_service.dart';
 import 'package:cooking_master/widgets/CustomBackButton.dart';
 import 'package:cooking_master/widgets/appbar.dart';
-import 'package:cooking_master/widgets/show_alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -33,6 +32,7 @@ class RecipeFormScreen extends StatefulWidget {
 class RecipeFormScreenState extends State<RecipeFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool isLoading = false;
   RecipeModel currentRecipe;
   String imageUrl;
   File imageFile;
@@ -40,6 +40,8 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
   var _directionWidgets = <Widget>[];
   var _directionImageUrls = <String>[];
   var _directionImageFiles = <File>[];
+  var _ingredientControllers = <TextEditingController>[];
+  var _directionControllers = <TextEditingController>[];
 
   @override
   void initState() {
@@ -55,77 +57,26 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
     imageUrl = currentRecipe.image;
 
     Future.delayed(Duration.zero, () {
-      currentRecipe.ingredients.forEach((element) {
-        _ingredientWidgets.add(_buildIngredientField());
-      });
+      for (int i = 0; i < currentRecipe.ingredients.length; i++) {
+        _ingredientControllers
+            .add(TextEditingController(text: currentRecipe.ingredients[i]));
+        _ingredientWidgets.add(_buildIngredientField(i));
+      }
+
+      if (_directionImageUrls.isEmpty) {
+        _directionImageUrls =
+            List.filled(currentRecipe.directions.length, null, growable: true);
+      }
 
       for (int i = 0; i < currentRecipe.directions.length; i++) {
+        _directionControllers
+            .add(TextEditingController(text: currentRecipe.directions[i]));
+        _directionImageFiles.add(null);
         _directionWidgets.add(_buildDirectionField(i));
       }
 
       setState(() {});
     });
-  }
-
-  Widget _buildYieldsField() {
-    return Row(
-      children: [
-        SizedBox(
-          width: 16,
-        ),
-        Expanded(
-            flex: 1,
-            child: Text(
-              "Serves",
-              style: GoogleFonts.roboto(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.5,
-                  height: 1.5),
-            )),
-        Expanded(
-          flex: 1,
-          child: Container(
-            margin: EdgeInsets.all(12),
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: '2 people',
-                fillColor: Colors.blue[100],
-                filled: true,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    const Radius.circular(15.0),
-                  ),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              initialValue: currentRecipe.yields == null
-                  ? ''
-                  : currentRecipe.yields.toString(),
-              keyboardType: TextInputType.number,
-              style: TextStyle(fontSize: 18),
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return 'Yields is required';
-                }
-
-                try {
-                  int.parse(value);
-                } on FormatException {
-                  return 'Only number';
-                }
-
-                return null;
-              },
-              onSaved: (String value) {
-                currentRecipe.yields = int.parse(value);
-              },
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildPrepTimeField() {
@@ -252,7 +203,7 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
     );
   }
 
-  Widget _buildIngredientField() {
+  Widget _buildIngredientField(int index) {
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
@@ -262,11 +213,7 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.73,
             child: TextFormField(
-              initialValue: currentRecipe.ingredients
-                      .asMap()
-                      .containsKey(_ingredientWidgets.length)
-                  ? currentRecipe.ingredients[_ingredientWidgets.length]
-                  : '',
+              controller: _ingredientControllers[index],
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 hintText: '200ml milk',
@@ -286,9 +233,6 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                 }
                 return null;
               },
-              onSaved: (String value) {
-                currentRecipe.ingredients.add(value);
-              },
             ),
           ),
           SizedBox(width: 5),
@@ -296,24 +240,54 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
             icon: Icon(Icons.more_horiz),
             onSelected: (String result) {
               switch (result) {
-                case "delete":
+                case 'delete':
                   setState(() {
-                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    _ingredientWidgets.removeAt(index);
+                    _ingredientControllers.removeAt(index);
+
+                    for (int i = index; i < _ingredientWidgets.length; i++) {
+                      _ingredientWidgets[i] = _buildIngredientField(i);
+                    }
                   });
                   break;
-                case "add":
+                case 'add_previous':
                   setState(() {
-                    //currentRecipe.directions.removeAt(_directionWidgets.length-1);
+                    _ingredientControllers.insert(
+                        index, TextEditingController());
+                    _ingredientWidgets.insert(
+                        index, _buildIngredientField(index));
+
+                    for (int i = index + 1;
+                        i < _ingredientWidgets.length;
+                        i++) {
+                      _ingredientWidgets[i] = _buildIngredientField(i);
+                    }
                   });
                   break;
-                default:
+                case 'add_next':
+                  setState(() {
+                    _ingredientControllers.insert(
+                        index + 1, TextEditingController());
+                    _ingredientWidgets.insert(
+                        index + 1, _buildIngredientField(index + 1));
+
+                    for (int i = index + 2;
+                        i < _ingredientWidgets.length;
+                        i++) {
+                      _ingredientWidgets[i] = _buildIngredientField(i);
+                    }
+                  });
+                  break;
               }
-              setState(() {});
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                value: "add",
-                child: Text('Add ingredient'),
+                value: "add_previous",
+                child: Text('Add previous ingredient'),
+              ),
+              const PopupMenuItem<String>(
+                value: "add_next",
+                child: Text('Add next ingredient'),
               ),
               const PopupMenuItem<String>(
                 value: "delete",
@@ -407,14 +381,11 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.73,
                 child: TextFormField(
+                  controller: _directionControllers[index],
+                  autofocus: false,
                   minLines: 2,
                   maxLines: 3,
                   keyboardType: TextInputType.text,
-                  initialValue: currentRecipe.directions
-                          .asMap()
-                          .containsKey(_directionWidgets.length)
-                      ? currentRecipe.directions[_directionWidgets.length]
-                      : '',
                   decoration: InputDecoration(
                     hintText: 'Mix the flour and water until they thicken',
                     filled: true,
@@ -432,263 +403,109 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                     }
                     return null;
                   },
-                  onSaved: (String value) {
-                    currentRecipe.directions.add(value);
-                  },
                 ),
               ),
               SizedBox(height: 5),
               widget.isUpdating
-                  ? (_directionImageFiles.length <= index)
-                      ? (_directionImageUrls.length <= index)
-                          ? GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (BuildContext bc) {
-                                    return SafeArea(
-                                      child: Container(
-                                        child: new Wrap(
-                                          children: <Widget>[
-                                            new ListTile(
-                                                leading: new Icon(
-                                                    Icons.photo_library),
-                                                title:
-                                                    new Text('Photo Library'),
-                                                onTap: () {
-                                                  _imgStepFromGallery();
-                                                  Navigator.of(context).pop();
-                                                }),
-                                            new ListTile(
-                                              leading:
-                                                  new Icon(Icons.photo_camera),
-                                              title: new Text('Camera'),
-                                              onTap: () {
-                                                _imgStepFromCamera();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
+                  ? GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext bc) {
+                            return SafeArea(
                               child: Container(
-                                width: 100,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(8)),
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: Colors.white,
+                                child: new Wrap(
+                                  children: <Widget>[
+                                    new ListTile(
+                                        leading: new Icon(Icons.photo_library),
+                                        title: new Text('Photo Library'),
+                                        onTap: () {
+                                          _imgStepFromGallery();
+                                          Navigator.of(context).pop();
+                                        }),
+                                    new ListTile(
+                                      leading: new Icon(Icons.photo_camera),
+                                      title: new Text('Camera'),
+                                      onTap: () {
+                                        _imgStepFromCamera();
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (BuildContext bc) {
-                                    return SafeArea(
-                                      child: Container(
-                                        child: new Wrap(
-                                          children: <Widget>[
-                                            new ListTile(
-                                                leading: new Icon(
-                                                    Icons.photo_library),
-                                                title: new Text(
-                                                    'Change image from Library'),
-                                                onTap: () {
-                                                  _imgStepFromGallery();
-                                                  Navigator.of(context).pop();
-                                                }),
-                                            new ListTile(
-                                              leading:
-                                                  new Icon(Icons.photo_camera),
-                                              title: new Text(
-                                                  'Change image from Camera'),
-                                              onTap: () {
-                                                _imgStepFromCamera();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            new ListTile(
-                                              leading: new Icon(
-                                                  Icons.delete_outline),
-                                              title: new Text('Delete image'),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 80,
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(8)),
+                        alignment: Alignment.center,
+                        child: _directionImageFiles[index] != null
+                            ? Image.file(_directionImageFiles[index],
+                                fit: BoxFit.fitWidth)
+                            : _directionImageUrls[index] != null
+                                ? Image.network(_directionImageUrls[index],
+                                    fit: BoxFit.fitWidth)
+                                : Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Colors.white,
+                                  ),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext bc) {
+                            return SafeArea(
                               child: Container(
-                                  width: 100,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  alignment: Alignment.center,
-                                  child: Image.network(
-                                      _directionImageUrls[index],
-                                      fit: BoxFit.fitWidth)),
-                            )
-                      : GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext bc) {
-                                return SafeArea(
-                                  child: Container(
-                                    child: new Wrap(
-                                      children: <Widget>[
-                                        new ListTile(
-                                            leading:
-                                                new Icon(Icons.photo_library),
-                                            title: new Text(
-                                                'Change image from Library'),
-                                            onTap: () {
-                                              _imgStepFromGallery();
-                                              Navigator.of(context).pop();
-                                            }),
-                                        new ListTile(
-                                          leading: new Icon(Icons.photo_camera),
-                                          title: new Text(
-                                              'Change image from Camera'),
-                                          onTap: () {
-                                            _imgStepFromCamera();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        new ListTile(
-                                          leading:
-                                              new Icon(Icons.delete_outline),
-                                          title: new Text('Delete image'),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
+                                child: new Wrap(
+                                  children: <Widget>[
+                                    new ListTile(
+                                        leading: new Icon(Icons.photo_library),
+                                        title: new Text('Photo Library'),
+                                        onTap: () {
+                                          _imgStepFromGallery();
+                                          Navigator.of(context).pop();
+                                        }),
+                                    new ListTile(
+                                      leading: new Icon(Icons.photo_camera),
+                                      title: new Text('Camera'),
+                                      onTap: () {
+                                        _imgStepFromCamera();
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
-                                  ),
-                                );
-                              },
+                                  ],
+                                ),
+                              ),
                             );
                           },
-                          child: Container(
-                              width: 100,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8)),
-                              alignment: Alignment.center,
-                              child: Image.file(_directionImageFiles[index],
-                                  key: UniqueKey(), fit: BoxFit.fitWidth)),
-                        )
-                  : (_directionImageFiles.length <= index)
-                      ? GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext bc) {
-                                return SafeArea(
-                                  child: Container(
-                                    child: new Wrap(
-                                      children: <Widget>[
-                                        new ListTile(
-                                            leading:
-                                                new Icon(Icons.photo_library),
-                                            title: new Text('Photo Library'),
-                                            onTap: () {
-                                              _imgStepFromGallery();
-                                              Navigator.of(context).pop();
-                                            }),
-                                        new ListTile(
-                                          leading: new Icon(Icons.photo_camera),
-                                          title: new Text('Camera'),
-                                          onTap: () {
-                                            _imgStepFromCamera();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 80,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(8)),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext bc) {
-                                return SafeArea(
-                                  child: Container(
-                                    child: new Wrap(
-                                      children: <Widget>[
-                                        new ListTile(
-                                            leading:
-                                                new Icon(Icons.photo_library),
-                                            title: new Text(
-                                                'Change image from Library'),
-                                            onTap: () {
-                                              _imgStepFromGallery();
-                                              Navigator.of(context).pop();
-                                            }),
-                                        new ListTile(
-                                          leading: new Icon(Icons.photo_camera),
-                                          title: new Text(
-                                              'Change image from Camera'),
-                                          onTap: () {
-                                            _imgStepFromCamera();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        new ListTile(
-                                          leading:
-                                              new Icon(Icons.delete_outline),
-                                          title: new Text('Delete image'),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                              width: 100,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8)),
-                              alignment: Alignment.center,
-                              child: Image.file(_directionImageFiles[index],
-                                  key: UniqueKey(), fit: BoxFit.fitWidth)),
-                        ),
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 80,
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(8)),
+                        alignment: Alignment.center,
+                        child: _directionImageFiles[index] != null
+                            ? Image.file(
+                                _directionImageFiles[index],
+                                fit: BoxFit.fitWidth,
+                              )
+                            : Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.white,
+                              ),
+                      ),
+                    )
             ],
           ),
           SizedBox(width: 5),
@@ -696,24 +513,56 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
             icon: Icon(Icons.more_horiz),
             onSelected: (String result) {
               switch (result) {
-                case "delete":
+                case 'delete':
                   setState(() {
                     _directionWidgets.removeAt(index);
+                    _directionControllers.removeAt(index);
+                    _directionImageUrls.removeAt(index);
+                    _directionImageFiles.removeAt(index);
+
+                    for (int i = index; i < _directionWidgets.length; i++) {
+                      _directionWidgets[i] = _buildDirectionField(i);
+                    }
                   });
                   break;
-                case "add":
+                case 'add_previous':
                   setState(() {
-                    _directionWidgets.add(_buildDirectionField(index + 1));
+                    _directionControllers.insert(
+                        index, TextEditingController());
+                    _directionImageFiles.insert(index, null);
+                    _directionImageUrls.insert(index, null);
+                    _directionWidgets.insert(
+                        index, _buildDirectionField(index));
+
+                    for (int i = index + 1; i < _directionWidgets.length; i++) {
+                      _directionWidgets[i] = _buildDirectionField(i);
+                    }
                   });
                   break;
-                default:
+                case 'add_next':
+                  setState(() {
+                    _directionControllers.insert(
+                        index + 1, TextEditingController());
+                    _directionImageFiles.insert(index + 1, null);
+                    _directionImageUrls.insert(index + 1, null);
+                    _directionWidgets.insert(
+                        index + 1, _buildDirectionField(index + 1));
+
+                    for (int i = index + 2; i < _directionWidgets.length; i++) {
+                      _directionWidgets[i] = _buildDirectionField(i);
+                    }
+                  });
+                  break;
               }
-              setState(() {});
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                value: "add",
-                child: Text('Add step'),
+                value: "add_previous",
+                child: Text('Add previous step'),
+              ),
+              const PopupMenuItem<String>(
+                value: "add_next",
+                child: Text('Add next step'),
               ),
               const PopupMenuItem<String>(
                 value: "delete",
@@ -733,8 +582,58 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
 
     _formKey.currentState.save();
 
+    setState(() {
+      isLoading = true;
+    });
+
+    
+    currentRecipe.directionImage = _directionImageUrls;
+    print(_directionImageUrls);
+    currentRecipe.ingredients.clear();
+    currentRecipe.directions.clear();
+
+    _ingredientControllers.forEach((element) {
+      currentRecipe.ingredients.add(element.text);
+    });
+
+    _directionControllers.forEach((element) {
+      currentRecipe.directions.add(element.text);
+    });
+
     await RecipeService().uploadRecipeAndImage(
         currentRecipe, widget.isUpdating, imageFile, _directionImageFiles);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (widget.isUpdating) {
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('All Done'),
+                content: Text('Update recipe successfully'),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('OK'))
+                ],
+              ));
+    } else {
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('All Done'),
+                content: Text('Upload recipe successfully'),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('OK'))
+                ],
+              ));
+    }
+
+    Navigator.pop(context);
 
     print("name: ${currentRecipe.name}");
     print("description: ${currentRecipe.description}");
@@ -750,6 +649,9 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     return Scaffold(
       appBar: buildAppBar(
         context,
@@ -765,18 +667,6 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
               ),
               onPressed: () async {
                 await _saveRecipe(context);
-                await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text('All Done'),
-                          content: Text('Upload recipe successfully'),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('OK'))
-                          ],
-                        ));
-                Navigator.pop(context);
               })
         ],
       ),
@@ -791,7 +681,7 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
               NameField(parent: this),
               DesciptionField(parent: this),
               CategoryField(parent: this),
-              _buildYieldsField(),
+              YieldsField(parent: this),
               _buildPrepTimeField(),
               _buildCookTimeField(),
               Divider(thickness: 5, color: Colors.blue[80]),
@@ -831,8 +721,16 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                onPressed: () => setState(
-                    () => _ingredientWidgets.add(_buildIngredientField())),
+                onPressed: () => setState(() {
+                  _ingredientControllers.add(TextEditingController());
+
+                  if (_ingredientWidgets.isEmpty) {
+                    _ingredientWidgets.add(_buildIngredientField(0));
+                  } else {
+                    _ingredientWidgets
+                        .add(_buildIngredientField(_ingredientWidgets.length));
+                  }
+                }),
               ),
               Divider(thickness: 5, color: Colors.blue[80]),
               Container(
@@ -871,8 +769,17 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                       letterSpacing: 0.5,
                       height: 1.5),
                 ),
-                onPressed: () => setState(() => _directionWidgets
-                    .add(_buildDirectionField(_directionWidgets.length))),
+                onPressed: () => setState(() {
+                  _directionControllers.add(TextEditingController());
+                  _directionImageFiles.add(null);
+                  _directionImageUrls.add(null);
+
+                  if (_directionWidgets.isEmpty) {
+                    _directionWidgets.add(_buildDirectionField(0));
+                  } else
+                    _directionWidgets
+                        .add(_buildDirectionField(_directionWidgets.length));
+                }),
               ),
               SizedBox(height: 16),
             ],

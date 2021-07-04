@@ -33,7 +33,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            margin: EdgeInsets.only(top:20, left: 10),
+            margin: EdgeInsets.only(top: 20, left: 10),
             child: Text(
               "Cancel",
               style: TextStyle(
@@ -54,7 +54,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
                 TipModel tip = TipModel();
                 tip.content = controller.text;
                 tip.image = null;
-                tip.uidLiked = new List<String>();
+                tip.uidLiked = [];
                 RecipeService().uploadTipAndImage(recipe.id, tip, _imageFile);
                 Navigator.pop(context);
               },
@@ -102,10 +102,10 @@ class _AddTipScreenState extends State<AddTipScreen> {
                     right: -10,
                     child: GestureDetector(
                       onTap: () => {
-                      setState(() {
-                        _imageFile = null;
-                      })
-                    },
+                        setState(() {
+                          _imageFile = null;
+                        })
+                      },
                       child: Container(
                         width: 25,
                         height: 25,
