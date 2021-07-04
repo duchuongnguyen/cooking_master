@@ -586,6 +586,9 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
       isLoading = true;
     });
 
+    
+    currentRecipe.directionImage = _directionImageUrls;
+    print(_directionImageUrls);
     currentRecipe.ingredients.clear();
     currentRecipe.directions.clear();
 
@@ -770,7 +773,7 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
                   _directionControllers.add(TextEditingController());
                   _directionImageFiles.add(null);
                   _directionImageUrls.add(null);
-                  
+
                   if (_directionWidgets.isEmpty) {
                     _directionWidgets.add(_buildDirectionField(0));
                   } else

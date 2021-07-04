@@ -83,7 +83,6 @@ class RecipeService {
             CloudinaryFile.fromFile(recipeImage.path,
                 resourceType: CloudinaryResourceType.Image),
           );
-          print(response.secureUrl);
           recipe.image = response.secureUrl;
         } catch (e) {
           recipe.image =
@@ -99,7 +98,6 @@ class RecipeService {
             CloudinaryFile.fromFile(recipeImage.path,
                 resourceType: CloudinaryResourceType.Image),
           );
-          print(response.secureUrl);
           recipe.image = response.secureUrl;
         } catch (e) {
           recipe.image =
@@ -111,13 +109,55 @@ class RecipeService {
       }
     }
     if (isUpdating) {
+      if (recipe.directionImage.isEmpty) {
+        if (directionImage != null) {
+          List<String> listImage = [];
+          for (var file in directionImage) {
+            if (file != null) {
+              final cloudinary =
+                  CloudinaryPublic('huong', 'wedding', cache: true);
+
+              await cloudinary
+                  .uploadFile(CloudinaryFile.fromFile(file.path,
+                      resourceType: CloudinaryResourceType.Image))
+                  .then((value) {
+                listImage.add(value.secureUrl);
+              });
+            } else {
+              listImage.add(null);
+            }
+          }
+          recipe.directionImage = listImage;
+        }
+      } else {
+        if (directionImage != null) {
+          List<String> listImage = [];
+          for (int i = 0; i < directionImage.length; i++) {
+            if (directionImage[i] != null) {
+              final cloudinary =
+                  CloudinaryPublic('huong', 'wedding', cache: true);
+
+              await cloudinary
+                  .uploadFile(CloudinaryFile.fromFile(directionImage[i].path,
+                      resourceType: CloudinaryResourceType.Image))
+                  .then((value) {
+                listImage.add(value.secureUrl);
+              });
+            } else if (recipe.directionImage[i] != null &&
+                directionImage[i] == null) {
+              listImage.add(recipe.directionImage[i]);
+            } else {
+              listImage.add(null);
+            }
+          }
+          recipe.directionImage = listImage;
+        }
+      }
     } else {
       if (directionImage != null) {
         List<String> listImage = [];
-        print(directionImage);
         for (var file in directionImage) {
           if (file != null) {
-            print(true);
             final cloudinary =
                 CloudinaryPublic('huong', 'wedding', cache: true);
 
@@ -131,7 +171,6 @@ class RecipeService {
             listImage.add(null);
           }
         }
-        print(listImage);
         recipe.directionImage = listImage;
       }
     }
