@@ -31,6 +31,8 @@ class NotificationService {
   }
 
   Future pushNotification(NotificationModel notification) async {
+    notification.createdAt = Timestamp.now();
+
     DocumentReference documentRef = await _ref.add(notification.toMap());
 
     notification.id = documentRef.id;

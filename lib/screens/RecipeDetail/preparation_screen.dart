@@ -98,10 +98,6 @@ class _PreparationScreenState extends State<PreparationScreen> {
                       });
                     },
                     itemBuilder: (context, position) {
-                      if (widget.recipe.directionImage.length <= position)
-                        return DetailPreparationStep(
-                            image: null,
-                            direction: widget.recipe.directions[position]);
                       return DetailPreparationStep(
                           image: widget.recipe.directionImage[position],
                           direction: widget.recipe.directions[position]);

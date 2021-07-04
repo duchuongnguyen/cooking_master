@@ -1,5 +1,6 @@
 import 'package:cooking_master/models/notification_model.dart';
 import 'package:cooking_master/models/user_model.dart';
+import 'package:cooking_master/screens/UserProfileWatch/user_profile_watch_screen.dart';
 import 'package:cooking_master/screens/notification_screen/bottomDialog.dart';
 import 'package:cooking_master/services/notification_service.dart';
 import 'package:cooking_master/services/userprofile_service.dart';
@@ -110,9 +111,22 @@ class _ListNotificationState extends State<_ListNotification> {
                                 if (user.connectionState ==
                                     ConnectionState.done) {
                                   return ListTile(
-                                    leading: CircleAvatar(
-                                        backgroundImage:
-                                            NetworkImage(user.data.userImage)),
+                                    leading: GestureDetector(
+                                        child: CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                user.data.userImage)),
+                                        onTap: () {
+                                          if (user.data.userId !=
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid)
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserProfileWatchScreen(
+                                                            uid: user
+                                                                .data.userId)));
+                                        }),
                                     title: RichText(
                                         text: TextSpan(
                                             style:
