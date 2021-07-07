@@ -53,7 +53,7 @@ class _AddCategoryDrawerState extends State<AddCategoryDrawer> {
                     onTap: () {
                       setState(() {
                         if (isSaved) {
-                          saveRecipeProvider.removeRecipeToMycategory(
+                          saveRecipeProvider.removeRecipeFromMycategory(
                               widget.idRecipe, 'All');
                         }
                         isSaved = !isSaved;
@@ -135,7 +135,7 @@ class _AddCategoryDrawerState extends State<AddCategoryDrawer> {
                                         .elementAt(index)
                                         .category);
                               } else {
-                                saveRecipeProvider.removeRecipeToMycategory(
+                                saveRecipeProvider.removeRecipeFromMycategory(
                                     widget.idRecipe,
                                     saveRecipeProvider.listMyCategory
                                         .elementAt(index)

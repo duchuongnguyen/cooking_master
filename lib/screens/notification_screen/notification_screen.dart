@@ -179,8 +179,8 @@ class _ListNotificationState extends State<_ListNotification> {
                                                           .withOpacity(0.6))),
                                             ]))),
                                     trailing: notification
-                                                .data[index].content !=
-                                            'started following you.'
+                                                .data[index].idRecipe !=
+                                            ''
                                         ? null
                                         : user.data.userFollower.contains(
                                                 FirebaseAuth

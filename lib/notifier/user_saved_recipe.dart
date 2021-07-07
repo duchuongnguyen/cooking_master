@@ -21,15 +21,9 @@ class SavedRecipeProvider with ChangeNotifier {
   Map<String, List<RecipeModel>> get mapSavedRecipe => _mapSavedRecipe;
   // load for render
   loadMapRecipe() async {
-    // this._mapSavedRecipe.clear();
-    //this._listMyCategory.clear();
     this._mapSavedRecipe = await _saveRecipeService.getmaprecipe();
     this._listMyCategory = await this._saveRecipeService.getListMyCategory();
     this._curCategoryList = List.from([]);
-    // if (this._curCategoryName.length > 0) {
-    //   this.CurCategoryList =
-    //       List.from(this._mapSavedRecipe[this._curCategoryName]);
-    // }
     notifyListeners();
   }
 
@@ -60,7 +54,7 @@ class SavedRecipeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  removeRecipeToMycategory(String idRecipe, String nameMyCategory) {
+  removeRecipeFromMycategory(String idRecipe, String nameMyCategory) {
     if (nameMyCategory == 'All') {
       this._mapSavedRecipe[nameMyCategory].forEach((element) async {
         if (element.id == idRecipe) {
@@ -101,8 +95,8 @@ class SavedRecipeProvider with ChangeNotifier {
       this._curCategoryList.removeAt(index);
       for (MapEntry<String, List<RecipeModel>> me
           in this._mapSavedRecipe.entries) {
-        if (me.key != 'All')         
-            me.value.removeWhere((element) => element.id == recipe.id);
+        if (me.key != 'All')
+          me.value.removeWhere((element) => element.id == recipe.id);
       }
     } else {
       await this._saveRecipeService.removeInArray(

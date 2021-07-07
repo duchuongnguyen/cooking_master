@@ -123,6 +123,12 @@ class UserProfileService {
       'category': 'All',
       'idrecipe': array,
     });
+    await FirebaseFirestore.instance
+        .collection('mytopics')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .set({
+      'topics': array,
+    });
     return resultCreate;
   }
 }
