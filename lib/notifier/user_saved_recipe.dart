@@ -159,9 +159,11 @@ class SavedRecipeProvider with ChangeNotifier {
     }
   }
 
-  checkNameCategoryExist(String name) {
-    if (this._mapSavedRecipe.containsKey(name)) return true;
-    return false;
+  String checkNameCategoryExist(String name) {
+    if (name.length > 30) return "Name is too long";
+    if (name == "") return "Name is not blank";
+    if (this._mapSavedRecipe.containsKey(name)) return "Name already exists";
+    return "OK";
   }
 }
 // removeCategory(String keyy) {

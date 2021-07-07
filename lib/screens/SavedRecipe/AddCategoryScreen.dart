@@ -19,11 +19,12 @@ class AddCategoryScreen extends StatelessWidget {
               child: TextField(
                 autofocus: true,
                 onSubmitted: (String value) {
-                  if (savedRecipeNotifier.checkNameCategoryExist(value)) {
-                    final didRequest = showAlertDialog(
+                  var check = savedRecipeNotifier.checkNameCategoryExist(value);
+                  if (check != "OK") {
+                    showAlertDialog(
                       context,
-                      title: 'Category Name Exist',
-                      content: 'Please fill another name!',
+                      title: 'Error',
+                      content: check,
                       defaultActionText: 'OK',
                     );
                   } else {

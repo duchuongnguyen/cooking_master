@@ -74,9 +74,10 @@ class _AddCategoryDrawerState extends State<AddCategoryDrawer> {
                             controller: myController,
                             focusNode: myFocusNode,
                             onSubmitted: (String value) {
-                              if (saveRecipeProvider
-                                  .checkNameCategoryExist(value)) {
-                                final didRequest = showAlertDialog(
+                              var check = saveRecipeProvider
+                                  .checkNameCategoryExist(value);
+                              if (check != "OK") {
+                                showAlertDialog(
                                   context,
                                   title: 'Exist',
                                   content: 'This name is exist',
