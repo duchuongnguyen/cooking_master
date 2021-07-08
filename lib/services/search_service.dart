@@ -9,7 +9,7 @@ class SearchService {
     if (name != '' && cate != 'all') {
       await ref
           .where('category', isEqualTo: cate)
-          .where('name', isGreaterThanOrEqualTo: name)
+          .where('name', isGreaterThanOrEqualTo: name) 
           .limit(6)
           .get()
           .then((value) {

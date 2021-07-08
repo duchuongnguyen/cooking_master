@@ -34,7 +34,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
+                      (lenght < 0
                           ? 'pasta'
                           : myFavoriteTopic.myTopicsString[0]))
                   .take(10)
@@ -48,15 +48,13 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
-                          ? 'beef'
-                          : myFavoriteTopic.myTopicsString[1]))
+                      (lenght < 0 ? 'beef' : myFavoriteTopic.myTopicsString[1]))
                   .take(10)
                   .toList(),
             ),
             SizedBox(height: 20),
             ListViewOfRecipeCardsWithTitle(
-              title: lenght-- <= 0
+              title: lenght-- < 0
                   ? 'Rice'
                   : toUpcaseFist(myFavoriteTopic.myTopicsString[2]),
               cards: recipe.listrecipes
@@ -76,9 +74,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
-                          ? 'cake'
-                          : myFavoriteTopic.myTopicsString[3]))
+                      (lenght < 0 ? 'cake' : myFavoriteTopic.myTopicsString[3]))
                   .take(10)
                   .toList(),
             ),
@@ -90,9 +86,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
-                          ? 'soup'
-                          : myFavoriteTopic.myTopicsString[4]))
+                      (lenght < 0 ? 'soup' : myFavoriteTopic.myTopicsString[4]))
                   .take(10)
                   .toList(),
             ),
@@ -104,7 +98,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
+                      (lenght < 0
                           ? 'bread'
                           : myFavoriteTopic.myTopicsString[5]))
                   .take(10)
@@ -118,7 +112,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
+                      (lenght < 0
                           ? 'sauce'
                           : myFavoriteTopic.myTopicsString[6]))
                   .take(10)
@@ -132,7 +126,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
+                      (lenght < 0
                           ? 'chicken'
                           : myFavoriteTopic.myTopicsString[7]))
                   .take(10)
@@ -146,9 +140,7 @@ class Body extends StatelessWidget {
               cards: recipe.listrecipes
                   .where((element) =>
                       element.category ==
-                      (lenght <= 0
-                          ? 'fish'
-                          : myFavoriteTopic.myTopicsString[8]))
+                      (lenght < 0 ? 'fish' : myFavoriteTopic.myTopicsString[8]))
                   .take(10)
                   .toList(),
             ),
