@@ -258,7 +258,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 Row(
                   children: [
                     Icon(
-                      Icons.person_outline,
+                      Icons.person,
                       size: 22,
                       color: Colors.black.withOpacity(0.7),
                     ),
@@ -268,7 +268,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                           (widget.recipe.yields > 1 ? " servings" : " serving"),
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                         color: Colors.black.withOpacity(0.7),
                       ),
                     ),

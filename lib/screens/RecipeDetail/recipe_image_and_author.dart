@@ -72,7 +72,7 @@ class _RecipeImageAndAuthorState extends State<RecipeImageAndAuthor> {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.normal,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.black.withOpacity(0.7),
                           ),
                         ),
                         subtitle: Text(
@@ -80,7 +80,7 @@ class _RecipeImageAndAuthorState extends State<RecipeImageAndAuthor> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                            color: Colors.blue[600],
                           ),
                         ),
                       );

@@ -1,3 +1,4 @@
+import 'package:cooking_master/constants/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -18,13 +19,19 @@ class SliverIngredientList extends StatelessWidget {
           (BuildContext context, int index) {
             final int itemIndex = index ~/ 2;
             if (index.isEven) {
-              return Text(
-                "${ingredientList[itemIndex]}",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black.withOpacity(0.5),
-                  letterSpacing: 0.6
+              return Container(
+                padding:
+                    EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Colors.white.withOpacity(0.7)),
+                child: Text(
+                  "${ingredientList[itemIndex]}",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                      letterSpacing: 0.6),
                 ),
               );
               // return Ingredient(
@@ -33,7 +40,9 @@ class SliverIngredientList extends StatelessWidget {
               //     unit: ingredient[itemIndex].ingredientUnit,
               //     proportion: servings / widget.recipe.recipeServingNumber);
             }
-            return SizedBox(height: 15,);
+            return SizedBox(
+              height: 15,
+            );
           },
           semanticIndexCallback: (Widget widget, int localIndex) {
             if (localIndex.isEven) {

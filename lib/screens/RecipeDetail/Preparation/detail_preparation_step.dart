@@ -15,20 +15,20 @@ class DetailPreparationStep extends StatelessWidget {
   Widget build(BuildContext context) {
     print(image);
     return Container(
-      child: Column(children: [
-        image != null
-            ? Image.network(image)
-            : Image.asset("assets/images/recipe1.jpg", fit: BoxFit.fitWidth),
-        Container(
-            padding: EdgeInsets.all(15),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Text(
-                direction,
-                style: TextStyle(fontSize: 20, color: blue5),
-              ),
-            ))
-      ]),
+      child: SingleChildScrollView(
+        child: Column(children: [
+          image != null ? Image.network(image) : Container(),
+          Container(
+              padding: EdgeInsets.all(15),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Text(
+                  direction,
+                  style: TextStyle(fontSize: 20, color: blue5),
+                ),
+              ))
+        ]),
+      ),
     );
   }
 }

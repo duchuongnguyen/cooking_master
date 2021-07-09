@@ -210,29 +210,30 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.73,
-            child: TextFormField(
-              controller: _ingredientControllers[index],
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                hintText: '200ml milk',
-                filled: true,
-                fillColor: Colors.blue[100],
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    const Radius.circular(15.0),
+          Expanded(
+            child: SizedBox(
+              child: TextFormField(
+                controller: _ingredientControllers[index],
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: '200ml milk',
+                  filled: true,
+                  fillColor: Colors.blue[100],
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      const Radius.circular(15.0),
+                    ),
+                    borderSide: BorderSide.none,
                   ),
-                  borderSide: BorderSide.none,
                 ),
+                style: TextStyle(fontSize: 18),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'ingre is required';
+                  }
+                  return null;
+                },
               ),
-              style: TextStyle(fontSize: 18),
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return 'ingre is required';
-                }
-                return null;
-              },
             ),
           ),
           SizedBox(width: 5),
@@ -375,138 +376,141 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
               ),
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.73,
-                child: TextFormField(
-                  controller: _directionControllers[index],
-                  autofocus: false,
-                  minLines: 2,
-                  maxLines: 3,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    hintText: 'Mix the flour and water until they thicken',
-                    filled: true,
-                    fillColor: Colors.blue[100],
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          const Radius.circular(15.0),
-                        ),
-                        borderSide: BorderSide.none),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: TextFormField(
+                    controller: _directionControllers[index],
+                    autofocus: false,
+                    minLines: 2,
+                    maxLines: 3,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: 'Mix the flour and water until they thicken',
+                      filled: true,
+                      fillColor: Colors.blue[100],
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            const Radius.circular(15.0),
+                          ),
+                          borderSide: BorderSide.none),
+                    ),
+                    style: TextStyle(fontSize: 16),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Step is required';
+                      }
+                      return null;
+                    },
                   ),
-                  style: TextStyle(fontSize: 16),
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return 'Step is required';
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              SizedBox(height: 5),
-              widget.isUpdating
-                  ? GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext bc) {
-                            return SafeArea(
-                              child: Container(
-                                child: new Wrap(
-                                  children: <Widget>[
-                                    new ListTile(
-                                        leading: new Icon(Icons.photo_library),
-                                        title: new Text('Photo Library'),
+                SizedBox(height: 5),
+                widget.isUpdating
+                    ? GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext bc) {
+                              return SafeArea(
+                                child: Container(
+                                  child: new Wrap(
+                                    children: <Widget>[
+                                      new ListTile(
+                                          leading:
+                                              new Icon(Icons.photo_library),
+                                          title: new Text('Photo Library'),
+                                          onTap: () {
+                                            _imgStepFromGallery();
+                                            Navigator.of(context).pop();
+                                          }),
+                                      new ListTile(
+                                        leading: new Icon(Icons.photo_camera),
+                                        title: new Text('Camera'),
                                         onTap: () {
-                                          _imgStepFromGallery();
+                                          _imgStepFromCamera();
                                           Navigator.of(context).pop();
-                                        }),
-                                    new ListTile(
-                                      leading: new Icon(Icons.photo_camera),
-                                      title: new Text('Camera'),
-                                      onTap: () {
-                                        _imgStepFromCamera();
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 80,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(8)),
-                        alignment: Alignment.center,
-                        child: _directionImageFiles[index] != null
-                            ? Image.file(_directionImageFiles[index],
-                                fit: BoxFit.fitWidth)
-                            : _directionImageUrls[index] != null
-                                ? Image.network(_directionImageUrls[index],
-                                    fit: BoxFit.fitWidth)
-                                : Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.white,
+                                        },
+                                      ),
+                                    ],
                                   ),
-                      ),
-                    )
-                  : GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext bc) {
-                            return SafeArea(
-                              child: Container(
-                                child: new Wrap(
-                                  children: <Widget>[
-                                    new ListTile(
-                                        leading: new Icon(Icons.photo_library),
-                                        title: new Text('Photo Library'),
-                                        onTap: () {
-                                          _imgStepFromGallery();
-                                          Navigator.of(context).pop();
-                                        }),
-                                    new ListTile(
-                                      leading: new Icon(Icons.photo_camera),
-                                      title: new Text('Camera'),
-                                      onTap: () {
-                                        _imgStepFromCamera();
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 80,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(8)),
-                        alignment: Alignment.center,
-                        child: _directionImageFiles[index] != null
-                            ? Image.file(
-                                _directionImageFiles[index],
-                                fit: BoxFit.fitWidth,
-                              )
-                            : Icon(
-                                Icons.camera_alt_outlined,
-                                color: Colors.white,
-                              ),
-                      ),
-                    )
-            ],
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 80,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(8)),
+                          alignment: Alignment.center,
+                          child: _directionImageFiles[index] != null
+                              ? Image.file(_directionImageFiles[index],
+                                  fit: BoxFit.fitWidth)
+                              : _directionImageUrls[index] != null
+                                  ? Image.network(_directionImageUrls[index],
+                                      fit: BoxFit.fitWidth)
+                                  : Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Colors.white,
+                                    ),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext bc) {
+                              return SafeArea(
+                                child: Container(
+                                  child: new Wrap(
+                                    children: <Widget>[
+                                      new ListTile(
+                                          leading:
+                                              new Icon(Icons.photo_library),
+                                          title: new Text('Photo Library'),
+                                          onTap: () {
+                                            _imgStepFromGallery();
+                                            Navigator.of(context).pop();
+                                          }),
+                                      new ListTile(
+                                        leading: new Icon(Icons.photo_camera),
+                                        title: new Text('Camera'),
+                                        onTap: () {
+                                          _imgStepFromCamera();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 80,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(8)),
+                          alignment: Alignment.center,
+                          child: _directionImageFiles[index] != null
+                              ? Image.file(
+                                  _directionImageFiles[index],
+                                  fit: BoxFit.fitWidth,
+                                )
+                              : Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: Colors.white,
+                                ),
+                        ),
+                      )
+              ],
+            ),
           ),
           SizedBox(width: 5),
           PopupMenuButton(
@@ -586,7 +590,6 @@ class RecipeFormScreenState extends State<RecipeFormScreen> {
       isLoading = true;
     });
 
-    
     currentRecipe.directionImage = _directionImageUrls;
     print(_directionImageUrls);
     currentRecipe.ingredients.clear();

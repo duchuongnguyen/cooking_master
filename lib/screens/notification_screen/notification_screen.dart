@@ -40,7 +40,7 @@ class NotificationScreenState extends State<NotificationScreen> {
                 )),
             SizedBox(height: 15),
             _ListNotification(
-              header: 'News',
+              header: 'New',
               stream: NotificationService()
                   .getNewNotifications(FirebaseAuth.instance.currentUser.uid),
               notificationScreenState: this,
